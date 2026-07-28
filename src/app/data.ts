@@ -18,9 +18,27 @@ export const matches = [
   { id: 3, teamA: '5cones', teamB: 'venvanse', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'qui., 23/07/2026 22:10', group: 'A' },
 ];
 
+export const upcomingMatches = [
+  {
+    id: 101,
+    teamA: 'venvanse',
+    teamB: 'desacreditados',
+    date: '2026-07-30T21:00:00-03:00',
+    group: 'Grupo A'
+  },
+  {
+    id: 102,
+    teamA: 'gilsons',
+    teamB: 'maconhaco',
+    date: '2026-07-31T20:00:00-03:00',
+    group: 'Grupo B'
+  }
+];
+
 export const matchDetails: Record<string, any> = {
   '1': {
-    map: 'Mirage', roundsA: 0, roundsB: 1,
+    map: 'Mirage', roundsA: 0, roundsB: 1, teamARounds: 9, teamBRounds: 13,
+    vodUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
     teamA_stats: [
       { name: 'Dash', kills: 15, deaths: 15, assists: 2 },
       { name: 'Gilli', kills: 15, deaths: 17, assists: 8 },
@@ -37,7 +55,8 @@ export const matchDetails: Record<string, any> = {
     ]
   },
   '2': {
-    map: 'Inferno', roundsA: 0, roundsB: 1,
+    map: 'Inferno', roundsA: 0, roundsB: 1, teamARounds: 16, teamBRounds: 19,
+    vodUrl: '',
     teamA_stats: [
       { name: 'Nil', kills: 39, deaths: 31, assists: 9 },
       { name: 'Leco', kills: 48, deaths: 29, assists: 11 },
@@ -54,7 +73,8 @@ export const matchDetails: Record<string, any> = {
     ]
   },
   '3': {
-    map: 'Nuke', roundsA: 0, roundsB: 1,
+    map: 'Nuke', roundsA: 0, roundsB: 1, teamARounds: 11, teamBRounds: 13,
+    vodUrl: '',
     teamA_stats: [
       { name: 'ChapaChaplin', kills: 15, deaths: 20, assists: 8 },
       { name: 'Bagua', kills: 21, deaths: 21, assists: 6 },
@@ -71,7 +91,8 @@ export const matchDetails: Record<string, any> = {
     ]
   },
   '4': {
-    map: 'Anúbis', roundsA: 1, roundsB: 0,
+    map: 'Anúbis', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 10,
+    vodUrl: '',
     teamA_stats: [
       { name: 'Gusta', kills: 19, deaths: 18, assists: 8 },
       { name: 'Acyd', kills: 33, deaths: 17, assists: 4 },

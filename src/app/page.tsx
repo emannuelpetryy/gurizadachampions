@@ -1,7 +1,8 @@
-import { getTeam, matches, players, teams } from './data';
+import { getTeam, matches, players, teams, upcomingMatches } from './data';
 import Link from 'next/link';
 import PlayerAvatar from './jogador/[name]/PlayerAvatar';
 import Comments from '../components/Comments';
+import Countdown from '../components/Countdown';
 
 export default function Home() {
   // Ordenar jogadores pelo KDA: (K + A) / D
@@ -39,6 +40,9 @@ export default function Home() {
             <Link href="/ranking" className="btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', margin: 0 }}>
               Ver Classificação
             </Link>
+            <Link href="/comparacao" className="btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', margin: 0, background: 'linear-gradient(45deg, #ab47bc, #7b1fa2)', borderColor: '#ab47bc', boxShadow: '0 0 15px rgba(171,71,188,0.4)' }}>
+              ⚔️ Comparar 1v1
+            </Link>
             <Link href="/jogadores" className="btn-secondary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', margin: 0 }}>
               Lista de Jogadores
             </Link>
@@ -48,6 +52,43 @@ export default function Home() {
 
       <section className="container" style={{ padding: '4rem 2rem' }}>
         <div className="grid-2">
+          
+          {/* Próximos Confrontos com Countdown */}
+          {upcomingMatches.length > 0 && (
+            <div className="glass-card" style={{ gridColumn: '1 / -1', marginBottom: '2rem', border: '1px solid rgba(0,240,255,0.2)', boxShadow: '0 0 25px rgba(0,240,255,0.05)' }}>
+              <h3 className="card-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Próximos Confrontos
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '1.5rem', marginTop: '1.5rem' }}>
+                {upcomingMatches.map((match) => {
+                  const teamA = getTeam(match.teamA);
+                  const teamB = getTeam(match.teamB);
+                  return (
+                    <div key={match.id} style={{ background: 'rgba(0,0,0,0.5)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', gap: '1.2rem', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>{match.group}</span>
+                      
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', gap: '1rem' }}>
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                          {teamA.logo ? <img src={teamA.logo} alt={teamA.name} style={{ width: '48px', height: '48px', borderRadius: '10px', objectFit: 'cover' }} /> : <div className="team-logo-square" style={{ width: '48px', height: '48px', fontSize: '1rem' }}>{teamA.initials}</div>}
+                          <strong style={{ fontSize: '1rem', color: '#fff', textAlign: 'center' }}>{teamA.name}</strong>
+                        </div>
+
+                        <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)' }}>VS</span>
+
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                          {teamB.logo ? <img src={teamB.logo} alt={teamB.name} style={{ width: '48px', height: '48px', borderRadius: '10px', objectFit: 'cover' }} /> : <div className="team-logo-square" style={{ width: '48px', height: '48px', fontSize: '1rem' }}>{teamB.initials}</div>}
+                          <strong style={{ fontSize: '1rem', color: '#fff', textAlign: 'center' }}>{teamB.name}</strong>
+                        </div>
+                      </div>
+
+                      <Countdown targetDate={match.date} />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           
           <div className="glass-card" style={{ gridColumn: '1 / -1' }}>
             <h3 className="card-title">

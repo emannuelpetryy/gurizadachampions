@@ -111,6 +111,74 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
               </div>
             </div>
 
+            {/* Badges / Conquistas */}
+            {(() => {
+              let mvpCount = 0;
+              let hasHardCarry = false;
+              let hasDifficilCarregar = false;
+
+              Object.values(matchDetails).forEach((det: any) => {
+                const allStats = [...det.teamA_stats, ...det.teamB_stats];
+                const pStat = allStats.find((s: any) => s.name.toLowerCase() === decodedName.toLowerCase());
+                if (pStat) {
+                  const pKd = pStat.kills / (pStat.deaths || 1);
+                  if (pKd >= 2.0) hasHardCarry = true;
+
+                  let bestKd = -1;
+                  let mvpPlayer = null;
+                  let worstKd = 999;
+                  let worstPlayer = null;
+
+                  allStats.forEach((s: any) => {
+                    const kdVal = s.kills / (s.deaths || 1);
+                    if (kdVal > bestKd) {
+                      bestKd = kdVal;
+                      mvpPlayer = s.name;
+                    }
+                    if (kdVal < worstKd) {
+                      worstKd = kdVal;
+                      worstPlayer = s.name;
+                    }
+                  });
+
+                  if (mvpPlayer && (mvpPlayer as string).toLowerCase() === decodedName.toLowerCase()) {
+                    mvpCount++;
+                  }
+                  if (worstPlayer && (worstPlayer as string).toLowerCase() === decodedName.toLowerCase()) {
+                    hasDifficilCarregar = true;
+                  }
+                }
+              });
+
+              const maxAssists = Math.max(...players.map(p => p.assists));
+              const isReiDaAssist = player.assists === maxAssists && player.assists > 0;
+
+              const badgesList = [];
+              if (mvpCount > 0) badgesList.push({ title: 'MVP da Partida', desc: `MVP ${mvpCount}x no campeonato`, icon: '🏆', color: 'var(--gold)' });
+              if (hasHardCarry) badgesList.push({ title: 'Hard Carry', desc: 'Teve partida com K/D > 2.0', icon: '🔥', color: 'var(--cyan)' });
+              if (isReiDaAssist) badgesList.push({ title: 'Rei da Assist', desc: 'Maior número de assistências da liga', icon: '👑', color: '#ab47bc' });
+              if (hasDifficilCarregar) badgesList.push({ title: 'Difícil Carregar', desc: 'Teve o menor K/D em uma partida', icon: '⚓', color: 'var(--accent-red)' });
+
+              if (badgesList.length === 0) return null;
+
+              return (
+                <div style={{ marginTop: '2rem', width: '100%', maxWidth: '800px' }}>
+                  <h4 style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1rem', textAlign: 'center' }}>MEDALHAS E CONQUISTAS</h4>
+                  <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    {badgesList.map((b, idx) => (
+                      <div key={idx} style={{ background: 'rgba(0,0,0,0.4)', border: `1px solid ${b.color}`, padding: '0.8rem 1.2rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '0.8rem', boxShadow: `0 0 10px ${b.color}20` }}>
+                        <span style={{ fontSize: '1.5rem' }}>{b.icon}</span>
+                        <div>
+                          <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>{b.title}</strong>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{b.desc}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
           </div>
           
           {/* Gráfico de Evolução de K/D */}

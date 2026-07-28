@@ -33,9 +33,12 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   const totalKillsB = details.teamB_stats.reduce((acc: number, p: any) => acc + p.kills, 0);
   const totalDeathsB = details.teamB_stats.reduce((acc: number, p: any) => acc + p.deaths, 0);
 
+  const totalRounds = (details.teamARounds || 0) + (details.teamBRounds || 0);
+
   const renderPlayerCard = (player: any, teamName: string) => {
     const kdaRaw = player.kills / (player.deaths || 1);
     const kda = kdaRaw.toFixed(2);
+    const kpr = totalRounds > 0 ? (player.kills / totalRounds).toFixed(2) : '-';
     
     // Cor do badge de KDA baseada no valor (verde para bom, vermelho para ruim, amarelo médio)
     let badgeColor = '#666';
@@ -47,17 +50,23 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
     return (
       <div key={player.name} className="glass-card match-card-hover" style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '1rem', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '0.8rem' }}>
         <PlayerAvatar teamName={teamName} playerName={player.name} badgeColor={badgeColor} size={40} />
-        <div style={{ flex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
-            <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit' }} className="match-card-hover">
-              <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
-            </Link>
-            <span style={{ background: badgeColor, color: '#fff', fontSize: '0.75rem', fontWeight: 'bold', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>
-              {kda}
-            </span>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
+              <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit' }} className="match-card-hover">
+                <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
+              </Link>
+              <span style={{ background: badgeColor, color: '#fff', fontSize: '0.75rem', fontWeight: 'bold', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>
+                KD {kda}
+              </span>
+            </div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+              <strong>K/D/A:</strong> {player.kills}/{player.deaths}/{player.assists}
+            </div>
           </div>
-          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            <strong>K/D/A:</strong> {player.kills}/{player.deaths}/{player.assists}
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>KPR</span>
+            <strong style={{ fontSize: '1.1rem', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)' }}>{kpr}</strong>
           </div>
         </div>
       </div>
@@ -216,6 +225,24 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
           </div>
         </div>
+
+        {/* VOD / Transmissão */}
+        {details.vodUrl && (
+          <div style={{ marginTop: '3rem', marginBottom: '1rem' }}>
+            <h3 className="hero-title" style={{ fontSize: '2.2rem', marginBottom: '1.5rem', textShadow: 'none', textAlign: 'left' }}>TRANSMISSÃO / VOD</h3>
+            <div className="glass-card" style={{ padding: '0.8rem', overflow: 'hidden', borderRadius: '16px', border: '1px solid rgba(0,240,255,0.2)', boxShadow: '0 0 20px rgba(0,240,255,0.1)' }}>
+              <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, borderRadius: '12px', overflow: 'hidden' }}>
+                <iframe
+                  src={details.vodUrl}
+                  title="Transmissão da Partida"
+                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Escalação */}
         <h3 className="hero-title" style={{ fontSize: '2.2rem', marginTop: '3rem', marginBottom: '1.5rem', textShadow: 'none', textAlign: 'left' }}>ESCALAÇÃO</h3>
