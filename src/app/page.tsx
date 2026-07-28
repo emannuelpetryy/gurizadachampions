@@ -39,7 +39,11 @@ export default function Home() {
                   <Link href={`/partida/${match.id}`} key={match.id} style={{ textDecoration: 'none' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.4)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', transition: 'all 0.2s', cursor: 'pointer' }} className="match-card-hover">
                       <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <div className="team-logo-square" style={{ width: '36px', height: '36px', fontSize: '0.8rem' }}>{teamA.initials}</div>
+                        {teamA.logo ? (
+                          <img src={teamA.logo} alt={teamA.name} style={{ width: '36px', height: '36px', borderRadius: '8px', objectFit: 'cover' }} />
+                        ) : (
+                          <div className="team-logo-square" style={{ width: '36px', height: '36px', fontSize: '0.8rem' }}>{teamA.initials}</div>
+                        )}
                         <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', color: '#fff' }}>{teamA.name}</strong>
                       </div>
                       
@@ -52,7 +56,11 @@ export default function Home() {
 
                       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '1rem' }}>
                         <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', textAlign: 'right', color: '#fff' }}>{teamB.name}</strong>
-                        <div className="team-logo-square" style={{ width: '36px', height: '36px', fontSize: '0.8rem' }}>{teamB.initials}</div>
+                        {teamB.logo ? (
+                          <img src={teamB.logo} alt={teamB.name} style={{ width: '36px', height: '36px', borderRadius: '8px', objectFit: 'cover' }} />
+                        ) : (
+                          <div className="team-logo-square" style={{ width: '36px', height: '36px', fontSize: '0.8rem' }}>{teamB.initials}</div>
+                        )}
                       </div>
                     </div>
                   </Link>

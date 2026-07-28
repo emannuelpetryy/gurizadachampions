@@ -2,11 +2,12 @@ import { getTeam, matches, matchDetails } from '../../data';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-export default function MatchPage({ params }: { params: { id: string } }) {
-  const match = matches.find(m => m.id === parseInt(params.id));
+export default async function MatchPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const match = matches.find(m => m.id === parseInt(resolvedParams.id));
   if (!match) return notFound();
 
-  const details = matchDetails[params.id];
+  const details = matchDetails[resolvedParams.id];
   const teamA = getTeam(match.teamA);
   const teamB = getTeam(match.teamB);
 
@@ -75,7 +76,7 @@ export default function MatchPage({ params }: { params: { id: string } }) {
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem' }}>
               
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                <div className="team-logo-square" style={{ width: '80px', height: '80px', fontSize: '2rem', boxShadow: '0 0 20px rgba(0,240,255,0.2)' }}>{teamA.initials}</div>
+                {teamA.logo ? <img src={teamA.logo} alt={teamA.name} style={{ width: '80px', height: '80px', borderRadius: '16px', objectFit: 'cover', boxShadow: '0 0 20px rgba(0,240,255,0.2)' }} /> : <div className="team-logo-square" style={{ width: '80px', height: '80px', fontSize: '2rem', boxShadow: '0 0 20px rgba(0,240,255,0.2)' }}>{teamA.initials}</div>}
                 <h2 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-rajdhani)', color: '#fff', textAlign: 'center' }}>{teamA.name}</h2>
               </div>
               
@@ -92,7 +93,7 @@ export default function MatchPage({ params }: { params: { id: string } }) {
               </div>
 
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                <div className="team-logo-square" style={{ width: '80px', height: '80px', fontSize: '2rem', boxShadow: '0 0 20px rgba(0,240,255,0.2)' }}>{teamB.initials}</div>
+                {teamB.logo ? <img src={teamB.logo} alt={teamB.name} style={{ width: '80px', height: '80px', borderRadius: '16px', objectFit: 'cover', boxShadow: '0 0 20px rgba(0,240,255,0.2)' }} /> : <div className="team-logo-square" style={{ width: '80px', height: '80px', fontSize: '2rem', boxShadow: '0 0 20px rgba(0,240,255,0.2)' }}>{teamB.initials}</div>}
                 <h2 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-rajdhani)', color: '#fff', textAlign: 'center' }}>{teamB.name}</h2>
               </div>
 

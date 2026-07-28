@@ -1,4 +1,5 @@
 import { groupA, groupB, getTeam, players } from '../data';
+import Link from 'next/link';
 
 export default function Ranking() {
   const renderGroupTable = (groupName: string, groupData: any[]) => (
@@ -27,10 +28,16 @@ export default function Ranking() {
                     </span>
                   </td>
                   <td>
-                    <div className="team-info">
-                      <div className="team-logo-square" style={{ width: '40px', height: '40px', fontSize: '0.9rem' }}>{team.initials}</div>
-                      <strong style={{ fontSize: '1.1rem' }}>{team.name}</strong>
-                    </div>
+                    <Link href={`/time/${team.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                      <div className="team-info" style={{ cursor: 'pointer' }}>
+                        {team.logo ? (
+                          <img src={team.logo} alt={team.name} style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} />
+                        ) : (
+                          <div className="team-logo-square" style={{ width: '40px', height: '40px', fontSize: '0.9rem' }}>{team.initials}</div>
+                        )}
+                        <strong style={{ fontSize: '1.1rem' }}>{team.name}</strong>
+                      </div>
+                    </Link>
                   </td>
                   <td style={{ textAlign: 'center', color: 'var(--primary)', fontWeight: 'bold', fontSize: '1.2rem' }}>{row.p}</td>
                   <td style={{ textAlign: 'center' }}>{row.pj}</td>
@@ -82,10 +89,16 @@ export default function Ranking() {
                       <td style={{ textAlign: 'center' }}><span className="rank-number" style={{ fontSize: index < 3 ? '1.5rem' : '1.2rem' }}>#{index + 1}</span></td>
                       <td><strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong></td>
                       <td>
-                        <div className="team-info" style={{ gap: '0.5rem' }}>
-                          <div className="team-logo-square" style={{ width: '24px', height: '24px', fontSize: '0.6rem', border: '1px solid rgba(255,255,255,0.2)' }}>{team.initials}</div>
-                          <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{team.name}</span>
-                        </div>
+                        <Link href={`/time/${team.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                          <div className="team-info" style={{ gap: '0.5rem', cursor: 'pointer' }}>
+                            {team.logo ? (
+                              <img src={team.logo} alt={team.name} style={{ width: '24px', height: '24px', borderRadius: '4px', objectFit: 'cover' }} />
+                            ) : (
+                              <div className="team-logo-square" style={{ width: '24px', height: '24px', fontSize: '0.6rem', border: '1px solid rgba(255,255,255,0.2)' }}>{team.initials}</div>
+                            )}
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{team.name}</span>
+                          </div>
+                        </Link>
                       </td>
                       <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '1.2rem' }}>{player.kills}</td>
                       <td style={{ textAlign: 'center', color: 'var(--accent-red)' }}>{player.deaths}</td>

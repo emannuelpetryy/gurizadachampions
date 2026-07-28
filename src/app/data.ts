@@ -1,12 +1,12 @@
 export const teams = [
-  { id: 'venvanse', name: 'Venvanse', initials: 'VEN' },
-  { id: 'desacreditados', name: 'Os Desacreditados', initials: 'ODS' },
-  { id: '5cones', name: '5 Cones', initials: '5CN' },
-  { id: 'jalin', name: 'Jalin Habei', initials: 'JHB' },
-  { id: 'gilsons', name: 'Gilsons E-Sports', initials: 'GLS' },
-  { id: 'maconhaco', name: 'Maconhaço E-Sports', initials: 'MAC' },
-  { id: 'assentamento', name: 'Assent. Celso Furtado', initials: 'ACF' },
-  { id: 'whitelemon', name: 'White Lemon', initials: 'WLM' },
+  { id: 'venvanse', name: 'Venvanse', initials: 'VEN', logo: '/logos/venvanse.jpeg' },
+  { id: 'desacreditados', name: 'Os Desacreditados', initials: 'ODS', logo: '/logos/desacreditados.jpeg' },
+  { id: '5cones', name: '5 Cones', initials: '5CN', logo: '/logos/5cones.jpeg' },
+  { id: 'jalin', name: 'Jalin Habei', initials: 'JHB', logo: '/logos/jalin.jpeg' },
+  { id: 'gilsons', name: 'Gilsons E-Sports', initials: 'GLS', logo: '/logos/gilsons.jpeg' },
+  { id: 'maconhaco', name: 'Maconhaço E-Sports', initials: 'MAC', logo: '/logos/maconhaco.jpeg' },
+  { id: 'assentamento', name: 'Assent. Celso Furtado', initials: 'ACF', logo: '/logos/assentamento.jpeg' },
+  { id: 'whitelemon', name: 'White Lemon', initials: 'WLM', logo: '/logos/whitelemon.jpeg' },
 ];
 
 export const getTeam = (id: string) => teams.find(t => t.id === id) || teams[0];
