@@ -1,48 +1,66 @@
+import { matches, getTeam, players } from './data';
+
 export default function Home() {
+  const nextMatch = matches[0]; // Pegando a primeira partida para destaque
+  const teamA = getTeam(nextMatch.teamA);
+  const teamB = getTeam(nextMatch.teamB);
+
   return (
     <main>
       <section className="hero">
         <div className="container">
-          <h1 className="hero-title">Onde as Lendas Nascem</h1>
+          <h1 className="hero-title">1º Gurizada Champions Cup</h1>
           <p className="hero-subtitle">
-            Acompanhe o maior campeonato de Counter-Strike 2. As melhores equipes,
-            os confrontos mais épicos e a disputa acirrada pelo topo do Ranking VRS.
+            Campeonatinho de CS2 entre amigos, pura resenha e entretenimento.
           </p>
-          <a href="/ranking" className="btn-primary">Ver Ranking Atual</a>
+          <a href="/ranking" className="btn-primary">Ver Ranking e Estatísticas</a>
         </div>
       </section>
 
-      <section className="container">
+      <section className="container" style={{ paddingBottom: '4rem' }}>
         <div className="grid-2">
           <div className="glass-card">
-            <h3 className="card-title">Próxima Partida</h3>
+            <h3 className="card-title">Último Jogo / Destaque</h3>
             <div style={{ marginTop: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.3)', padding: '1rem', borderRadius: '8px' }}>
                 <div style={{ textAlign: 'center', flex: 1 }}>
-                  <div className="team-logo-placeholder" style={{ margin: '0 auto 0.5rem' }}>A</div>
-                  <strong>Team Alpha</strong>
+                  <div className="team-logo-placeholder" style={{ margin: '0 auto 0.5rem', background: '#333' }}>{teamA.logo}</div>
+                  <strong style={{ fontSize: '0.9rem' }}>{teamA.name}</strong>
                 </div>
-                <div style={{ padding: '0 1rem', color: 'var(--primary)', fontWeight: 'bold' }}>VS</div>
+                <div style={{ padding: '0 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <span style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{nextMatch.scoreA} - {nextMatch.scoreB}</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--primary)', textTransform: 'uppercase' }}>{nextMatch.status}</span>
+                </div>
                 <div style={{ textAlign: 'center', flex: 1 }}>
-                  <div className="team-logo-placeholder" style={{ margin: '0 auto 0.5rem' }}>B</div>
-                  <strong>Team Bravo</strong>
+                  <div className="team-logo-placeholder" style={{ margin: '0 auto 0.5rem', background: '#333' }}>{teamB.logo}</div>
+                  <strong style={{ fontSize: '0.9rem' }}>{teamB.name}</strong>
                 </div>
               </div>
-              <p style={{ textAlign: 'center', marginTop: '1rem', color: '#999', fontSize: '0.9rem' }}>Hoje, 20:00 - MD3 (Inferno, Mirage, Nuke)</p>
+              <p style={{ textAlign: 'center', marginTop: '1rem', color: '#999', fontSize: '0.85rem' }}>{nextMatch.date} - Grupo {nextMatch.group}</p>
             </div>
           </div>
 
           <div className="glass-card">
-            <h3 className="card-title">Últimas Notícias</h3>
+            <h3 className="card-title">Top 3 Jogadores (Kills)</h3>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <li style={{ borderBottom: '1px solid var(--card-border)', paddingBottom: '1rem' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>Há 2 horas</span>
-                <p style={{ fontWeight: '500', marginTop: '0.2rem' }}>Atualização no Mappool para as Finais</p>
-              </li>
-              <li>
-                <span style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>Ontem</span>
-                <p style={{ fontWeight: '500', marginTop: '0.2rem' }}>Resumo da Rodada 3: ZeuS brilha na Overpass</p>
-              </li>
+              {players.slice(0, 3).map((player, index) => {
+                const team = getTeam(player.teamId);
+                return (
+                  <li key={player.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--card-border)', paddingBottom: '0.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                      <span style={{ fontWeight: 'bold', color: index === 0 ? '#ffd700' : index === 1 ? '#c0c0c0' : '#cd7f32' }}>#{index + 1}</span>
+                      <div>
+                        <p style={{ fontWeight: 'bold' }}>{player.name}</p>
+                        <p style={{ fontSize: '0.75rem', color: '#999' }}>{team.name}</p>
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontWeight: 'bold', color: 'var(--accent)' }}>{player.kills} K</span>
+                      <p style={{ fontSize: '0.75rem', color: '#999' }}>{player.assists} A</p>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
