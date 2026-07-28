@@ -12,15 +12,36 @@ export default function Home() {
 
   return (
     <main>
-      <section className="hero-section">
-        <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
-          {/* Usando a imagem diretamente em vez de background para não bugar com texto por cima */}
-          <img 
-            src="https://firebasestorage.googleapis.com/v0/b/copafacil-web.appspot.com/o/events%2F-zfhvn%2Finfo.png?alt=media&token=1&m=1784675443770" 
-            alt="Gurizada Champions" 
-            style={{ width: '100%', maxWidth: '800px', borderRadius: '12px', boxShadow: '0 10px 40px rgba(0, 240, 255, 0.2)' }}
-          />
-          <Link href="/ranking" className="btn-primary">VER CLASSIFICAÇÃO COMPLETA</Link>
+      <section className="hero-section" style={{ position: 'relative', width: '100%', minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+        {/* Background Image with Parallax & Blur */}
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundImage: 'url(https://firebasestorage.googleapis.com/v0/b/copafacil-web.appspot.com/o/events%2F-zfhvn%2Finfo.png?alt=media&token=1&m=1784675443770)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(5px) brightness(0.25)', transform: 'scale(1.05)' }}></div>
+        
+        {/* Gradient Overlay */}
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, rgba(5, 10, 20, 0.2) 0%, rgba(5, 10, 20, 1) 100%)' }}></div>
+        
+        {/* Content */}
+        <div className="container" style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', textAlign: 'center', padding: '4rem 1rem' }}>
+          
+          <div style={{ display: 'inline-block', padding: '0.5rem 1.5rem', background: 'rgba(0, 240, 255, 0.1)', border: '1px solid var(--cyan)', borderRadius: '30px', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '1rem', boxShadow: '0 0 20px rgba(0, 240, 255, 0.2)' }}>
+            Temporada 1 - Fase de Grupos
+          </div>
+
+          <h1 style={{ fontSize: 'clamp(3rem, 8vw, 5rem)', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, lineHeight: 1, color: '#fff', textTransform: 'uppercase', margin: 0, textShadow: '0 0 40px rgba(0, 240, 255, 0.5)' }}>
+            GURIZADA <span style={{ color: 'transparent', WebkitTextStroke: '2px var(--cyan)', textShadow: 'none' }}>CHAMPIONS</span>
+          </h1>
+          
+          <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', maxWidth: '600px', lineHeight: 1.6, marginTop: '1rem' }}>
+            Acompanhe as estatísticas, tabela de classificação e o desempenho individual dos melhores jogadores da liga.
+          </p>
+
+          <div style={{ display: 'flex', gap: '1.5rem', marginTop: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <Link href="/ranking" className="btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', background: 'var(--cyan)', color: '#000', borderRadius: '8px', fontWeight: 'bold', textDecoration: 'none', boxShadow: '0 0 20px rgba(0,240,255,0.4)', transition: 'all 0.3s', textTransform: 'uppercase' }}>
+              Ver Classificação
+            </Link>
+            <Link href="/jogadores" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', fontWeight: 'bold', textDecoration: 'none', transition: 'all 0.3s', textTransform: 'uppercase' }} className="btn-secondary match-card-hover">
+              Lista de Jogadores
+            </Link>
+          </div>
         </div>
       </section>
 

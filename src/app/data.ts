@@ -120,20 +120,20 @@ addPlayersToGlobal(matchDetails, '4', 'maconhaco', 'whitelemon');
 
 export const tiers = {
   S: [
-    { name: 'Matheus mankinho', lvl: 20 },
-    { name: 'becker', lvl: 20 },
+    { name: 'Manko', lvl: 20 },
+    { name: 'Becker', lvl: 20 },
     { name: 'Acyd', lvl: 20 },
-    { name: 'dash', lvl: 18 },
-    { name: 'pacal', lvl: 18 },
+    { name: 'Dash', lvl: 18 },
+    { name: 'Pacal', lvl: 18 },
     { name: 'Nil', lvl: 18 },
-    { name: 'leco', lvl: 17, swap: true },
-    { name: 's0rps', lvl: 17 }
+    { name: 'Leco', lvl: 17, swap: true },
+    { name: 'Sorps - Leluia', lvl: 17 }
   ],
   A: [
     { name: 'Felpy', lvl: 18, swap: true },
     { name: 'DaddyMnny', lvl: 17 },
-    { name: 'Fernandinho', lvl: 15 },
-    { name: 'distress', lvl: 15 },
+    { name: 'Fernandin 666', lvl: 15 },
+    { name: 'Pedro - Distress', lvl: 15 },
     { name: 'Gusta', lvl: 14 },
     { name: 'Gilli', lvl: 14 },
     { name: 'Samuka', lvl: 14 },
@@ -141,32 +141,32 @@ export const tiers = {
   ],
   B: [
     { name: 'Alemão', lvl: 13 },
-    { name: 'Tufa', lvl: 12 },
+    { name: 'Tufabala', lvl: 12 },
     { name: 'Hallow', lvl: 12 },
     { name: 'Duzz', lvl: 12 },
-    { name: 'math', lvl: 11 },
-    { name: 'Lucas', lvl: 10 },
-    { name: 'bagua', lvl: 10 },
+    { name: 'Math', lvl: 11 },
+    { name: 'Do Not Remove - Lucas', lvl: 10 },
+    { name: 'Baguá', lvl: 10 },
     { name: 'Manu', lvl: 10 }
   ],
   C: [
-    { name: 'Gio', lvl: 10 },
-    { name: 'Giuseppe Lagos - Henrique', lvl: 10 },
-    { name: 'dark', lvl: 10 },
-    { name: 'ptk', lvl: 9 },
-    { name: 'duzao', lvl: 9 },
+    { name: 'João Marcelo', lvl: 10 },
+    { name: 'Giuseppe Lagos', lvl: 10 },
+    { name: 'Vandeco', lvl: 10 },
+    { name: 'Peteka', lvl: 9 },
+    { name: 'Duzão', lvl: 9 },
     { name: 'PombaLoka', lvl: 9 },
-    { name: 'COBES', lvl: 9 },
-    { name: 'Pedro Giraldi', lvl: 7 }
+    { name: 'Cobes', lvl: 9 },
+    { name: 'Pedro G.', lvl: 7 }
   ],
   D: [
     { name: 'Galaxy', lvl: 7 },
     { name: 'Knight', lvl: 7 },
-    { name: 'Jota Marcinho', lvl: 6 },
-    { name: 'b1tplz', lvl: 6 },
+    { name: 'Dezin', lvl: 6 },
+    { name: 'B1tz', lvl: 6 },
     { name: 'Baronelis', lvl: 6 },
-    { name: 'De', lvl: 5 },
+    { name: 'Tricke', lvl: 5 },
     { name: 'Natan', lvl: 4 },
-    { name: 'gilso tedesko', lvl: 3 }
+    { name: 'Gilson Tedesko', lvl: 3 }
   ]
 };

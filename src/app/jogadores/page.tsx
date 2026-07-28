@@ -1,4 +1,5 @@
 import { tiers } from '../data';
+import Link from 'next/link';
 
 export default function Jogadores() {
   const tierKeys = Object.keys(tiers) as Array<keyof typeof tiers>;
@@ -32,7 +33,9 @@ export default function Jogadores() {
                         </div>
                         <div>
                           <p style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.1rem' }}>
-                            {player.name}
+                            <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit' }} className="match-card-hover">
+                              {player.name}
+                            </Link>
                             {(player as any).swap && <span style={{ marginLeft: '0.5rem', fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 'normal', border: '1px solid var(--primary)', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>🔄 Trocado</span>}
                           </p>
                         </div>
