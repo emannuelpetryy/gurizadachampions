@@ -33,7 +33,7 @@ export default function Jogadores() {
                         <div>
                           <p style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.1rem' }}>
                             {player.name}
-                            {player.swap && <span style={{ marginLeft: '0.5rem', fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 'normal', border: '1px solid var(--primary)', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>🔄 Trocado</span>}
+                            {(player as any).swap && <span style={{ marginLeft: '0.5rem', fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 'normal', border: '1px solid var(--primary)', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>🔄 Trocado</span>}
                           </p>
                         </div>
                       </div>
