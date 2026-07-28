@@ -12,11 +12,33 @@ export const teams = [
 export const getTeam = (id: string) => teams.find(t => t.id === id) || teams[0];
 
 export const matches = [
+  { id: 4, teamA: 'maconhaco', teamB: 'whitelemon', scoreA: 1, scoreB: 0, status: 'Encerrado', date: 'Rodada 1', group: 'B' },
   { id: 1, teamA: 'jalin', teamB: 'desacreditados', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'qui., 23/07/2026 21:00', group: 'A' },
   { id: 2, teamA: '5cones', teamB: 'venvanse', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'qui., 23/07/2026 22:10', group: 'A' },
   { id: 3, teamA: 'assentamento', teamB: 'gilsons', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'seg., 27/07/2026 20:00', group: 'B' },
-  { id: 4, teamA: 'maconhaco', teamB: 'whitelemon', scoreA: 1, scoreB: 0, status: 'Encerrado', date: 'Rodada 1', group: 'B' },
 ];
+
+export const matchDetails: Record<string, any> = {
+  '4': {
+    map: 'Anúbis',
+    roundsA: 13,
+    roundsB: 10,
+    teamA_stats: [
+      { name: 'acyd', kills: 33, deaths: 17, assists: 4 },
+      { name: 'Majaster', kills: 19, deaths: 18, assists: 8 },
+      { name: 'Lucaaas TA LÁ', kills: 15, deaths: 18, assists: 7 },
+      { name: 'EasyMoneyrasta', kills: 10, deaths: 17, assists: 6 },
+      { name: 'LaColombia', kills: 7, deaths: 18, assists: 6 },
+    ],
+    teamB_stats: [
+      { name: 'sk | oliveira7f', kills: 22, deaths: 16, assists: 7 },
+      { name: 'White Lemon | Giuseppe Lagos', kills: 21, deaths: 18, assists: 5 },
+      { name: 'kyousuke666', kills: 20, deaths: 16, assists: 6 },
+      { name: 'Hallow', kills: 14, deaths: 19, assists: 6 },
+      { name: 'b1tplz', kills: 11, deaths: 19, assists: 4 },
+    ]
+  }
+};
 
 export const groupA = [
   { teamId: 'venvanse', p: 1, pj: 1, v: 1, d: 0 },

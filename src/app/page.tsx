@@ -36,24 +36,26 @@ export default function Home() {
                 const teamA = getTeam(match.teamA);
                 const teamB = getTeam(match.teamB);
                 return (
-                  <div key={match.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.4)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px' }}>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                      <div className="team-logo-square" style={{ width: '36px', height: '36px', fontSize: '0.8rem' }}>{teamA.initials}</div>
-                      <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)' }}>{teamA.name}</strong>
-                    </div>
-                    
-                    <div style={{ padding: '0 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '100px' }}>
-                      <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-main)', fontFamily: 'var(--font-rajdhani)' }}>
-                        {match.scoreA} <span className="text-cyan">-</span> {match.scoreB}
-                      </span>
-                      <span style={{ fontSize: '0.65rem', color: 'var(--accent-red)', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '1px' }}>{match.status}</span>
-                    </div>
+                  <Link href={`/partida/${match.id}`} key={match.id} style={{ textDecoration: 'none' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.4)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', transition: 'all 0.2s', cursor: 'pointer' }} className="match-card-hover">
+                      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <div className="team-logo-square" style={{ width: '36px', height: '36px', fontSize: '0.8rem' }}>{teamA.initials}</div>
+                        <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', color: '#fff' }}>{teamA.name}</strong>
+                      </div>
+                      
+                      <div style={{ padding: '0 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '100px' }}>
+                        <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-main)', fontFamily: 'var(--font-rajdhani)' }}>
+                          {match.scoreA} <span className="text-cyan">-</span> {match.scoreB}
+                        </span>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--accent-red)', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '1px' }}>{match.status}</span>
+                      </div>
 
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '1rem' }}>
-                      <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', textAlign: 'right' }}>{teamB.name}</strong>
-                      <div className="team-logo-square" style={{ width: '36px', height: '36px', fontSize: '0.8rem' }}>{teamB.initials}</div>
+                      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '1rem' }}>
+                        <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', textAlign: 'right', color: '#fff' }}>{teamB.name}</strong>
+                        <div className="team-logo-square" style={{ width: '36px', height: '36px', fontSize: '0.8rem' }}>{teamB.initials}</div>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>
