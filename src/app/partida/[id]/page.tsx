@@ -124,6 +124,58 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
 
+        {/* MVP Card */}
+        {(() => {
+          const allPlayers = [...details.teamA_stats, ...details.teamB_stats];
+          if (allPlayers.length > 0) {
+            const mvp = allPlayers.reduce((prev, current) => {
+              const prevKD = prev.kills / (prev.deaths || 1);
+              const currKD = current.kills / (current.deaths || 1);
+              return (prevKD > currKD) ? prev : current;
+            });
+            const mvpTeamId = details.teamA_stats.includes(mvp) ? match.teamA : match.teamB;
+            const mvpTeamObj = getTeam(mvpTeamId);
+            const mvpKD = (mvp.kills / (mvp.deaths || 1)).toFixed(2);
+
+            return (
+              <div className="glass-card" style={{ padding: '0', marginBottom: '3rem', overflow: 'hidden', position: 'relative', border: '1px solid var(--gold)', boxShadow: '0 0 30px rgba(255, 215, 0, 0.15)' }}>
+                <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: 'radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%)', animation: 'spin 10s linear infinite' }}></div>
+                <div style={{ position: 'relative', zIndex: 1, padding: '2rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '2rem', background: 'linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(20,20,20,0.9) 100%)' }}>
+                  
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                    <div style={{ background: 'var(--gold)', padding: '1rem', borderRadius: '50%', color: '#000', boxShadow: '0 0 20px rgba(255,215,0,0.5)' }}>
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"></path></svg>
+                    </div>
+                    <div>
+                      <h4 style={{ color: 'var(--gold)', margin: 0, fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase' }}>MVP da Partida</h4>
+                      <Link href={`/jogador/${encodeURIComponent(mvp.name)}`} style={{ textDecoration: 'none' }}>
+                        <h2 style={{ color: '#fff', fontSize: '2.5rem', fontFamily: 'var(--font-rajdhani)', margin: 0, textShadow: '0 0 10px rgba(255,255,255,0.3)' }} className="match-card-hover">{mvp.name}</h2>
+                      </Link>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                        {mvpTeamObj.logo ? <img src={mvpTeamObj.logo} alt={mvpTeamObj.name} style={{ width: '20px', height: '20px', borderRadius: '4px' }} /> : null}
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{mvpTeamObj.name}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                    <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,215,0,0.2)', padding: '1rem 1.5rem', borderRadius: '12px', textAlign: 'center' }}>
+                      <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Desempenho</span>
+                      <strong style={{ fontSize: '1.5rem', color: '#fff' }}>{mvp.kills}K / {mvp.deaths}D / {mvp.assists}A</strong>
+                    </div>
+                    <div style={{ background: 'rgba(255,215,0,0.1)', border: '1px solid rgba(255,215,0,0.3)', padding: '1rem 1.5rem', borderRadius: '12px', textAlign: 'center' }}>
+                      <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--gold)' }}>K/D Ratio</span>
+                      <strong style={{ fontSize: '2rem', color: 'var(--gold)', fontFamily: 'var(--font-rajdhani)', lineHeight: 1 }}>{mvpKD}</strong>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            );
+          }
+          return null;
+        })()}
+
         {/* Resumo */}
         <h3 className="hero-title" style={{ fontSize: '2.2rem', marginTop: '3rem', marginBottom: '1.5rem', textShadow: 'none', textAlign: 'left' }}>RESUMO</h3>
         <div className="glass-card" style={{ padding: '2rem', marginBottom: '3rem' }}>

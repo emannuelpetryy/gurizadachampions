@@ -1,6 +1,7 @@
 import { players, getTeam, matches, matchDetails, tiers } from '../../data';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import PlayerChart from './PlayerChart';
 
 export default async function JogadorPage({ params }: { params: Promise<{ name: string }> }) {
   const resolvedParams = await params;
@@ -115,6 +116,15 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
             </div>
 
           </div>
+          
+          {/* Gráfico de Evolução de K/D */}
+          {playerMatches.length > 0 && (
+            <PlayerChart data={playerMatches.map((pm, i) => ({ 
+              name: `vs ${pm.enemyObj.name}`, 
+              kd: parseFloat(pm.matchKd) 
+            }))} />
+          )}
+
         </div>
 
         {/* Histórico de Partidas */}
