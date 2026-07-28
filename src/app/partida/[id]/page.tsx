@@ -26,11 +26,11 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   }
 
   // Cálculos de Resumo
-  const totalKillsA = details.teamA_stats.reduce((acc, p) => acc + p.kills, 0);
-  const totalDeathsA = details.teamA_stats.reduce((acc, p) => acc + p.deaths, 0);
+  const totalKillsA = details.teamA_stats.reduce((acc: number, p: any) => acc + p.kills, 0);
+  const totalDeathsA = details.teamA_stats.reduce((acc: number, p: any) => acc + p.deaths, 0);
   
-  const totalKillsB = details.teamB_stats.reduce((acc, p) => acc + p.kills, 0);
-  const totalDeathsB = details.teamB_stats.reduce((acc, p) => acc + p.deaths, 0);
+  const totalKillsB = details.teamB_stats.reduce((acc: number, p: any) => acc + p.kills, 0);
+  const totalDeathsB = details.teamB_stats.reduce((acc: number, p: any) => acc + p.deaths, 0);
 
   const renderPlayerCard = (player: any) => {
     const kdaRaw = (player.kills + player.assists) / (player.deaths || 1);

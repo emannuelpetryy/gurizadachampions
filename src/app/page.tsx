@@ -1,5 +1,6 @@
-import { getTeam, matches, players } from './data';
+import { getTeam, matches, players, teams } from './data';
 import Link from 'next/link';
+import Comments from '../components/Comments';
 
 export default function Home() {
   // Ordenar jogadores pelo KDA: (K + A) / D
@@ -148,6 +149,89 @@ export default function Home() {
           </div>
           
         </div>
+      </section>
+
+      {/* Seção Equipes */}
+      <section className="container" style={{ padding: '0 2rem 4rem' }}>
+        <h3 className="hero-title" style={{ fontSize: '2rem', marginBottom: '1.5rem', textShadow: 'none', textAlign: 'left' }}>EQUIPES</h3>
+        <div className="glass-card" style={{ padding: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '2rem', justifyItems: 'center' }}>
+            {teams.map(team => (
+              <Link href={`/time/${team.id}`} key={team.id} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }} className="match-card-hover">
+                {team.logo ? (
+                  <img src={team.logo} alt={team.name} style={{ width: '80px', height: '80px', borderRadius: '12px', objectFit: 'cover', boxShadow: '0 4px 15px rgba(0,240,255,0.2)' }} />
+                ) : (
+                  <div className="team-logo-square" style={{ width: '80px', height: '80px', fontSize: '1.5rem', borderRadius: '12px' }}>{team.initials}</div>
+                )}
+                <span style={{ color: '#fff', fontSize: '0.9rem', textAlign: 'center', fontWeight: 'bold' }}>{team.name}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Seção Premiações */}
+      <section className="container" style={{ padding: '0 2rem 4rem' }}>
+        <h3 className="hero-title" style={{ fontSize: '2rem', marginBottom: '1.5rem', textShadow: 'none', textAlign: 'left' }}>PREMIAÇÕES</h3>
+        <div className="glass-card" style={{ padding: '3rem 2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
+              <span style={{ background: '#FFD700', color: '#000', fontWeight: 'bold', padding: '0.3rem 1.5rem', borderRadius: '20px', fontSize: '0.9rem' }}>Campeão</span>
+              <div style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '80px', height: '80px', background: 'rgba(255, 215, 0, 0.2)', filter: 'blur(20px)', borderRadius: '50%' }}></div>
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="#FFD700" stroke="#B8860B" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))' }}>
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                  <path d="M4 22h16"></path>
+                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                  <text x="12" y="7" textAnchor="middle" fill="#000" fontSize="4" fontWeight="bold" stroke="none">1</text>
+                </svg>
+              </div>
+              <span style={{ color: 'var(--text-muted)', fontSize: '1.2rem' }}>R$ <strong style={{ color: '#fff', fontSize: '1.8rem', fontFamily: 'var(--font-rajdhani)' }}>250,00</strong></span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
+              <span style={{ background: '#C0C0C0', color: '#000', fontWeight: 'bold', padding: '0.3rem 1.5rem', borderRadius: '20px', fontSize: '0.9rem' }}>2º Colocado</span>
+              <div style={{ position: 'relative' }}>
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="#C0C0C0" stroke="#808080" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))' }}>
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                  <path d="M4 22h16"></path>
+                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                  <text x="12" y="7" textAnchor="middle" fill="#000" fontSize="4" fontWeight="bold" stroke="none">2</text>
+                </svg>
+              </div>
+              <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>R$ <strong style={{ color: '#fff', fontSize: '1.5rem', fontFamily: 'var(--font-rajdhani)' }}>100,00</strong></span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
+              <span style={{ background: '#CD7F32', color: '#000', fontWeight: 'bold', padding: '0.3rem 1.5rem', borderRadius: '20px', fontSize: '0.9rem' }}>3º Colocado</span>
+              <div style={{ position: 'relative' }}>
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="#CD7F32" stroke="#8B4513" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))' }}>
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                  <path d="M4 22h16"></path>
+                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                  <text x="12" y="7" textAnchor="middle" fill="#000" fontSize="4" fontWeight="bold" stroke="none">3</text>
+                </svg>
+              </div>
+              <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>R$ <strong style={{ color: '#fff', fontSize: '1.5rem', fontFamily: 'var(--font-rajdhani)' }}>50,00</strong></span>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Seção Mural de Resenha (Comentários) */}
+      <section className="container" style={{ padding: '0 2rem 6rem' }}>
+        <Comments />
       </section>
     </main>
   );
