@@ -1,6 +1,7 @@
 import { getTeam, players, matches, matchDetails } from '../../data';
 import Link from 'next/link';
 import PlayerAvatar from '../../jogador/[name]/PlayerAvatar';
+import TeamLogo from '../../components/TeamLogo';
 import { notFound } from 'next/navigation';
 
 export default async function TeamPage({ params }: { params: Promise<{ id: string }> }) {
@@ -21,11 +22,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
           <div style={{ height: '200px', background: 'url(https://firebasestorage.googleapis.com/v0/b/copafacil-web.appspot.com/o/events%2F-zfhvn%2Finfo.png?alt=media&token=1&m=1784675443770)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(3px) brightness(0.3)' }}></div>
           
           <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', gap: '2rem', padding: '2rem' }}>
-            {team.logo ? (
-              <img src={team.logo} alt={team.name} style={{ width: '120px', height: '120px', borderRadius: '12px', objectFit: 'cover', border: '2px solid var(--cyan)', boxShadow: '0 0 20px rgba(0,240,255,0.3)' }} />
-            ) : (
-              <div className="team-logo-square" style={{ width: '120px', height: '120px', fontSize: '2.5rem', borderRadius: '12px' }}>{team.initials}</div>
-            )}
+            <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={120} borderRadius="12px" />
             <div>
               <h1 style={{ fontSize: '3rem', fontFamily: 'var(--font-rajdhani)', color: '#fff', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>{team.name}</h1>
               <span style={{ background: 'var(--cyan)', color: '#000', padding: '0.2rem 1rem', borderRadius: '20px', fontWeight: 'bold' }}>GRUPO DA EQUIPE</span>

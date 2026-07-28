@@ -117,12 +117,15 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
               let hasHardCarry = false;
               let hasDifficilCarregar = false;
 
+              let hasMonstroDoFrag = false;
+
               Object.values(matchDetails).forEach((det: any) => {
                 const allStats = [...det.teamA_stats, ...det.teamB_stats];
                 const pStat = allStats.find((s: any) => s.name.toLowerCase() === decodedName.toLowerCase());
                 if (pStat) {
                   const pKd = pStat.kills / (pStat.deaths || 1);
                   if (pKd >= 2.0) hasHardCarry = true;
+                  if (pStat.kills >= 30) hasMonstroDoFrag = true;
 
                   let bestKd = -1;
                   let mvpPlayer = null;
@@ -151,13 +154,24 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
               });
 
               const maxAssists = Math.max(...players.map(p => p.assists));
-              const isReiDaAssist = player.assists === maxAssists && player.assists > 0;
+              const isReiDaResenha = player.assists === maxAssists && player.assists > 0;
+
+              let isSwapped = false;
+              for (const tierPlayers of Object.values(tiers)) {
+                const found = tierPlayers.find(tp => (tp.name.toLowerCase().includes(decodedName.toLowerCase()) || decodedName.toLowerCase().includes(tp.name.toLowerCase())) && (tp as any).swap);
+                if (found) {
+                  isSwapped = true;
+                  break;
+                }
+              }
 
               const badgesList = [];
-              if (mvpCount > 0) badgesList.push({ title: 'MVP da Partida', desc: `MVP ${mvpCount}x no campeonato`, icon: '🏆', color: 'var(--gold)' });
-              if (hasHardCarry) badgesList.push({ title: 'Hard Carry', desc: 'Teve partida com K/D > 2.0', icon: '🔥', color: 'var(--cyan)' });
-              if (isReiDaAssist) badgesList.push({ title: 'Rei da Assist', desc: 'Maior número de assistências da liga', icon: '👑', color: '#ab47bc' });
-              if (hasDifficilCarregar) badgesList.push({ title: 'Difícil Carregar', desc: 'Teve o menor K/D em uma partida', icon: '⚓', color: 'var(--accent-red)' });
+              if (mvpCount > 0) badgesList.push({ title: 'MVP da Partida', desc: `Melhor jogador da partida ${mvpCount}x no campeonato`, icon: '🏆', color: 'var(--gold)' });
+              if (hasHardCarry) badgesList.push({ title: 'Hard Carry', desc: 'Teve desempenho monstruoso com K/D > 2.0 em uma partida', icon: '🔥', color: 'var(--cyan)' });
+              if (hasMonstroDoFrag) badgesList.push({ title: 'Monstro do Frag', desc: 'Fez 30 ou mais Kills em uma única partida', icon: '🎯', color: '#ff9800' });
+              if (isReiDaResenha) badgesList.push({ title: 'Rei da Resenha', desc: 'Dono do maior número de assistências de toda a liga', icon: '👑', color: '#ab47bc' });
+              if (isSwapped) badgesList.push({ title: 'Trocado', desc: 'Jogador envolvido em troca de equipe durante a liga', icon: '🔄', color: '#00e676' });
+              if (hasDifficilCarregar) badgesList.push({ title: 'Difícil Carregar', desc: 'Teve o menor K/D em uma partida do campeonato', icon: '⚓', color: 'var(--accent-red)' });
 
               if (badgesList.length === 0) return null;
 
@@ -166,7 +180,7 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
                   <h4 style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1rem', textAlign: 'center' }}>MEDALHAS E CONQUISTAS</h4>
                   <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                     {badgesList.map((b, idx) => (
-                      <div key={idx} style={{ background: 'rgba(0,0,0,0.4)', border: `1px solid ${b.color}`, padding: '0.8rem 1.2rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '0.8rem', boxShadow: `0 0 10px ${b.color}20` }}>
+                      <div key={idx} title={`${b.title}: ${b.desc}`} style={{ background: 'rgba(0,0,0,0.4)', border: `1px solid ${b.color}`, padding: '0.8rem 1.2rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '0.8rem', boxShadow: `0 0 10px ${b.color}20`, cursor: 'help' }}>
                         <span style={{ fontSize: '1.5rem' }}>{b.icon}</span>
                         <div>
                           <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>{b.title}</strong>

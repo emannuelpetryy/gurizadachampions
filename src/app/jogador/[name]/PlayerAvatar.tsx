@@ -2,37 +2,129 @@
 
 import { useState } from 'react';
 
-export default function PlayerAvatar({ teamName, playerName, badgeColor, size = 120 }: { teamName: string, playerName: string, badgeColor: string, size?: number }) {
+// Mapa de jogadores que já possuem foto cadastrada em public/Fotos Jogadores
+const KNOWN_PLAYER_PHOTOS: Record<string, string> = {
+  'Manu': '/Fotos Jogadores/Venvanse/Manu.jpg',
+  'Pacal': '/Fotos Jogadores/Venvanse/Pacal.jpeg',
+  'Samuka': '/Fotos Jogadores/Venvanse/Samuka.jpg',
+  'Galaxy': '/Fotos Jogadores/Os Desacreditados/Galaxy.jpg',
+};
+
+export default function PlayerAvatar({ 
+  teamName, 
+  playerName, 
+  badgeColor, 
+  size = 120 
+}: { 
+  teamName: string, 
+  playerName: string, 
+  badgeColor: string, 
+  size?: number 
+}) {
   const [imgError, setImgError] = useState(false);
-  const extensions = ['.jpg', '.jpeg', '.png', '.webp'];
-  const [extIndex, setExtIndex] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Normalizar nome do time
+  const normalizedTeam = (teamName || '')
+    .replace('Maconhaço', 'Maconhaco')
+    .trim();
+
+  // Obter as iniciais do jogador para o avatar estiloso
+  const cleanName = (playerName || '').replace(/[^a-zA-Z0-9 ]/g, '').trim();
+  const nameParts = cleanName.split(' ').filter(Boolean);
+  const initials = nameParts.length > 0
+    ? nameParts.map(n => n[0]).join('').substring(0, 2).toUpperCase()
+    : 'CS';
+
+  // Verificar se o jogador possui foto conhecida
+  const knownPhoto = KNOWN_PLAYER_PHOTOS[playerName];
+  const currentImgUrl = knownPhoto || encodeURI(`/Fotos Jogadores/${normalizedTeam}/${playerName}.jpg`);
+
+  // Avatar com iniciais elegantes para quando não tem foto
+  const InitialsPlaceholder = (
+    <div 
+      style={{ 
+        width: size, 
+        height: size, 
+        borderRadius: '50%', 
+        border: `2px solid ${badgeColor}`, 
+        background: `radial-gradient(circle at 30% 30%, ${badgeColor}40, rgba(10, 15, 30, 0.95))`,
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        boxShadow: `0 0 15px ${badgeColor}30`,
+        position: 'relative',
+        flexShrink: 0
+      }}
+    >
+      <span style={{ 
+        fontFamily: 'var(--font-rajdhani)', 
+        fontWeight: 'bold', 
+        fontSize: `${size * 0.38}px`, 
+        color: '#fff', 
+        textShadow: `0 0 8px ${badgeColor}`,
+        letterSpacing: '1px',
+        lineHeight: 1
+      }}>
+        {initials}
+      </span>
+    </div>
+  );
 
   if (imgError) {
-    return (
-      <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: `${size / 5}px`, borderRadius: '50%', border: `2px solid ${badgeColor}`, display: 'flex', alignItems: 'center', justifyContent: 'center', width: size, height: size }}>
-        <svg width={size / 2} height={size / 2} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: badgeColor }}>
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-      </div>
-    );
+    return InitialsPlaceholder;
   }
 
-  const currentImgUrl = `/Fotos Jogadores/${teamName}/${playerName}${extensions[extIndex]}`;
-
   return (
-    <div style={{ width: size, height: size, borderRadius: '50%', border: `3px solid ${badgeColor}`, overflow: 'hidden', boxShadow: `0 0 20px ${badgeColor}40`, position: 'relative' }}>
+    <div 
+      style={{ 
+        width: size, 
+        height: size, 
+        borderRadius: '50%', 
+        border: `2px solid ${badgeColor}`, 
+        overflow: 'hidden', 
+        boxShadow: `0 0 15px ${badgeColor}40`, 
+        position: 'relative',
+        flexShrink: 0,
+        background: `radial-gradient(circle at 30% 30%, ${badgeColor}40, rgba(10, 15, 30, 0.95))`
+      }}
+    >
+      {/* Exibe as iniciais de fundo instantaneamente enquanto a foto tenta carregar */}
+      {!isLoaded && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: 'var(--font-rajdhani)',
+          fontWeight: 'bold',
+          fontSize: `${size * 0.38}px`,
+          color: '#fff',
+          textShadow: `0 0 8px ${badgeColor}`,
+          letterSpacing: '1px'
+        }}>
+          {initials}
+        </div>
+      )}
+
       <img 
         src={currentImgUrl} 
-        alt={playerName} 
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        onError={() => {
-          if (extIndex < extensions.length - 1) {
-            setExtIndex(extIndex + 1);
-          } else {
-            setImgError(true);
-          }
+        alt="" 
+        style={{ 
+          width: '100%', 
+          height: '100%', 
+          objectFit: 'cover',
+          opacity: isLoaded ? 1 : 0,
+          transition: 'opacity 0.2s ease-in-out',
+          position: 'relative',
+          zIndex: 1
         }}
+        onLoad={() => setIsLoaded(true)}
+        onError={() => setImgError(true)}
       />
     </div>
   );

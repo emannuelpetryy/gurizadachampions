@@ -2,6 +2,7 @@ import { getTeam, matches, matchDetails } from '../../data';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PlayerAvatar from '../../jogador/[name]/PlayerAvatar';
+import TeamLogo from '../../components/TeamLogo';
 
 export default async function MatchPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
@@ -47,18 +48,58 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
     else if (kdaRaw >= 0.7) badgeColor = '#f57c00'; // Laranja
     else badgeColor = 'var(--accent-red)'; // Vermelho
 
+    const allPlayersInMatch = [...details.teamA_stats, ...details.teamB_stats];
+    let maxKd = -1;
+    let mvpName = '';
+    let minKd = 999;
+    let worstName = '';
+    let maxAssistsInMatch = -1;
+    let reiResenhaName = '';
+
+    allPlayersInMatch.forEach((p: any) => {
+      const pKd = p.kills / (p.deaths || 1);
+      if (pKd > maxKd) {
+        maxKd = pKd;
+        mvpName = p.name;
+      }
+      if (pKd < minKd) {
+        minKd = pKd;
+        worstName = p.name;
+      }
+      if (p.assists > maxAssistsInMatch) {
+        maxAssistsInMatch = p.assists;
+        reiResenhaName = p.name;
+      }
+    });
+
+    const kprVal = totalRounds > 0 ? player.kills / totalRounds : 0;
+
+    const matchBadges = [];
+    if (player.name === mvpName) matchBadges.push({ title: 'MVP', desc: 'Melhor jogador da partida (Maior K/D)', icon: '🏆', color: 'var(--gold)' });
+    if (kdaRaw >= 2.0) matchBadges.push({ title: 'Hard Carry', desc: 'Teve desempenho destruidor com K/D >= 2.0', icon: '🔥', color: 'var(--cyan)' });
+    if (player.kills >= 30) matchBadges.push({ title: 'Monstro do Frag', desc: 'Eliminou 30 ou mais inimigos na partida', icon: '🎯', color: '#ff9800' });
+    if (kprVal >= 1.0) matchBadges.push({ title: 'Maestro do Round', desc: 'Média alta de 1+ kill por round jogado', icon: '⚡', color: '#e91e63' });
+    if (player.assists >= 10) matchBadges.push({ title: 'Assistente de Luxo', desc: 'Garantiu 10+ assistências no jogo', icon: '🤝', color: '#4caf50' });
+    if (player.name === reiResenhaName && player.assists > 0) matchBadges.push({ title: 'Rei da Resenha', desc: 'Jogador com mais assistências nesta partida', icon: '👑', color: '#ab47bc' });
+    if (player.name === worstName) matchBadges.push({ title: 'Difícil Carregar', desc: 'Jogador com menor K/D na partida', icon: '⚓', color: 'var(--accent-red)' });
+
     return (
       <div key={player.name} className="glass-card match-card-hover" style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '1rem', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '0.8rem' }}>
         <PlayerAvatar teamName={teamName} playerName={player.name} badgeColor={badgeColor} size={40} />
         <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem', flexWrap: 'wrap' }}>
               <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit' }} className="match-card-hover">
                 <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
               </Link>
               <span style={{ background: badgeColor, color: '#fff', fontSize: '0.75rem', fontWeight: 'bold', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>
                 KD {kda}
               </span>
+              {matchBadges.map((b, idx) => (
+                <span key={idx} title={`${b.title}: ${b.desc}`} style={{ background: 'rgba(0,0,0,0.5)', border: `1px solid ${b.color}`, color: b.color, fontSize: '0.7rem', fontWeight: 'bold', padding: '0.1rem 0.4rem', borderRadius: '4px', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', cursor: 'help' }}>
+                  <span>{b.icon}</span> {b.title}
+                </span>
+              ))}
             </div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
               <strong>K/D/A:</strong> {player.kills}/{player.deaths}/{player.assists}
@@ -104,7 +145,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
               
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                 <Link href={`/time/${teamA.id}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                  {teamA.logo ? <img src={teamA.logo} alt={teamA.name} style={{ width: '100px', height: '100px', borderRadius: '16px', objectFit: 'cover', boxShadow: '0 0 20px rgba(0,240,255,0.2)' }} /> : <div className="team-logo-square" style={{ width: '100px', height: '100px', fontSize: '2.5rem', boxShadow: '0 0 20px rgba(0,240,255,0.2)' }}>{teamA.initials}</div>}
+                  <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={100} borderRadius="16px" />
                   <h2 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-rajdhani)', color: '#fff', textAlign: 'center' }}>{teamA.name}</h2>
                 </Link>
               </div>
@@ -123,7 +164,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                 <Link href={`/time/${teamB.id}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                  {teamB.logo ? <img src={teamB.logo} alt={teamB.name} style={{ width: '100px', height: '100px', borderRadius: '16px', objectFit: 'cover', boxShadow: '0 0 20px rgba(0,240,255,0.2)' }} /> : <div className="team-logo-square" style={{ width: '100px', height: '100px', fontSize: '2.5rem', boxShadow: '0 0 20px rgba(0,240,255,0.2)' }}>{teamB.initials}</div>}
+                  <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={100} borderRadius="16px" />
                   <h2 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-rajdhani)', color: '#fff', textAlign: 'center' }}>{teamB.name}</h2>
                 </Link>
               </div>
@@ -141,7 +182,8 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
               const currKD = current.kills / (current.deaths || 1);
               return (prevKD > currKD) ? prev : current;
             });
-            const mvpTeamId = details.teamA_stats.includes(mvp) ? match.teamA : match.teamB;
+            const isMvpInTeamA = details.teamA_stats.some((p: any) => p.name === mvp.name);
+            const mvpTeamId = isMvpInTeamA ? match.teamA : match.teamB;
             const mvpTeamObj = getTeam(mvpTeamId);
             const mvpKD = (mvp.kills / (mvp.deaths || 1)).toFixed(2);
 
@@ -163,7 +205,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                         <h2 style={{ color: '#fff', fontSize: '2.5rem', fontFamily: 'var(--font-rajdhani)', margin: 0, textShadow: '0 0 10px rgba(255,255,255,0.3)' }} className="match-card-hover">{mvp.name}</h2>
                       </Link>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-                        {mvpTeamObj.logo ? <img src={mvpTeamObj.logo} alt={mvpTeamObj.name} style={{ width: '20px', height: '20px', borderRadius: '4px' }} /> : null}
+                        <TeamLogo logo={mvpTeamObj.logo} name={mvpTeamObj.name} initials={mvpTeamObj.initials} size={20} borderRadius="4px" />
                         <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{mvpTeamObj.name}</span>
                       </div>
                     </div>
@@ -227,22 +269,33 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         </div>
 
         {/* VOD / Transmissão */}
-        {details.vodUrl && (
-          <div style={{ marginTop: '3rem', marginBottom: '1rem' }}>
-            <h3 className="hero-title" style={{ fontSize: '2.2rem', marginBottom: '1.5rem', textShadow: 'none', textAlign: 'left' }}>TRANSMISSÃO / VOD</h3>
-            <div className="glass-card" style={{ padding: '0.8rem', overflow: 'hidden', borderRadius: '16px', border: '1px solid rgba(0,240,255,0.2)', boxShadow: '0 0 20px rgba(0,240,255,0.1)' }}>
-              <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, borderRadius: '12px', overflow: 'hidden' }}>
-                <iframe
-                  src={details.vodUrl}
-                  title="Transmissão da Partida"
-                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
+        {details.vodUrl && (() => {
+          let embedSrc = details.vodUrl;
+          if (details.vodUrl.includes('twitch.tv/videos/')) {
+            const videoId = details.vodUrl.split('twitch.tv/videos/')[1]?.split('?')[0];
+            embedSrc = `https://player.twitch.tv/?video=${videoId}&parent=gurizadachampions.vercel.app&parent=localhost&autoplay=false`;
+          } else if (details.vodUrl.includes('youtube.com/watch?v=')) {
+            const videoId = details.vodUrl.split('watch?v=')[1]?.split('&')[0];
+            embedSrc = `https://www.youtube.com/embed/${videoId}`;
+          }
+
+          return (
+            <div style={{ marginTop: '3rem', marginBottom: '1rem' }}>
+              <h3 className="hero-title" style={{ fontSize: '2.2rem', marginBottom: '1.5rem', textShadow: 'none', textAlign: 'left' }}>TRANSMISSÃO / VOD</h3>
+              <div className="glass-card" style={{ padding: '0.8rem', overflow: 'hidden', borderRadius: '16px', border: '1px solid rgba(0,240,255,0.2)', boxShadow: '0 0 20px rgba(0,240,255,0.1)' }}>
+                <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, borderRadius: '12px', overflow: 'hidden' }}>
+                  <iframe
+                    src={embedSrc}
+                    title="Transmissão da Partida"
+                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Escalação */}
         <h3 className="hero-title" style={{ fontSize: '2.2rem', marginTop: '3rem', marginBottom: '1.5rem', textShadow: 'none', textAlign: 'left' }}>ESCALAÇÃO</h3>
@@ -251,7 +304,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           {/* Team A Roster */}
           <div>
             <h4 style={{ color: '#fff', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.3rem' }}>
-              {teamA.logo ? <img src={teamA.logo} alt={teamA.name} style={{ width: '30px', height: '30px', borderRadius: '6px', objectFit: 'cover' }} /> : <div className="team-logo-square" style={{ width: '30px', height: '30px', fontSize: '0.8rem' }}>{teamA.initials}</div>}
+              <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={30} borderRadius="6px" />
               {teamA.name}
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -262,7 +315,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           {/* Team B Roster */}
           <div>
             <h4 style={{ color: '#fff', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.3rem' }}>
-              {teamB.logo ? <img src={teamB.logo} alt={teamB.name} style={{ width: '30px', height: '30px', borderRadius: '6px', objectFit: 'cover' }} /> : <div className="team-logo-square" style={{ width: '30px', height: '30px', fontSize: '0.8rem' }}>{teamB.initials}</div>}
+              <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={30} borderRadius="6px" />
               {teamB.name}
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>

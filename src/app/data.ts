@@ -20,25 +20,43 @@ export const matches = [
 
 export const upcomingMatches = [
   {
-    id: 101,
-    teamA: 'venvanse',
-    teamB: 'desacreditados',
-    date: '2026-07-30T21:00:00-03:00',
-    group: 'Grupo A'
+    id: 201,
+    teamA: 'gilsons',
+    teamB: 'whitelemon',
+    date: '2026-07-28T21:00:00-03:00',
+    dateDisplay: 'Terça-Feira, 28/07 às 21:00',
+    group: 'Rodada 2 - Grupo B'
   },
   {
-    id: 102,
-    teamA: 'gilsons',
+    id: 202,
+    teamA: 'assentamento',
     teamB: 'maconhaco',
-    date: '2026-07-31T20:00:00-03:00',
-    group: 'Grupo B'
+    date: '2026-07-29T21:30:00-03:00',
+    dateDisplay: 'Quarta-Feira, 29/07 às 21:30',
+    group: 'Rodada 2 - Grupo B'
+  },
+  {
+    id: 203,
+    teamA: 'desacreditados',
+    teamB: '5cones',
+    date: 'A definir',
+    dateDisplay: 'Sexta-Feira, 31/07 - Horário a Definir',
+    group: 'Rodada 2 - Grupo A'
+  },
+  {
+    id: 204,
+    teamA: 'venvanse',
+    teamB: 'jalin',
+    date: 'A definir',
+    dateDisplay: 'Domingo, 02/08 - Horário a Definir',
+    group: 'Rodada 2 - Grupo A'
   }
 ];
 
 export const matchDetails: Record<string, any> = {
   '1': {
     map: 'Mirage', roundsA: 0, roundsB: 1, teamARounds: 9, teamBRounds: 13,
-    vodUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    vodUrl: 'https://www.twitch.tv/videos/2827426394',
     teamA_stats: [
       { name: 'Dash', kills: 15, deaths: 15, assists: 2 },
       { name: 'Gilli', kills: 15, deaths: 17, assists: 8 },
@@ -56,7 +74,7 @@ export const matchDetails: Record<string, any> = {
   },
   '2': {
     map: 'Inferno', roundsA: 0, roundsB: 1, teamARounds: 16, teamBRounds: 19,
-    vodUrl: '',
+    vodUrl: 'https://www.twitch.tv/videos/2830666292',
     teamA_stats: [
       { name: 'Nil', kills: 39, deaths: 31, assists: 9 },
       { name: 'Leco', kills: 48, deaths: 29, assists: 11 },
@@ -74,7 +92,7 @@ export const matchDetails: Record<string, any> = {
   },
   '3': {
     map: 'Nuke', roundsA: 0, roundsB: 1, teamARounds: 11, teamBRounds: 13,
-    vodUrl: '',
+    vodUrl: 'https://www.twitch.tv/videos/2827426394',
     teamA_stats: [
       { name: 'ChapaChaplin', kills: 15, deaths: 20, assists: 8 },
       { name: 'Bagua', kills: 21, deaths: 21, assists: 6 },
@@ -92,7 +110,7 @@ export const matchDetails: Record<string, any> = {
   },
   '4': {
     map: 'Anúbis', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 10,
-    vodUrl: '',
+    vodUrl: 'https://www.twitch.tv/videos/2830666292',
     teamA_stats: [
       { name: 'Gusta', kills: 19, deaths: 18, assists: 8 },
       { name: 'Acyd', kills: 33, deaths: 17, assists: 4 },

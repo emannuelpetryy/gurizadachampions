@@ -1,6 +1,7 @@
 import { groupA, groupB, getTeam, players } from '../data';
 import Link from 'next/link';
 import PlayerAvatar from '../jogador/[name]/PlayerAvatar';
+import TeamLogo from '../components/TeamLogo';
 
 export default function Ranking() {
   const renderGroupTable = (groupName: string, groupData: any[]) => (
@@ -31,11 +32,7 @@ export default function Ranking() {
                   <td>
                     <Link href={`/time/${team.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                       <div className="team-info" style={{ cursor: 'pointer' }}>
-                        {team.logo ? (
-                          <img src={team.logo} alt={team.name} style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} />
-                        ) : (
-                          <div className="team-logo-square" style={{ width: '40px', height: '40px', fontSize: '0.9rem' }}>{team.initials}</div>
-                        )}
+                        <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={40} borderRadius="8px" />
                         <strong style={{ fontSize: '1.1rem' }}>{team.name}</strong>
                       </div>
                     </Link>
@@ -99,11 +96,7 @@ export default function Ranking() {
                       <td>
                         <Link href={`/time/${team.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                           <div className="team-info" style={{ gap: '0.5rem', cursor: 'pointer' }}>
-                            {team.logo ? (
-                              <img src={team.logo} alt={team.name} style={{ width: '24px', height: '24px', borderRadius: '4px', objectFit: 'cover' }} />
-                            ) : (
-                              <div className="team-logo-square" style={{ width: '24px', height: '24px', fontSize: '0.6rem', border: '1px solid rgba(255,255,255,0.2)' }}>{team.initials}</div>
-                            )}
+                            <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={24} borderRadius="4px" />
                             <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{team.name}</span>
                           </div>
                         </Link>

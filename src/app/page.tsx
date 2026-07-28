@@ -3,6 +3,9 @@ import Link from 'next/link';
 import PlayerAvatar from './jogador/[name]/PlayerAvatar';
 import Comments from '../components/Comments';
 import Countdown from '../components/Countdown';
+import TeamLogo from './components/TeamLogo';
+import MatchPrediction from './components/MatchPrediction';
+import MapPoolStats from './components/MapPoolStats';
 
 export default function Home() {
   // Ordenar jogadores pelo KDA: (K + A) / D
@@ -35,13 +38,9 @@ export default function Home() {
           <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', maxWidth: '600px', lineHeight: 1.6, marginTop: '1rem' }}>
             Acompanhe as estatísticas, tabela de classificação e o desempenho individual dos melhores jogadores da liga.
           </p>
-
-          <div style={{ display: 'flex', gap: '1.5rem', marginTop: '3rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
             <Link href="/ranking" className="btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', margin: 0 }}>
               Ver Classificação
-            </Link>
-            <Link href="/comparacao" className="btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', margin: 0, background: 'linear-gradient(45deg, #ab47bc, #7b1fa2)', borderColor: '#ab47bc', boxShadow: '0 0 15px rgba(171,71,188,0.4)' }}>
-              ⚔️ Comparar 1v1
             </Link>
             <Link href="/jogadores" className="btn-secondary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', margin: 0 }}>
               Lista de Jogadores
@@ -53,12 +52,33 @@ export default function Home() {
       <section className="container" style={{ padding: '4rem 2rem' }}>
         <div className="grid-2">
           
-          {/* Próximos Confrontos com Countdown */}
+          {/* Twitch Live Stream Banner (ggustatc) */}
+          <div className="glass-card" style={{ gridColumn: '1 / -1', marginBottom: '2.5rem', border: '1px solid var(--cyan)', boxShadow: '0 0 35px rgba(0,240,255,0.2)', background: 'linear-gradient(135deg, rgba(13,20,36,0.95) 0%, rgba(0,240,255,0.08) 100%)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem', flexWrap: 'wrap', gap: '1rem' }}>
+              <h3 className="card-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.4rem' }}>
+                <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '50%', background: '#ff3366', boxShadow: '0 0 12px #ff3366' }}></span>
+                🔴 TRANSMISSÃO AO VIVO NA TWITCH (@ggustatc)
+              </h3>
+              <a href="https://www.twitch.tv/ggustatc" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ padding: '0.6rem 1.4rem', fontSize: '0.9rem', textDecoration: 'none' }}>
+                Abrir Live na Twitch ↗
+              </a>
+            </div>
+            <div style={{ position: 'relative', paddingBottom: '45%', height: 0, borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <iframe
+                src="https://player.twitch.tv/?channel=ggustatc&parent=gurizadachampions.vercel.app&parent=localhost&autoplay=false"
+                title="Transmissão Ao Vivo Gusta CS2"
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+
+          {/* Próximos Confrontos com Countdown & Palpites */}
           {upcomingMatches.length > 0 && (
             <div className="glass-card" style={{ gridColumn: '1 / -1', marginBottom: '2rem', border: '1px solid rgba(0,240,255,0.2)', boxShadow: '0 0 25px rgba(0,240,255,0.05)' }}>
               <h3 className="card-title">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                Próximos Confrontos
+                Próximos Confrontos da Rodada 2
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '1.5rem', marginTop: '1.5rem' }}>
                 {upcomingMatches.map((match) => {
@@ -70,25 +90,34 @@ export default function Home() {
                       
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', gap: '1rem' }}>
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                          {teamA.logo ? <img src={teamA.logo} alt={teamA.name} style={{ width: '48px', height: '48px', borderRadius: '10px', objectFit: 'cover' }} /> : <div className="team-logo-square" style={{ width: '48px', height: '48px', fontSize: '1rem' }}>{teamA.initials}</div>}
+                          <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={48} borderRadius="10px" />
                           <strong style={{ fontSize: '1rem', color: '#fff', textAlign: 'center' }}>{teamA.name}</strong>
                         </div>
 
                         <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)' }}>VS</span>
 
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                          {teamB.logo ? <img src={teamB.logo} alt={teamB.name} style={{ width: '48px', height: '48px', borderRadius: '10px', objectFit: 'cover' }} /> : <div className="team-logo-square" style={{ width: '48px', height: '48px', fontSize: '1rem' }}>{teamB.initials}</div>}
+                          <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={48} borderRadius="10px" />
                           <strong style={{ fontSize: '1rem', color: '#fff', textAlign: 'center' }}>{teamB.name}</strong>
                         </div>
                       </div>
 
                       <Countdown targetDate={match.date} />
+                      {match.dateDisplay && (
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>{match.dateDisplay}</span>
+                      )}
+                      
+                      {/* Sistema de Palpites / Votação da Torcida */}
+                      <MatchPrediction matchId={match.id} teamAName={teamA.name} teamBName={teamB.name} />
                     </div>
                   );
                 })}
               </div>
             </div>
           )}
+
+          {/* Estatísticas de Mapas do Campeonato */}
+          <MapPoolStats />
           
           <div className="glass-card" style={{ gridColumn: '1 / -1' }}>
             <h3 className="card-title">
@@ -103,11 +132,7 @@ export default function Home() {
                   <Link href={`/partida/${match.id}`} key={match.id} style={{ textDecoration: 'none' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.4)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', transition: 'all 0.2s', cursor: 'pointer' }} className="match-card-hover">
                       <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        {teamA.logo ? (
-                          <img src={teamA.logo} alt={teamA.name} style={{ width: '36px', height: '36px', borderRadius: '8px', objectFit: 'cover' }} />
-                        ) : (
-                          <div className="team-logo-square" style={{ width: '36px', height: '36px', fontSize: '0.8rem' }}>{teamA.initials}</div>
-                        )}
+                        <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={36} borderRadius="8px" />
                         <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', color: '#fff' }}>{teamA.name}</strong>
                       </div>
                       
@@ -120,11 +145,7 @@ export default function Home() {
 
                       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '1rem' }}>
                         <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', textAlign: 'right', color: '#fff' }}>{teamB.name}</strong>
-                        {teamB.logo ? (
-                          <img src={teamB.logo} alt={teamB.name} style={{ width: '36px', height: '36px', borderRadius: '8px', objectFit: 'cover' }} />
-                        ) : (
-                          <div className="team-logo-square" style={{ width: '36px', height: '36px', fontSize: '0.8rem' }}>{teamB.initials}</div>
-                        )}
+                        <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={36} borderRadius="8px" />
                       </div>
                     </div>
                   </Link>
@@ -155,7 +176,7 @@ export default function Home() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                       <span style={{ fontFamily: 'var(--font-rajdhani)', fontSize: '1.2rem', fontWeight: 'bold', color: index === 0 ? '#ffd700' : index === 1 ? '#c0c0c0' : index === 2 ? '#cd7f32' : 'var(--text-muted)', minWidth: '35px' }}>#{index + 1}</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                        {team.logo ? <img src={team.logo} alt={team.name} style={{ width: '28px', height: '28px', borderRadius: '4px', objectFit: 'cover' }} /> : <div className="team-logo-square" style={{ width: '28px', height: '28px', fontSize: '0.6rem' }}>{team.initials}</div>}
+                        <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={28} borderRadius="4px" />
                         <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor="rgba(255,255,255,0.1)" size={32} />
                         <div>
                           <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none' }} className="match-card-hover">
@@ -189,11 +210,7 @@ export default function Home() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '2rem', justifyItems: 'center' }}>
             {teams.map(team => (
               <Link href={`/time/${team.id}`} key={team.id} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }} className="match-card-hover">
-                {team.logo ? (
-                  <img src={team.logo} alt={team.name} style={{ width: '80px', height: '80px', borderRadius: '12px', objectFit: 'cover', boxShadow: '0 4px 15px rgba(0,240,255,0.2)' }} />
-                ) : (
-                  <div className="team-logo-square" style={{ width: '80px', height: '80px', fontSize: '1.5rem', borderRadius: '12px' }}>{team.initials}</div>
-                )}
+                <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={80} borderRadius="12px" />
                 <span style={{ color: '#fff', fontSize: '0.9rem', textAlign: 'center', fontWeight: 'bold' }}>{team.name}</span>
               </Link>
             ))}

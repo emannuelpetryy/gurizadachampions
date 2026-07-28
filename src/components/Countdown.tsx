@@ -40,6 +40,14 @@ export default function Countdown({ targetDate }: CountdownProps) {
     return () => clearInterval(timer);
   }, [targetDate]);
 
+  if (!targetDate || targetDate === 'A definir' || isNaN(new Date(targetDate).getTime())) {
+    return (
+      <div style={{ background: 'rgba(255, 215, 0, 0.1)', border: '1px solid rgba(255, 215, 0, 0.3)', color: 'var(--gold)', padding: '0.5rem 1.2rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 0 10px rgba(255,215,0,0.15)' }}>
+        <span>🗓️</span> DATA A SER MARCADA
+      </div>
+    );
+  }
+
   if (timeLeft.isExpired) {
     return <span style={{ color: 'var(--cyan)', fontWeight: 'bold' }}>AO VIVO / EM BREVE</span>;
   }
