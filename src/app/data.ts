@@ -19,23 +19,72 @@ export const matches = [
 ];
 
 export const matchDetails: Record<string, any> = {
-  '4': {
-    map: 'Anúbis',
-    roundsA: 13,
-    roundsB: 10,
+  '1': {
+    map: 'Mirage', roundsA: 0, roundsB: 1,
     teamA_stats: [
-      { name: 'acyd', kills: 33, deaths: 17, assists: 4 },
-      { name: 'Majaster', kills: 19, deaths: 18, assists: 8 },
-      { name: 'Lucaaas TA LÁ', kills: 15, deaths: 18, assists: 7 },
-      { name: 'EasyMoneyrasta', kills: 10, deaths: 17, assists: 6 },
-      { name: 'LaColombia', kills: 7, deaths: 18, assists: 6 },
+      { name: 'Dash', kills: 15, deaths: 15, assists: 2 },
+      { name: 'Gilli', kills: 15, deaths: 17, assists: 8 },
+      { name: 'Duzz', kills: 7, deaths: 17, assists: 3 },
+      { name: 'Peteka', kills: 12, deaths: 20, assists: 6 },
+      { name: 'Knight', kills: 10, deaths: 16, assists: 2 },
     ],
     teamB_stats: [
-      { name: 'sk | oliveira7f', kills: 22, deaths: 16, assists: 7 },
-      { name: 'White Lemon | Giuseppe Lagos', kills: 21, deaths: 18, assists: 5 },
-      { name: 'kyousuke666', kills: 20, deaths: 16, assists: 6 },
+      { name: 'Sorps - Leluia', kills: 13, deaths: 10, assists: 6 },
+      { name: 'Tufabala', kills: 22, deaths: 10, assists: 8 },
+      { name: 'Vandeco', kills: 13, deaths: 13, assists: 5 },
+      { name: 'Galaxy', kills: 13, deaths: 14, assists: 9 },
+      { name: 'Pedro - Distress', kills: 20, deaths: 12, assists: 5 },
+    ]
+  },
+  '2': {
+    map: 'Inferno', roundsA: 0, roundsB: 1,
+    teamA_stats: [
+      { name: 'Nil', kills: 39, deaths: 31, assists: 9 },
+      { name: 'Leco', kills: 48, deaths: 29, assists: 11 },
+      { name: 'Math', kills: 13, deaths: 28, assists: 14 },
+      { name: 'Cobes', kills: 27, deaths: 29, assists: 7 },
+      { name: 'João Marcelo', kills: 17, deaths: 28, assists: 7 },
+    ],
+    teamB_stats: [
+      { name: 'Gilson Tedesko', kills: 17, deaths: 33, assists: 5 },
+      { name: 'Manko', kills: 39, deaths: 34, assists: 14 },
+      { name: 'PombaLoka', kills: 26, deaths: 26, assists: 6 },
+      { name: 'Alemão', kills: 20, deaths: 31, assists: 8 },
+      { name: 'Felpy', kills: 41, deaths: 29, assists: 11 },
+    ]
+  },
+  '3': {
+    map: 'Nuke', roundsA: 0, roundsB: 1,
+    teamA_stats: [
+      { name: 'ChapaChaplin', kills: 15, deaths: 20, assists: 8 },
+      { name: 'Baguá', kills: 21, deaths: 21, assists: 6 },
+      { name: 'Pedro G.', kills: 16, deaths: 20, assists: 6 },
+      { name: 'Dezin', kills: 14, deaths: 24, assists: 8 },
+      { name: 'Becker', kills: 28, deaths: 22, assists: 9 },
+    ],
+    teamB_stats: [
+      { name: 'Pacal', kills: 39, deaths: 17, assists: 7 },
+      { name: 'Samuka', kills: 25, deaths: 18, assists: 9 },
+      { name: 'Manu', kills: 19, deaths: 18, assists: 6 },
+      { name: 'Duzão', kills: 10, deaths: 20, assists: 11 },
+      { name: 'Baronelis', kills: 13, deaths: 21, assists: 11 },
+    ]
+  },
+  '4': {
+    map: 'Anúbis', roundsA: 1, roundsB: 0,
+    teamA_stats: [
+      { name: 'Gusta', kills: 19, deaths: 18, assists: 8 },
+      { name: 'Acyd', kills: 33, deaths: 17, assists: 4 },
+      { name: 'Do Not Remove - Lucas', kills: 15, deaths: 18, assists: 7 },
+      { name: 'Tricke', kills: 10, deaths: 17, assists: 6 },
+      { name: 'Natan', kills: 7, deaths: 18, assists: 6 },
+    ],
+    teamB_stats: [
       { name: 'Hallow', kills: 14, deaths: 19, assists: 6 },
-      { name: 'b1tplz', kills: 11, deaths: 19, assists: 4 },
+      { name: 'DaddyMnny', kills: 20, deaths: 16, assists: 6 },
+      { name: 'Fernandin 666', kills: 22, deaths: 16, assists: 7 },
+      { name: 'Giuseppe Lagos', kills: 21, deaths: 18, assists: 5 },
+      { name: 'B1tz', kills: 11, deaths: 19, assists: 4 },
     ]
   }
 };
@@ -54,18 +103,20 @@ export const groupB = [
   { teamId: 'whitelemon', p: 0, pj: 1, v: 0, d: 1 },
 ];
 
-export const players = [
-  { name: 'Leco', teamId: 'assentamento', kills: 48, deaths: 29, assists: 11 },
-  { name: 'Felpy', teamId: 'gilsons', kills: 41, deaths: 29, assists: 11 },
-  { name: 'Manko', teamId: 'gilsons', kills: 39, deaths: 34, assists: 14 },
-  { name: 'Pacal', teamId: 'venvanse', kills: 39, deaths: 17, assists: 7 },
-  { name: 'Nil', teamId: 'assentamento', kills: 39, deaths: 31, assists: 9 },
-  { name: 'Acyd', teamId: 'maconhaco', kills: 33, deaths: 17, assists: 4 },
-  { name: 'Becker', teamId: '5cones', kills: 28, deaths: 22, assists: 9 },
-  { name: 'Cobes', teamId: 'assentamento', kills: 27, deaths: 29, assists: 7 },
-  { name: 'PombaLoka', teamId: 'gilsons', kills: 26, deaths: 26, assists: 6 },
-  { name: 'Samuka', teamId: 'venvanse', kills: 25, deaths: 18, assists: 9 },
-];
+// Re-computando a lista global de players a partir das matchDetails para ter o DB exato.
+export const players: Array<{name: string, teamId: string, kills: number, deaths: number, assists: number}> = [];
+const addPlayersToGlobal = (matchDetailsMap: Record<string, any>, matchId: string, teamAId: string, teamBId: string) => {
+  const details = matchDetailsMap[matchId];
+  if (details) {
+    details.teamA_stats.forEach((p: any) => players.push({ name: p.name, teamId: teamAId, kills: p.kills, deaths: p.deaths, assists: p.assists }));
+    details.teamB_stats.forEach((p: any) => players.push({ name: p.name, teamId: teamBId, kills: p.kills, deaths: p.deaths, assists: p.assists }));
+  }
+};
+
+addPlayersToGlobal(matchDetails, '1', 'jalin', 'desacreditados');
+addPlayersToGlobal(matchDetails, '2', 'assentamento', 'gilsons');
+addPlayersToGlobal(matchDetails, '3', '5cones', 'venvanse');
+addPlayersToGlobal(matchDetails, '4', 'maconhaco', 'whitelemon');
 
 export const tiers = {
   S: [
