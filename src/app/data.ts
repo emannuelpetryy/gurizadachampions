@@ -1,12 +1,12 @@
 export const teams = [
-  { id: 'venvanse', name: 'Venvanse', logo: 'V' },
-  { id: 'desacreditados', name: 'Os Desacreditados', logo: 'OD' },
-  { id: '5cones', name: '5 Cones', logo: '5C' },
-  { id: 'jalin', name: 'Jalin Habei', logo: 'JH' },
-  { id: 'gilsons', name: 'Gilsons E-Sports', logo: 'GE' },
-  { id: 'maconhaco', name: 'Maconhaço E-Sports', logo: 'ME' },
-  { id: 'assentamento', name: 'Assentamento Celso Furtado', logo: 'AC' },
-  { id: 'whitelemon', name: 'White Lemon', logo: 'WL' },
+  { id: 'venvanse', name: 'Venvanse', initials: 'VEN' },
+  { id: 'desacreditados', name: 'Os Desacreditados', initials: 'ODS' },
+  { id: '5cones', name: '5 Cones', initials: '5CN' },
+  { id: 'jalin', name: 'Jalin Habei', initials: 'JHB' },
+  { id: 'gilsons', name: 'Gilsons E-Sports', initials: 'GLS' },
+  { id: 'maconhaco', name: 'Maconhaço E-Sports', initials: 'MAC' },
+  { id: 'assentamento', name: 'Assent. Celso Furtado', initials: 'ACF' },
+  { id: 'whitelemon', name: 'White Lemon', initials: 'WLM' },
 ];
 
 export const getTeam = (id: string) => teams.find(t => t.id === id) || teams[0];
@@ -19,17 +19,17 @@ export const matches = [
 ];
 
 export const groupA = [
-  { teamId: 'venvanse', p: 1, pj: 1, v: 1, e: 0, d: 0, k: 106, d_rounds: 94 },
-  { teamId: 'desacreditados', p: 1, pj: 1, v: 1, e: 0, d: 0, k: 81, d_rounds: 59 },
-  { teamId: '5cones', p: 0, pj: 1, v: 0, e: 0, d: 1, k: 94, d_rounds: 107 },
-  { teamId: 'jalin', p: 0, pj: 1, v: 0, e: 0, d: 1, k: 59, d_rounds: 85 },
+  { teamId: 'venvanse', p: 1, pj: 1, v: 1, d: 0 },
+  { teamId: 'desacreditados', p: 1, pj: 1, v: 1, d: 0 },
+  { teamId: '5cones', p: 0, pj: 1, v: 0, d: 1 },
+  { teamId: 'jalin', p: 0, pj: 1, v: 0, d: 1 },
 ];
 
 export const groupB = [
-  { teamId: 'gilsons', p: 1, pj: 1, v: 1, e: 0, d: 0, k: 143, d_rounds: 153 },
-  { teamId: 'maconhaco', p: 1, pj: 1, v: 1, e: 0, d: 0, k: 84, d_rounds: 88 },
-  { teamId: 'assentamento', p: 0, pj: 1, v: 0, e: 0, d: 1, k: 144, d_rounds: 145 },
-  { teamId: 'whitelemon', p: 0, pj: 1, v: 0, e: 0, d: 1, k: 88, d_rounds: 88 },
+  { teamId: 'gilsons', p: 1, pj: 1, v: 1, d: 0 },
+  { teamId: 'maconhaco', p: 1, pj: 1, v: 1, d: 0 },
+  { teamId: 'assentamento', p: 0, pj: 1, v: 0, d: 1 },
+  { teamId: 'whitelemon', p: 0, pj: 1, v: 0, d: 1 },
 ];
 
 export const players = [
@@ -44,3 +44,56 @@ export const players = [
   { name: 'PombaLoka', teamId: 'gilsons', kills: 26, deaths: 26, assists: 6 },
   { name: 'Samuka', teamId: 'venvanse', kills: 25, deaths: 18, assists: 9 },
 ];
+
+export const tiers = {
+  S: [
+    { name: 'Matheus mankinho', lvl: 20 },
+    { name: 'becker', lvl: 20 },
+    { name: 'Acyd', lvl: 20 },
+    { name: 'dash', lvl: 18 },
+    { name: 'pacal', lvl: 18 },
+    { name: 'Nil', lvl: 18 },
+    { name: 'leco', lvl: 17, swap: true },
+    { name: 's0rps', lvl: 17 }
+  ],
+  A: [
+    { name: 'Felpy', lvl: 18, swap: true },
+    { name: 'DaddyMnny', lvl: 17 },
+    { name: 'Fernandinho', lvl: 15 },
+    { name: 'distress', lvl: 15 },
+    { name: 'Gusta', lvl: 14 },
+    { name: 'Gilli', lvl: 14 },
+    { name: 'Samuka', lvl: 14 },
+    { name: 'ChapaChaplin', lvl: 13 }
+  ],
+  B: [
+    { name: 'Alemão', lvl: 13 },
+    { name: 'Tufa', lvl: 12 },
+    { name: 'Hallow', lvl: 12 },
+    { name: 'Duzz', lvl: 12 },
+    { name: 'math', lvl: 11 },
+    { name: 'Lucas', lvl: 10 },
+    { name: 'bagua', lvl: 10 },
+    { name: 'Manu', lvl: 10 }
+  ],
+  C: [
+    { name: 'Gio', lvl: 10 },
+    { name: 'Giuseppe Lagos - Henrique', lvl: 10 },
+    { name: 'dark', lvl: 10 },
+    { name: 'ptk', lvl: 9 },
+    { name: 'duzao', lvl: 9 },
+    { name: 'PombaLoka', lvl: 9 },
+    { name: 'COBES', lvl: 9 },
+    { name: 'Pedro Giraldi', lvl: 7 }
+  ],
+  D: [
+    { name: 'Galaxy', lvl: 7 },
+    { name: 'Knight', lvl: 7 },
+    { name: 'Jota Marcinho', lvl: 6 },
+    { name: 'b1tplz', lvl: 6 },
+    { name: 'Baronelis', lvl: 6 },
+    { name: 'De', lvl: 5 },
+    { name: 'Natan', lvl: 4 },
+    { name: 'gilso tedesko', lvl: 3 }
+  ]
+};

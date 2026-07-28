@@ -2,21 +2,18 @@ import { groupA, groupB, getTeam, players } from '../data';
 
 export default function Ranking() {
   const renderGroupTable = (groupName: string, groupData: any[]) => (
-    <div className="glass-card" style={{ marginBottom: '2rem' }}>
-      <h3 className="card-title" style={{ textAlign: 'center' }}>Grupo {groupName}</h3>
+    <div className="glass-card" style={{ marginBottom: '2rem', padding: '1.5rem' }}>
+      <h3 className="card-title" style={{ textAlign: 'center', justifyContent: 'center' }}>GRUPO {groupName}</h3>
       <div style={{ overflowX: 'auto' }}>
         <table className="ranking-table">
           <thead>
             <tr>
-              <th>Pos</th>
-              <th>Equipe</th>
-              <th>P</th>
-              <th>J</th>
-              <th>V</th>
-              <th>E</th>
-              <th>D</th>
-              <th>K</th>
-              <th>D (Rounds)</th>
+              <th style={{ width: '60px', textAlign: 'center' }}>POS</th>
+              <th>EQUIPE</th>
+              <th style={{ textAlign: 'center', color: 'var(--primary)' }}>PTS</th>
+              <th style={{ textAlign: 'center' }}>J</th>
+              <th style={{ textAlign: 'center' }}>V</th>
+              <th style={{ textAlign: 'center' }}>D</th>
             </tr>
           </thead>
           <tbody>
@@ -24,35 +21,37 @@ export default function Ranking() {
               const team = getTeam(row.teamId);
               return (
                 <tr key={team.id} className={`rank-${index + 1}`}>
-                  <td><span className="rank-number" style={{ fontSize: index < 3 ? '1.5rem' : '1.2rem' }}>{index + 1}</span></td>
+                  <td style={{ textAlign: 'center' }}>
+                    <span className="rank-number" style={{ fontSize: index < 2 ? '1.5rem' : '1.2rem', color: index < 2 ? 'var(--cyan)' : '#fff', textShadow: index < 2 ? '0 0 10px rgba(0,240,255,0.5)' : 'none' }}>
+                      {index + 1}
+                    </span>
+                  </td>
                   <td>
                     <div className="team-info">
-                      <div className="team-logo-placeholder">{team.logo}</div>
-                      <strong>{team.name}</strong>
+                      <div className="team-logo-square" style={{ width: '40px', height: '40px', fontSize: '0.9rem' }}>{team.initials}</div>
+                      <strong style={{ fontSize: '1.1rem' }}>{team.name}</strong>
                     </div>
                   </td>
-                  <td style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{row.p}</td>
-                  <td>{row.pj}</td>
-                  <td>{row.v}</td>
-                  <td>{row.e}</td>
-                  <td>{row.d}</td>
-                  <td style={{ color: '#2de2e6' }}>{row.k}</td>
-                  <td style={{ color: '#e03a45' }}>{row.d_rounds}</td>
+                  <td style={{ textAlign: 'center', color: 'var(--primary)', fontWeight: 'bold', fontSize: '1.2rem' }}>{row.p}</td>
+                  <td style={{ textAlign: 'center' }}>{row.pj}</td>
+                  <td style={{ textAlign: 'center', color: '#00F0FF' }}>{row.v}</td>
+                  <td style={{ textAlign: 'center', color: '#ff3366' }}>{row.d}</td>
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
+      <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>* Top 2 classificam para as semifinais</p>
     </div>
   );
 
   return (
     <main style={{ padding: '4rem 0' }}>
       <section className="container">
-        <h1 className="hero-title" style={{ fontSize: '3rem', textAlign: 'center' }}>Classificação</h1>
-        <p className="hero-subtitle" style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          Tabela Oficial da 1ª Fase do Gurizada Champions Cup.
+        <h1 className="hero-title" style={{ fontSize: '3.5rem', textAlign: 'center', textShadow: 'none' }}>TABELA DE <span className="text-cyan">CLASSIFICAÇÃO</span></h1>
+        <p className="hero-subtitle" style={{ textAlign: 'center', marginBottom: '4rem' }}>
+          FASE DE GRUPOS - 1ª ETAPA
         </p>
 
         <div className="grid-2">
@@ -60,19 +59,19 @@ export default function Ranking() {
           {renderGroupTable('B', groupB)}
         </div>
 
-        <h2 className="hero-title" style={{ fontSize: '2.5rem', textAlign: 'center', marginTop: '4rem', marginBottom: '2rem' }}>Estatísticas Individuais</h2>
+        <h2 className="hero-title" style={{ fontSize: '2.5rem', textAlign: 'center', marginTop: '5rem', marginBottom: '2rem', textShadow: 'none' }}>TOP <span className="text-gold">FRAGGERS</span></h2>
         
-        <div className="glass-card">
+        <div className="glass-card" style={{ padding: '1.5rem' }}>
           <div style={{ overflowX: 'auto' }}>
             <table className="ranking-table">
               <thead>
                 <tr>
-                  <th>Rank</th>
-                  <th>Jogador</th>
-                  <th>Equipe</th>
-                  <th>Kills</th>
-                  <th>Deaths</th>
-                  <th>Assists</th>
+                  <th style={{ width: '80px', textAlign: 'center' }}>RANK</th>
+                  <th>JOGADOR</th>
+                  <th>EQUIPE</th>
+                  <th style={{ textAlign: 'center', color: 'var(--cyan)' }}>KILLS</th>
+                  <th style={{ textAlign: 'center', color: 'var(--accent-red)' }}>DEATHS</th>
+                  <th style={{ textAlign: 'center' }}>ASSISTS</th>
                 </tr>
               </thead>
               <tbody>
@@ -80,12 +79,17 @@ export default function Ranking() {
                   const team = getTeam(player.teamId);
                   return (
                     <tr key={player.name} className={`rank-${index + 1}`}>
-                      <td><span className="rank-number" style={{ fontSize: index < 3 ? '1.5rem' : '1.2rem' }}>{index + 1}</span></td>
-                      <td><strong>{player.name}</strong></td>
-                      <td style={{ color: '#999', fontSize: '0.85rem' }}>{team.name}</td>
-                      <td style={{ color: '#2de2e6', fontWeight: 'bold' }}>{player.kills}</td>
-                      <td style={{ color: '#e03a45' }}>{player.deaths}</td>
-                      <td style={{ color: 'var(--primary)' }}>{player.assists}</td>
+                      <td style={{ textAlign: 'center' }}><span className="rank-number" style={{ fontSize: index < 3 ? '1.5rem' : '1.2rem' }}>#{index + 1}</span></td>
+                      <td><strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong></td>
+                      <td>
+                        <div className="team-info" style={{ gap: '0.5rem' }}>
+                          <div className="team-logo-square" style={{ width: '24px', height: '24px', fontSize: '0.6rem', border: '1px solid rgba(255,255,255,0.2)' }}>{team.initials}</div>
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{team.name}</span>
+                        </div>
+                      </td>
+                      <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '1.2rem' }}>{player.kills}</td>
+                      <td style={{ textAlign: 'center', color: 'var(--accent-red)' }}>{player.deaths}</td>
+                      <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{player.assists}</td>
                     </tr>
                   );
                 })}
