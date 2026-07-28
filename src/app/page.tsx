@@ -34,11 +34,11 @@ export default function Home() {
             Acompanhe as estatísticas, tabela de classificação e o desempenho individual dos melhores jogadores da liga.
           </p>
 
-          <div style={{ display: 'flex', gap: '1.5rem', marginTop: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <Link href="/ranking" className="btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', background: 'var(--cyan)', color: '#000', borderRadius: '8px', fontWeight: 'bold', textDecoration: 'none', boxShadow: '0 0 20px rgba(0,240,255,0.4)', transition: 'all 0.3s', textTransform: 'uppercase' }}>
+          <div style={{ display: 'flex', gap: '1.5rem', marginTop: '3rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <Link href="/ranking" className="btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', margin: 0 }}>
               Ver Classificação
             </Link>
-            <Link href="/jogadores" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', fontWeight: 'bold', textDecoration: 'none', transition: 'all 0.3s', textTransform: 'uppercase' }} className="btn-secondary match-card-hover">
+            <Link href="/jogadores" className="btn-secondary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', margin: 0 }}>
               Lista de Jogadores
             </Link>
           </div>
