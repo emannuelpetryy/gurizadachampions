@@ -4,7 +4,8 @@ import { useState } from 'react';
 
 export default function PlayerAvatar({ teamName, playerName, badgeColor, size = 120 }: { teamName: string, playerName: string, badgeColor: string, size?: number }) {
   const [imgError, setImgError] = useState(false);
-  const imgUrl = `/Fotos Jogadores/${teamName}/${playerName}.jpg`;
+  const extensions = ['.jpg', '.jpeg', '.png', '.webp'];
+  const [extIndex, setExtIndex] = useState(0);
 
   if (imgError) {
     return (
@@ -17,13 +18,21 @@ export default function PlayerAvatar({ teamName, playerName, badgeColor, size = 
     );
   }
 
+  const currentImgUrl = `/Fotos Jogadores/${teamName}/${playerName}${extensions[extIndex]}`;
+
   return (
     <div style={{ width: size, height: size, borderRadius: '50%', border: `3px solid ${badgeColor}`, overflow: 'hidden', boxShadow: `0 0 20px ${badgeColor}40`, position: 'relative' }}>
       <img 
-        src={imgUrl} 
+        src={currentImgUrl} 
         alt={playerName} 
         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        onError={() => setImgError(true)}
+        onError={() => {
+          if (extIndex < extensions.length - 1) {
+            setExtIndex(extIndex + 1);
+          } else {
+            setImgError(true);
+          }
+        }}
       />
     </div>
   );
