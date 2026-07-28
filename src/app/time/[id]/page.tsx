@@ -1,5 +1,6 @@
-import { getTeam, matches, players } from '../../data';
+import { getTeam, players, matches, matchDetails } from '../../data';
 import Link from 'next/link';
+import PlayerAvatar from '../../jogador/[name]/PlayerAvatar';
 import { notFound } from 'next/navigation';
 
 export default async function TeamPage({ params }: { params: Promise<{ id: string }> }) {
@@ -52,9 +53,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                     <tr key={player.name}>
                       <td style={{ paddingLeft: '1.5rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                          <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                          </div>
+                          <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor="rgba(255,255,255,0.1)" size={40} />
                           <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit' }} className="match-card-hover">
                             <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
                           </Link>

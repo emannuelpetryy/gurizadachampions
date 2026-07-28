@@ -1,5 +1,6 @@
-import { tiers } from '../data';
+import { tiers, players as globalPlayers, getTeam } from '../data';
 import Link from 'next/link';
+import PlayerAvatar from '../jogador/[name]/PlayerAvatar';
 
 export default function Jogadores() {
   const tierKeys = Object.keys(tiers) as Array<keyof typeof tiers>;
@@ -25,12 +26,13 @@ export default function Jogadores() {
                 </div>
                 
                 <div className="grid-3">
-                  {players.map((player) => (
+                  {players.map((player) => {
+                    const fullPlayer = globalPlayers.find(p => p.name.toLowerCase() === player.name.toLowerCase());
+                    const teamName = fullPlayer ? getTeam(fullPlayer.teamId).name : '';
+                    return (
                     <div key={player.name} className="player-card">
                       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        </div>
+                        <PlayerAvatar teamName={teamName} playerName={player.name} badgeColor="rgba(255,255,255,0.2)" size={40} />
                         <div>
                           <p style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.1rem' }}>
                             <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit' }} className="match-card-hover">
@@ -44,7 +46,8 @@ export default function Jogadores() {
                         <span style={{ color: 'var(--cyan)', fontWeight: 'bold', fontSize: '1.2rem', fontFamily: 'var(--font-rajdhani)' }}>LVL {player.lvl}</span>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             );

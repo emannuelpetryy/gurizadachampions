@@ -1,5 +1,6 @@
 import { groupA, groupB, getTeam, players } from '../data';
 import Link from 'next/link';
+import PlayerAvatar from '../jogador/[name]/PlayerAvatar';
 
 export default function Ranking() {
   const renderGroupTable = (groupName: string, groupData: any[]) => (
@@ -90,7 +91,8 @@ export default function Ranking() {
                     <tr key={player.name} className={`rank-${index + 1}`}>
                       <td style={{ textAlign: 'center' }}><span className="rank-number" style={{ fontSize: index < 3 ? '1.5rem' : '1.2rem' }}>#{index + 1}</span></td>
                       <td>
-                        <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit' }} className="match-card-hover">
+                        <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '1rem' }} className="match-card-hover">
+                          <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor="rgba(255,255,255,0.1)" size={40} />
                           <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
                         </Link>
                       </td>

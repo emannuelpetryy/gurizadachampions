@@ -1,5 +1,6 @@
 import { getTeam, matches, players, teams } from './data';
 import Link from 'next/link';
+import PlayerAvatar from './jogador/[name]/PlayerAvatar';
 import Comments from '../components/Comments';
 
 export default function Home() {
@@ -114,6 +115,7 @@ export default function Home() {
                       <span style={{ fontFamily: 'var(--font-rajdhani)', fontSize: '1.2rem', fontWeight: 'bold', color: index === 0 ? '#ffd700' : index === 1 ? '#c0c0c0' : index === 2 ? '#cd7f32' : 'var(--text-muted)', minWidth: '35px' }}>#{index + 1}</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                         {team.logo ? <img src={team.logo} alt={team.name} style={{ width: '28px', height: '28px', borderRadius: '4px', objectFit: 'cover' }} /> : <div className="team-logo-square" style={{ width: '28px', height: '28px', fontSize: '0.6rem' }}>{team.initials}</div>}
+                        <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor="rgba(255,255,255,0.1)" size={32} />
                         <div>
                           <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none' }} className="match-card-hover">
                             <p style={{ fontWeight: 'bold', fontSize: '1rem', color: '#fff' }}>{player.name}</p>

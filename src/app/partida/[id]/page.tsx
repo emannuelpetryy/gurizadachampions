@@ -33,7 +33,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   const totalKillsB = details.teamB_stats.reduce((acc: number, p: any) => acc + p.kills, 0);
   const totalDeathsB = details.teamB_stats.reduce((acc: number, p: any) => acc + p.deaths, 0);
 
-  const renderPlayerCard = (player: any) => {
+  const renderPlayerCard = (player: any, teamName: string) => {
     const kdaRaw = player.kills / (player.deaths || 1);
     const kda = kdaRaw.toFixed(2);
     
@@ -46,9 +46,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
     return (
       <div key={player.name} className="glass-card match-card-hover" style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '1rem', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '0.8rem' }}>
-        <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        </div>
+        <PlayerAvatar teamName={teamName} playerName={player.name} badgeColor={badgeColor} size={40} />
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
             <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit' }} className="match-card-hover">
@@ -230,7 +228,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
               {teamA.name}
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {details.teamA_stats.map(renderPlayerCard)}
+              {details.teamA_stats.map(p => renderPlayerCard(p, teamA.name))}
             </div>
           </div>
           
@@ -241,7 +239,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
               {teamB.name}
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {details.teamB_stats.map(renderPlayerCard)}
+              {details.teamB_stats.map(p => renderPlayerCard(p, teamB.name))}
             </div>
           </div>
         </div>
