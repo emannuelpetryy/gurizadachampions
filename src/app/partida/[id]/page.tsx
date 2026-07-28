@@ -228,7 +228,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
               {teamA.name}
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {details.teamA_stats.map(p => renderPlayerCard(p, teamA.name))}
+              {details.teamA_stats.map((p: any) => renderPlayerCard(p, teamA.name))}
             </div>
           </div>
           
@@ -239,7 +239,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
               {teamB.name}
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {details.teamB_stats.map(p => renderPlayerCard(p, teamB.name))}
+              {details.teamB_stats.map((p: any) => renderPlayerCard(p, teamB.name))}
             </div>
           </div>
         </div>
