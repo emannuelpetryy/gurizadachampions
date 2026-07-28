@@ -14,8 +14,8 @@ export const getTeam = (id: string) => teams.find(t => t.id === id) || teams[0];
 export const matches = [
   { id: 4, teamA: 'maconhaco', teamB: 'whitelemon', scoreA: 1, scoreB: 0, status: 'Encerrado', date: 'Rodada 1', group: 'B' },
   { id: 1, teamA: 'jalin', teamB: 'desacreditados', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'qui., 23/07/2026 21:00', group: 'A' },
-  { id: 2, teamA: '5cones', teamB: 'venvanse', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'qui., 23/07/2026 22:10', group: 'A' },
-  { id: 3, teamA: 'assentamento', teamB: 'gilsons', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'seg., 27/07/2026 20:00', group: 'B' },
+  { id: 2, teamA: 'assentamento', teamB: 'gilsons', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'seg., 27/07/2026 20:00', group: 'B' },
+  { id: 3, teamA: '5cones', teamB: 'venvanse', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'qui., 23/07/2026 22:10', group: 'A' },
 ];
 
 export const matchDetails: Record<string, any> = {
@@ -26,14 +26,14 @@ export const matchDetails: Record<string, any> = {
       { name: 'Gilli', kills: 15, deaths: 17, assists: 8 },
       { name: 'Duzz', kills: 7, deaths: 17, assists: 3 },
       { name: 'Peteka', kills: 12, deaths: 20, assists: 6 },
-      { name: 'Knight', kills: 10, deaths: 16, assists: 2 },
+      { name: 'Camargo', kills: 10, deaths: 16, assists: 2 },
     ],
     teamB_stats: [
       { name: 'Sorps - Leluia', kills: 13, deaths: 10, assists: 6 },
-      { name: 'Tufabala', kills: 22, deaths: 10, assists: 8 },
-      { name: 'Vandeco', kills: 13, deaths: 13, assists: 5 },
+      { name: 'Tufa', kills: 22, deaths: 10, assists: 8 },
+      { name: 'Gio', kills: 13, deaths: 13, assists: 5 },
       { name: 'Galaxy', kills: 13, deaths: 14, assists: 9 },
-      { name: 'Pedro - Distress', kills: 20, deaths: 12, assists: 5 },
+      { name: 'Distress - Pedro', kills: 20, deaths: 12, assists: 5 },
     ]
   },
   '2': {
@@ -57,9 +57,9 @@ export const matchDetails: Record<string, any> = {
     map: 'Nuke', roundsA: 0, roundsB: 1,
     teamA_stats: [
       { name: 'ChapaChaplin', kills: 15, deaths: 20, assists: 8 },
-      { name: 'Baguá', kills: 21, deaths: 21, assists: 6 },
-      { name: 'Pedro G.', kills: 16, deaths: 20, assists: 6 },
-      { name: 'Dezin', kills: 14, deaths: 24, assists: 8 },
+      { name: 'Bagua', kills: 21, deaths: 21, assists: 6 },
+      { name: 'Pedro Giraldi', kills: 16, deaths: 20, assists: 6 },
+      { name: 'De', kills: 14, deaths: 24, assists: 8 },
       { name: 'Becker', kills: 28, deaths: 22, assists: 9 },
     ],
     teamB_stats: [
@@ -75,16 +75,16 @@ export const matchDetails: Record<string, any> = {
     teamA_stats: [
       { name: 'Gusta', kills: 19, deaths: 18, assists: 8 },
       { name: 'Acyd', kills: 33, deaths: 17, assists: 4 },
-      { name: 'Do Not Remove - Lucas', kills: 15, deaths: 18, assists: 7 },
-      { name: 'Tricke', kills: 10, deaths: 17, assists: 6 },
+      { name: 'Lucas', kills: 15, deaths: 18, assists: 7 },
+      { name: 'Dark', kills: 10, deaths: 17, assists: 6 },
       { name: 'Natan', kills: 7, deaths: 18, assists: 6 },
     ],
     teamB_stats: [
       { name: 'Hallow', kills: 14, deaths: 19, assists: 6 },
-      { name: 'DaddyMnny', kills: 20, deaths: 16, assists: 6 },
-      { name: 'Fernandin 666', kills: 22, deaths: 16, assists: 7 },
-      { name: 'Giuseppe Lagos', kills: 21, deaths: 18, assists: 5 },
-      { name: 'B1tz', kills: 11, deaths: 19, assists: 4 },
+      { name: 'Daddy Money', kills: 20, deaths: 16, assists: 6 },
+      { name: 'Fernandinho - Peida Leite', kills: 22, deaths: 16, assists: 7 },
+      { name: 'Giuseppe Lagos - Henrique', kills: 21, deaths: 18, assists: 5 },
+      { name: 'Marcelo - Bitz', kills: 11, deaths: 19, assists: 4 },
     ]
   }
 };
@@ -131,9 +131,9 @@ export const tiers = {
   ],
   A: [
     { name: 'Felpy', lvl: 18, swap: true },
-    { name: 'DaddyMnny', lvl: 17 },
-    { name: 'Fernandin 666', lvl: 15 },
-    { name: 'Pedro - Distress', lvl: 15 },
+    { name: 'Daddy Money', lvl: 17 },
+    { name: 'Fernandinho - Peida Leite', lvl: 15 },
+    { name: 'Distress - Pedro', lvl: 15 },
     { name: 'Gusta', lvl: 14 },
     { name: 'Gilli', lvl: 14 },
     { name: 'Samuka', lvl: 14 },
@@ -141,31 +141,31 @@ export const tiers = {
   ],
   B: [
     { name: 'Alemão', lvl: 13 },
-    { name: 'Tufabala', lvl: 12 },
+    { name: 'Tufa', lvl: 12 },
     { name: 'Hallow', lvl: 12 },
     { name: 'Duzz', lvl: 12 },
     { name: 'Math', lvl: 11 },
-    { name: 'Do Not Remove - Lucas', lvl: 10 },
-    { name: 'Baguá', lvl: 10 },
+    { name: 'Lucas', lvl: 10 },
+    { name: 'Bagua', lvl: 10 },
     { name: 'Manu', lvl: 10 }
   ],
   C: [
     { name: 'João Marcelo', lvl: 10 },
-    { name: 'Giuseppe Lagos', lvl: 10 },
-    { name: 'Vandeco', lvl: 10 },
+    { name: 'Giuseppe Lagos - Henrique', lvl: 10 },
+    { name: 'Gio', lvl: 10 },
     { name: 'Peteka', lvl: 9 },
     { name: 'Duzão', lvl: 9 },
     { name: 'PombaLoka', lvl: 9 },
     { name: 'Cobes', lvl: 9 },
-    { name: 'Pedro G.', lvl: 7 }
+    { name: 'Pedro Giraldi', lvl: 7 }
   ],
   D: [
     { name: 'Galaxy', lvl: 7 },
-    { name: 'Knight', lvl: 7 },
-    { name: 'Dezin', lvl: 6 },
-    { name: 'B1tz', lvl: 6 },
+    { name: 'Camargo', lvl: 7 },
+    { name: 'De', lvl: 6 },
+    { name: 'Marcelo - Bitz', lvl: 6 },
     { name: 'Baronelis', lvl: 6 },
-    { name: 'Tricke', lvl: 5 },
+    { name: 'Dark', lvl: 5 },
     { name: 'Natan', lvl: 4 },
     { name: 'Gilson Tedesko', lvl: 3 }
   ]
