@@ -1,7 +1,7 @@
 import { getTeam, matches, matchDetails } from '../../data';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import PlayerAvatar from '../jogador/[name]/PlayerAvatar';
+import PlayerAvatar from '../../jogador/[name]/PlayerAvatar';
 
 export default async function MatchPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
