@@ -82,7 +82,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
               <Link href={`/partida/${match.id}`} key={match.id} style={{ textDecoration: 'none' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.4)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', transition: 'all 0.2s', cursor: 'pointer' }} className="match-card-hover">
                   <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    {teamA.logo ? <img src={teamA.logo} alt={teamA.name} style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} /> : <div className="team-logo-square" style={{ width: '40px', height: '40px' }}>{teamA.initials}</div>}
+                    <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={40} borderRadius="8px" />
                     <strong style={{ fontSize: '1.1rem', fontFamily: 'var(--font-rajdhani)', color: '#fff' }}>{teamA.name}</strong>
                   </div>
                   
@@ -95,13 +95,69 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
 
                   <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '1rem' }}>
                     <strong style={{ fontSize: '1.1rem', fontFamily: 'var(--font-rajdhani)', textAlign: 'right', color: '#fff' }}>{teamB.name}</strong>
-                    {teamB.logo ? <img src={teamB.logo} alt={teamB.name} style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} /> : <div className="team-logo-square" style={{ width: '40px', height: '40px' }}>{teamB.initials}</div>}
+                    <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={40} borderRadius="8px" />
                   </div>
                 </div>
               </Link>
             )
           })}
         </div>
+
+        {/* Estatísticas de Mapas do Time */}
+        {(() => {
+          const teamMapStats: { map: string; result: 'win' | 'loss' }[] = [];
+          teamMatches.forEach(match => {
+            const detail = matchDetails[String(match.id)];
+            if (detail && detail.map) {
+              const isTeamA = match.teamA === team.id;
+              const won = isTeamA ? match.scoreA > match.scoreB : match.scoreB > match.scoreA;
+              teamMapStats.push({ map: detail.map, result: won ? 'win' : 'loss' });
+            }
+          });
+
+          if (teamMapStats.length === 0) return null;
+
+          const mapAgg: Record<string, { played: number; wins: number }> = {};
+          teamMapStats.forEach(s => {
+            if (!mapAgg[s.map]) mapAgg[s.map] = { played: 0, wins: 0 };
+            mapAgg[s.map].played++;
+            if (s.result === 'win') mapAgg[s.map].wins++;
+          });
+
+          return (
+            <div className="glass-card" style={{ marginTop: '3rem', border: '1px solid rgba(0,240,255,0.2)' }}>
+              <h2 className="hero-title" style={{ fontSize: '2rem', marginBottom: '1.5rem', textShadow: 'none' }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '0.5rem', verticalAlign: 'middle' }}><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                MAP POOL
+              </h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.2rem' }}>
+                {Object.entries(mapAgg).map(([mapName, stats]) => {
+                  const winPct = Math.round((stats.wins / stats.played) * 100);
+                  const mapColors: Record<string, string> = { 'Mirage': 'var(--cyan)', 'Inferno': '#ff4757', 'Nuke': '#ffa502', 'Anúbis': '#2ed573' };
+                  const color = mapColors[mapName] || 'var(--cyan)';
+                  return (
+                    <div key={mapName} style={{ background: 'rgba(0,0,0,0.5)', padding: '1.2rem', borderRadius: '14px', border: `1px solid ${color}33`, display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <strong style={{ fontSize: '1.3rem', color: '#fff', fontFamily: 'var(--font-rajdhani)' }}>{mapName}</strong>
+                        <span style={{ background: color, color: '#000', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.15rem 0.6rem', borderRadius: '12px' }}>
+                          {stats.played}x jogado
+                        </span>
+                      </div>
+                      <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
+                        <div style={{ width: `${winPct}%`, height: '100%', background: color }}></div>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
+                        <span style={{ color: '#2ed573' }}>✅ {stats.wins}V</span>
+                        <span style={{ color: '#ff4757' }}>❌ {stats.played - stats.wins}D</span>
+                        <span style={{ color: 'var(--text-muted)' }}>WR: {winPct}%</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
 
       </section>
     </main>
