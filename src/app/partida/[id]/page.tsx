@@ -1,6 +1,7 @@
 import { getTeam, matches, matchDetails } from '../../data';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import PlayerAvatar from '../jogador/[name]/PlayerAvatar';
 
 export default async function MatchPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
@@ -143,8 +144,11 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                 <div style={{ position: 'relative', zIndex: 1, padding: '2rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '2rem', background: 'linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(20,20,20,0.9) 100%)' }}>
                   
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                    <div style={{ background: 'var(--gold)', padding: '1rem', borderRadius: '50%', color: '#000', boxShadow: '0 0 20px rgba(255,215,0,0.5)' }}>
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"></path></svg>
+                    <div style={{ position: 'relative' }}>
+                      <PlayerAvatar teamName={mvpTeamObj.name} playerName={mvp.name} badgeColor="var(--gold)" size={80} />
+                      <div style={{ position: 'absolute', bottom: '-10px', right: '-10px', background: 'var(--gold)', padding: '0.5rem', borderRadius: '50%', color: '#000', boxShadow: '0 0 10px rgba(255,215,0,0.8)', zIndex: 2 }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"></path></svg>
+                      </div>
                     </div>
                     <div>
                       <h4 style={{ color: 'var(--gold)', margin: 0, fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase' }}>MVP da Partida</h4>

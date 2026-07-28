@@ -2,6 +2,7 @@ import { players, getTeam, matches, matchDetails, tiers } from '../../data';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PlayerChart from './PlayerChart';
+import PlayerAvatar from './PlayerAvatar';
 
 export default async function JogadorPage({ params }: { params: Promise<{ name: string }> }) {
   const resolvedParams = await params;
@@ -73,12 +74,7 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', position: 'relative', zIndex: 1 }}>
             
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexDirection: 'column' }}>
-              <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '1.5rem', borderRadius: '50%', border: `2px solid ${badgeColor}` }}>
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: badgeColor }}>
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-              </div>
+              <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor={badgeColor} />
               <h1 className="hero-title" style={{ fontSize: '3rem', margin: 0, textShadow: 'none' }}>{player.name}</h1>
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                 {playerTier !== 'Não ranqueado' && (
