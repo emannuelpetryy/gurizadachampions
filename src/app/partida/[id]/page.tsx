@@ -33,7 +33,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   const totalDeathsB = details.teamB_stats.reduce((acc: number, p: any) => acc + p.deaths, 0);
 
   const renderPlayerCard = (player: any) => {
-    const kdaRaw = (player.kills + player.assists) / (player.deaths || 1);
+    const kdaRaw = player.kills / (player.deaths || 1);
     const kda = kdaRaw.toFixed(2);
     
     // Cor do badge de KDA baseada no valor (verde para bom, vermelho para ruim, amarelo médio)
@@ -50,7 +50,9 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
-            <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
+            <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit' }} className="match-card-hover">
+              <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
+            </Link>
             <span style={{ background: badgeColor, color: '#fff', fontSize: '0.75rem', fontWeight: 'bold', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>
               {kda}
             </span>

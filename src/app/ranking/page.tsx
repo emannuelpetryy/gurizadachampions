@@ -66,7 +66,7 @@ export default function Ranking() {
           {renderGroupTable('B', groupB)}
         </div>
 
-        <h2 className="hero-title" style={{ fontSize: '2.5rem', textAlign: 'center', marginTop: '5rem', marginBottom: '2rem', textShadow: 'none' }}>TOP <span className="text-gold">FRAGGERS</span></h2>
+        <h2 className="hero-title" style={{ fontSize: '2.5rem', textAlign: 'center', marginTop: '5rem', marginBottom: '2rem', textShadow: 'none' }}>RANKING GERAL DE <span className="text-gold">KDA</span></h2>
         
         <div className="glass-card" style={{ padding: '1.5rem' }}>
           <div style={{ overflowX: 'auto' }}>
@@ -79,15 +79,21 @@ export default function Ranking() {
                   <th style={{ textAlign: 'center', color: 'var(--cyan)' }}>KILLS</th>
                   <th style={{ textAlign: 'center', color: 'var(--accent-red)' }}>DEATHS</th>
                   <th style={{ textAlign: 'center' }}>ASSISTS</th>
+                  <th style={{ textAlign: 'center', color: 'var(--gold)' }}>K/D</th>
                 </tr>
               </thead>
               <tbody>
-                {players.map((player, index) => {
+                {[...players].sort((a, b) => (b.kills / (b.deaths || 1)) - (a.kills / (a.deaths || 1))).map((player, index) => {
                   const team = getTeam(player.teamId);
+                  const kd = (player.kills / (player.deaths || 1)).toFixed(2);
                   return (
                     <tr key={player.name} className={`rank-${index + 1}`}>
                       <td style={{ textAlign: 'center' }}><span className="rank-number" style={{ fontSize: index < 3 ? '1.5rem' : '1.2rem' }}>#{index + 1}</span></td>
-                      <td><strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong></td>
+                      <td>
+                        <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit' }} className="match-card-hover">
+                          <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
+                        </Link>
+                      </td>
                       <td>
                         <Link href={`/time/${team.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                           <div className="team-info" style={{ gap: '0.5rem', cursor: 'pointer' }}>
@@ -103,6 +109,7 @@ export default function Ranking() {
                       <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '1.2rem' }}>{player.kills}</td>
                       <td style={{ textAlign: 'center', color: 'var(--accent-red)' }}>{player.deaths}</td>
                       <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{player.assists}</td>
+                      <td style={{ textAlign: 'center', color: 'var(--gold)', fontWeight: 'bold', fontSize: '1.2rem' }}>{kd}</td>
                     </tr>
                   );
                 })}

@@ -5,8 +5,8 @@ import Comments from '../components/Comments';
 export default function Home() {
   // Ordenar jogadores pelo KDA: (K + A) / D
   const topKDA = [...players].sort((a, b) => {
-    const kdaA = (a.kills + a.assists) / (a.deaths || 1);
-    const kdaB = (b.kills + b.assists) / (b.deaths || 1);
+    const kdaA = a.kills / (a.deaths || 1);
+    const kdaB = b.kills / (b.deaths || 1);
     return kdaB - kdaA; // Decrescente
   });
 
@@ -79,7 +79,7 @@ export default function Home() {
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.8rem', maxHeight: '600px', overflowY: 'auto', paddingRight: '0.5rem' }} className="custom-scrollbar">
               {topKDA.map((player, index) => {
                 const team = getTeam(player.teamId);
-                const kdaRaw = (player.kills + player.assists) / (player.deaths || 1);
+                const kdaRaw = player.kills / (player.deaths || 1);
                 const kda = kdaRaw.toFixed(2);
                 let badgeColor = '#666';
                 if (kdaRaw >= 1.5) badgeColor = 'var(--cyan)';
@@ -94,7 +94,9 @@ export default function Home() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                         {team.logo ? <img src={team.logo} alt={team.name} style={{ width: '28px', height: '28px', borderRadius: '4px', objectFit: 'cover' }} /> : <div className="team-logo-square" style={{ width: '28px', height: '28px', fontSize: '0.6rem' }}>{team.initials}</div>}
                         <div>
-                          <p style={{ fontWeight: 'bold', fontSize: '1rem', color: '#fff' }}>{player.name}</p>
+                          <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none' }} className="match-card-hover">
+                            <p style={{ fontWeight: 'bold', fontSize: '1rem', color: '#fff' }}>{player.name}</p>
+                          </Link>
                           <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{team.name}</p>
                         </div>
                       </div>

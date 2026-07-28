@@ -55,7 +55,9 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                           <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                           </div>
-                          <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
+                          <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit' }} className="match-card-hover">
+                            <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
+                          </Link>
                         </div>
                       </td>
                       <td style={{ textAlign: 'center' }}>1</td>
