@@ -16,17 +16,10 @@ export const matches = [
   { id: 1, teamA: 'jalin', teamB: 'desacreditados', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'qui., 23/07/2026 21:00', group: 'A' },
   { id: 2, teamA: 'assentamento', teamB: 'gilsons', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'seg., 27/07/2026 20:00', group: 'B' },
   { id: 3, teamA: '5cones', teamB: 'venvanse', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'qui., 23/07/2026 22:10', group: 'A' },
+  { id: 5, teamA: 'gilsons', teamB: 'whitelemon', scoreA: 1, scoreB: 0, status: 'Encerrado', date: 'ter., 28/07/2026 21:00', group: 'B' },
 ];
 
 export const upcomingMatches = [
-  {
-    id: 201,
-    teamA: 'gilsons',
-    teamB: 'whitelemon',
-    date: '2026-07-28T21:00:00-03:00',
-    dateDisplay: 'Terça-Feira, 28/07 às 21:00',
-    group: 'Rodada 2 - Grupo B'
-  },
   {
     id: 202,
     teamA: 'assentamento',
@@ -125,6 +118,24 @@ export const matchDetails: Record<string, any> = {
       { name: 'Giuseppe Lagos - Henrique', kills: 21, deaths: 18, assists: 5 },
       { name: 'Marcelo - Bitz', kills: 11, deaths: 19, assists: 4 },
     ]
+  },
+  '5': {
+    map: 'Dust II', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 6,
+    vodUrl: 'https://www.twitch.tv/ggustatc',
+    teamA_stats: [
+      { name: 'Alemão', kills: 14, deaths: 10, assists: 6 },
+      { name: 'SimboladaPAZ', kills: 9, deaths: 11, assists: 5 },
+      { name: 'Manko', kills: 27, deaths: 11, assists: 7 },
+      { name: 'PombaLoka', kills: 13, deaths: 11, assists: 6 },
+      { name: 'Felpy', kills: 24, deaths: 12, assists: 6 },
+    ],
+    teamB_stats: [
+      { name: 'Giuseppe Lagos - Henrique', kills: 8, deaths: 18, assists: 2 },
+      { name: 'Marcelo - Bitz', kills: 2, deaths: 19, assists: 6 },
+      { name: 'Hallow', kills: 16, deaths: 17, assists: 4 },
+      { name: 'Daddy Money', kills: 17, deaths: 18, assists: 2 },
+      { name: 'Fernandinho - Peida Leite', kills: 8, deaths: 15, assists: 5 },
+    ]
   }
 };
 
@@ -136,10 +147,10 @@ export const groupA = [
 ];
 
 export const groupB = [
-  { teamId: 'gilsons', p: 1, pj: 1, v: 1, d: 0 },
+  { teamId: 'gilsons', p: 2, pj: 2, v: 2, d: 0 },
   { teamId: 'maconhaco', p: 1, pj: 1, v: 1, d: 0 },
   { teamId: 'assentamento', p: 0, pj: 1, v: 0, d: 1 },
-  { teamId: 'whitelemon', p: 0, pj: 1, v: 0, d: 1 },
+  { teamId: 'whitelemon', p: 0, pj: 2, v: 0, d: 2 },
 ];
 
 // Re-computando a lista global de players a partir das matchDetails para ter o DB exato.
@@ -156,6 +167,7 @@ addPlayersToGlobal(matchDetails, '1', 'jalin', 'desacreditados');
 addPlayersToGlobal(matchDetails, '2', 'assentamento', 'gilsons');
 addPlayersToGlobal(matchDetails, '3', '5cones', 'venvanse');
 addPlayersToGlobal(matchDetails, '4', 'maconhaco', 'whitelemon');
+addPlayersToGlobal(matchDetails, '5', 'gilsons', 'whitelemon');
 
 export const tiers = {
   S: [

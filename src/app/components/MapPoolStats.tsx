@@ -17,6 +17,7 @@ export default function MapPoolStats() {
     { name: 'Inferno', count: mapCounts['Inferno'] || 0, color: '#ff4757' },
     { name: 'Nuke', count: mapCounts['Nuke'] || 0, color: '#ffa502' },
     { name: 'Anúbis', count: mapCounts['Anúbis'] || 0, color: '#2ed573' },
+    { name: 'Dust II', count: mapCounts['Dust II'] || 0, color: '#dfe6e9' },
   ];
 
   return (

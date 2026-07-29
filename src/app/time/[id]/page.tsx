@@ -133,7 +133,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.2rem' }}>
                 {Object.entries(mapAgg).map(([mapName, stats]) => {
                   const winPct = Math.round((stats.wins / stats.played) * 100);
-                  const mapColors: Record<string, string> = { 'Mirage': 'var(--cyan)', 'Inferno': '#ff4757', 'Nuke': '#ffa502', 'Anúbis': '#2ed573' };
+                  const mapColors: Record<string, string> = { 'Mirage': 'var(--cyan)', 'Inferno': '#ff4757', 'Nuke': '#ffa502', 'Anúbis': '#2ed573', 'Dust II': '#dfe6e9' };
                   const color = mapColors[mapName] || 'var(--cyan)';
                   return (
                     <div key={mapName} style={{ background: 'rgba(0,0,0,0.5)', padding: '1.2rem', borderRadius: '14px', border: `1px solid ${color}33`, display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
