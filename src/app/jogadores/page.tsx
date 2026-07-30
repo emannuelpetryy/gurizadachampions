@@ -12,7 +12,7 @@ export default function Jogadores() {
           TIERS DOS <span className="text-cyan">JOGADORES</span>
         </h1>
         <p className="hero-subtitle" style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          Classificação oficial baseada no nível GamersClub/FACEIT
+          Classificação oficial baseada no nível GamersClub / Gurizada Rating
         </p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
