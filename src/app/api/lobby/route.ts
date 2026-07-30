@@ -107,12 +107,20 @@ export async function GET() {
     const slotsMap: Record<number, any> = {};
 
     let storedDrawResult = null;
+    let storedMatchHistory: any[] = [];
+    let storedVetoState = { bannedMaps: [], vetoTurn: 'teamA' };
 
     if (Array.isArray(data)) {
       data.forEach(item => {
         if (item.slot_id === 99) {
           // Registro reservado para o resultado do sorteio
           try { storedDrawResult = JSON.parse(item.player_name); } catch(e) {}
+        } else if (item.slot_id === 98) {
+          // Registro reservado para o histórico de partidas do lobby
+          try { storedMatchHistory = JSON.parse(item.player_name); } catch(e) {}
+        } else if (item.slot_id === 97) {
+          // Registro reservado para o estado de veto de mapas ao vivo
+          try { storedVetoState = JSON.parse(item.player_name); } catch(e) {}
         } else {
           slotsMap[item.slot_id] = item;
         }
@@ -121,9 +129,9 @@ export async function GET() {
 
     const slots = Array.from({ length: 10 }, (_, i) => slotsMap[i + 1] || null);
 
-    return NextResponse.json({ slots, drawResult: storedDrawResult });
+    return NextResponse.json({ slots, drawResult: storedDrawResult, matchHistory: storedMatchHistory, vetoState: storedVetoState });
   } catch (e) {
-    return NextResponse.json({ slots: Array(10).fill(null), drawResult: null });
+    return NextResponse.json({ slots: Array(10).fill(null), drawResult: null, matchHistory: [], vetoState: { bannedMaps: [], vetoTurn: 'teamA' } });
   }
 }
 
@@ -136,7 +144,117 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Supabase não configurado' }, { status: 503 });
     }
 
-    const { action, slotId, playerName, teamId } = await request.json();
+    const { action, slotId, playerName, teamId, scoreA, scoreB, mapName, teamA, teamB } = await request.json();
+
+    if (action === 'save_match') {
+      if (scoreA === undefined || scoreB === undefined) {
+        return NextResponse.json({ error: 'Placar inválido' }, { status: 400 });
+      }
+
+      // Buscar histórico existente
+      const queryUrl = `${supabaseUrl}/rest/v1/match_lobby?select=*&slot_id=eq.98`;
+      const histRes = await fetch(queryUrl, {
+        headers: { 'Authorization': `Bearer ${supabaseKey}`, 'apikey': supabaseKey },
+        cache: 'no-store',
+      });
+      const histData = histRes.ok ? await histRes.json() : [];
+      let currentHistory: any[] = [];
+      if (histData.length > 0) {
+        try { currentHistory = JSON.parse(histData[0].player_name); } catch(e) {}
+      }
+
+      const newMatchRecord = {
+        id: Date.now().toString(),
+        scoreA,
+        scoreB,
+        mapName: mapName || 'Dust II',
+        teamA: teamA || [],
+        teamB: teamB || [],
+        date: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }),
+      };
+
+      const updatedHistory = [newMatchRecord, ...currentHistory];
+
+      // Salvar histórico atualizado no slot 98
+      const upsertUrl = `${supabaseUrl}/rest/v1/match_lobby`;
+      await fetch(upsertUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabaseKey}`,
+          'apikey': supabaseKey,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates',
+        },
+        body: JSON.stringify({
+          slot_id: 98,
+          player_name: JSON.stringify(updatedHistory),
+          joined_at: new Date().toISOString(),
+        }),
+      });
+
+      return NextResponse.json({ success: true, matchHistory: updatedHistory });
+    }
+
+    if (action === 'ban_map') {
+      if (!mapName) {
+        return NextResponse.json({ error: 'Falta o mapa' }, { status: 400 });
+      }
+
+      const queryUrl = `${supabaseUrl}/rest/v1/match_lobby?select=*&slot_id=eq.97`;
+      const vetoRes = await fetch(queryUrl, {
+        headers: { 'Authorization': `Bearer ${supabaseKey}`, 'apikey': supabaseKey },
+        cache: 'no-store',
+      });
+      const vetoData = vetoRes.ok ? await vetoRes.json() : [];
+      let vetoState = { bannedMaps: [] as string[], vetoTurn: 'teamA' };
+      if (vetoData.length > 0) {
+        try { vetoState = JSON.parse(vetoData[0].player_name); } catch(e) {}
+      }
+
+      if (!vetoState.bannedMaps.includes(mapName)) {
+        vetoState.bannedMaps.push(mapName);
+        vetoState.vetoTurn = vetoState.vetoTurn === 'teamA' ? 'teamB' : 'teamA';
+      }
+
+      const upsertUrl = `${supabaseUrl}/rest/v1/match_lobby`;
+      await fetch(upsertUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabaseKey}`,
+          'apikey': supabaseKey,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates',
+        },
+        body: JSON.stringify({
+          slot_id: 97,
+          player_name: JSON.stringify(vetoState),
+          joined_at: new Date().toISOString(),
+        }),
+      });
+
+      return NextResponse.json({ success: true, vetoState });
+    }
+
+    if (action === 'reset_veto') {
+      const vetoState = { bannedMaps: [], vetoTurn: 'teamA' };
+      const upsertUrl = `${supabaseUrl}/rest/v1/match_lobby`;
+      await fetch(upsertUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabaseKey}`,
+          'apikey': supabaseKey,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates',
+        },
+        body: JSON.stringify({
+          slot_id: 97,
+          player_name: JSON.stringify(vetoState),
+          joined_at: new Date().toISOString(),
+        }),
+      });
+
+      return NextResponse.json({ success: true, vetoState });
+    }
 
     if (action === 'join') {
       if (!slotId || !playerName) {

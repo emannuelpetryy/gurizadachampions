@@ -8,6 +8,7 @@ import TeamLogo from '../components/TeamLogo';
 export default function LobbyPage() {
   const [slots, setSlots] = useState<any[]>(Array(10).fill(null));
   const [drawResult, setDrawResult] = useState<any>(null);
+  const [matchHistory, setMatchHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPlayer, setSelectedPlayer] = useState('');
   const [customName, setCustomName] = useState('');
@@ -15,6 +16,9 @@ export default function LobbyPage() {
   const [activeSlotModal, setActiveSlotModal] = useState<number | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
+  const [scoreAInput, setScoreAInput] = useState('13');
+  const [scoreBInput, setScoreBInput] = useState('9');
+  const [savingScore, setSavingScore] = useState(false);
 
   // Auto-refresh a cada 2.5s para ser simultâneo em tempo real!
   useEffect(() => {
@@ -28,6 +32,11 @@ export default function LobbyPage() {
           if (!cancelled) {
             setSlots(data.slots || Array(10).fill(null));
             if (data.drawResult) setDrawResult(data.drawResult);
+            if (data.matchHistory) setMatchHistory(data.matchHistory);
+            if (data.vetoState) {
+              if (Array.isArray(data.vetoState.bannedMaps)) setBannedMaps(data.vetoState.bannedMaps);
+              if (data.vetoState.vetoTurn) setVetoTurn(data.vetoState.vetoTurn);
+            }
           }
         }
       } catch (e) {
@@ -170,22 +179,71 @@ export default function LobbyPage() {
     { name: 'Nuke', icon: '⚛️', desc: 'Usina Nuclear & Rota Secreta B', color: '#3498db' },
     { name: 'Anubis', icon: '⚖️', desc: 'Ruínas do Egito & Águas de B', color: '#9b59b6' },
     { name: 'Ancient', icon: '🗿', desc: 'Selva Maia & Ruínas de Pedra', color: '#2ecc71' },
-    { name: 'Train', icon: '🚂', desc: 'Pátio de Trens & Trilhos Frios', color: '#1abc9c' },
+    { name: 'Cache', icon: '☣️', desc: 'Zona Radiativa & Meio Retão', color: '#4caf50' },
   ];
 
   const [bannedMaps, setBannedMaps] = useState<string[]>([]);
   const [vetoTurn, setVetoTurn] = useState<'teamA' | 'teamB'>('teamA');
 
-  const handleBanMap = (mapName: string) => {
+  const handleBanMap = async (mapName: string) => {
     if (bannedMaps.includes(mapName)) return;
     const updated = [...bannedMaps, mapName];
+    const nextTurn = vetoTurn === 'teamA' ? 'teamB' : 'teamA';
     setBannedMaps(updated);
-    setVetoTurn(prev => (prev === 'teamA' ? 'teamB' : 'teamA'));
+    setVetoTurn(nextTurn);
+
+    try {
+      await fetch('/api/lobby', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'ban_map', mapName }),
+      });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  const handleResetVeto = () => {
+  const handleResetVeto = async () => {
     setBannedMaps([]);
     setVetoTurn('teamA');
+    try {
+      await fetch('/api/lobby', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'reset_veto' }),
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleSaveMatchScore = async () => {
+    if (!drawResult) return;
+    setSavingScore(true);
+    try {
+      const res = await fetch('/api/lobby', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'save_match',
+          scoreA: parseInt(scoreAInput) || 0,
+          scoreB: parseInt(scoreBInput) || 0,
+          mapName: finalChosenMap ? finalChosenMap.name : 'Dust II',
+          teamA: drawResult.teamA,
+          teamB: drawResult.teamB,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.matchHistory) setMatchHistory(data.matchHistory);
+        alert('🏆 Placar do amistoso registrado com sucesso!');
+      }
+    } catch (e) {
+      alert('Erro ao salvar o placar da partida.');
+    } finally {
+      setSavingScore(false);
+    }
   };
 
   const remainingMaps = CS2_ACTIVE_DUTY.filter(m => !bannedMaps.includes(m.name));
@@ -425,6 +483,54 @@ export default function LobbyPage() {
                     </div>
                   );
                 })}
+{/* REGISTRO DO PLACAR DA PARTIDA */}
+                <div style={{ marginTop: '2rem', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,215,0,0.3)', borderRadius: '16px', padding: '1.5rem', textAlign: 'center' }}>
+                  <h4 style={{ fontSize: '1.2rem', color: '#ffd700', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, margin: '0 0 1rem 0' }}>
+                    🏆 REGISTRAR RESULTADO DA PARTIDA AMISTOSA
+                  </h4>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ color: 'var(--cyan)', fontWeight: 800, fontSize: '0.9rem' }}>LADO AZUL:</span>
+                      <input
+                        type="number"
+                        value={scoreAInput}
+                        onChange={e => setScoreAInput(e.target.value)}
+                        style={{ width: '65px', background: 'rgba(10,15,30,0.95)', border: '1px solid var(--cyan)', padding: '0.5rem', borderRadius: '8px', color: '#fff', fontSize: '1.2rem', textAlign: 'center', fontWeight: 800 }}
+                      />
+                    </div>
+
+                    <span style={{ fontSize: '1.4rem', color: '#fff', fontWeight: 900 }}>X</span>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <input
+                        type="number"
+                        value={scoreBInput}
+                        onChange={e => setScoreBInput(e.target.value)}
+                        style={{ width: '65px', background: 'rgba(10,15,30,0.95)', border: '1px solid var(--accent-red)', padding: '0.5rem', borderRadius: '8px', color: '#fff', fontSize: '1.2rem', textAlign: 'center', fontWeight: 800 }}
+                      />
+                      <span style={{ color: 'var(--accent-red)', fontWeight: 800, fontSize: '0.9rem' }}>LADO VERMELHO</span>
+                    </div>
+
+                    <button
+                      onClick={handleSaveMatchScore}
+                      disabled={savingScore}
+                      style={{
+                        background: 'linear-gradient(135deg, #ffd700, #ffaa00)',
+                        color: '#080d1a',
+                        border: 'none',
+                        padding: '0.6rem 1.4rem',
+                        borderRadius: '12px',
+                        fontWeight: 800,
+                        fontSize: '0.9rem',
+                        cursor: 'pointer',
+                        boxShadow: '0 0 15px rgba(255,215,0,0.4)',
+                      }}
+                    >
+                      {savingScore ? 'SALVANDO...' : '💾 SALVAR PLACAR'}
+                    </button>
+                  </div>
+                </div>
+
               </div>
             </div>
 
@@ -769,6 +875,37 @@ export default function LobbyPage() {
                 </button>
               </div>
 
+            </div>
+          </div>
+        )}
+
+        {/* HISTÓRICO DE AMISTOSOS FINALIZADOS */}
+        {matchHistory.length > 0 && (
+          <div style={{ marginTop: '3.5rem' }}>
+            <h2 style={{ fontSize: '1.8rem', color: '#fff', textAlign: 'center', marginBottom: '1.5rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 800 }}>
+              📜 HISTÓRICO DE AMISTOSOS (5v5)
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '800px', margin: '0 auto' }}>
+              {matchHistory.map((m: any, idx: number) => (
+                <div key={m.id || idx} className="glass-card" style={{ padding: '1.2rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                    <span style={{ background: 'rgba(0,240,255,0.15)', color: 'var(--cyan)', padding: '0.3rem 0.8rem', borderRadius: '10px', fontWeight: 800, fontSize: '0.8rem' }}>
+                      🗺️ {m.mapName || 'CS2 Map'}
+                    </span>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{m.date}</span>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, fontSize: '1.4rem' }}>
+                    <span style={{ color: m.scoreA > m.scoreB ? '#2ed573' : '#fff' }}>{m.scoreA}</span>
+                    <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>-</span>
+                    <span style={{ color: m.scoreB > m.scoreA ? '#2ed573' : '#fff' }}>{m.scoreB}</span>
+                  </div>
+
+                  <span style={{ fontSize: '0.85rem', fontWeight: 800, color: m.scoreA > m.scoreB ? 'var(--cyan)' : 'var(--accent-red)' }}>
+                    {m.scoreA > m.scoreB ? '🏆 VITÓRIA LADO AZUL' : '🏆 VITÓRIA LADO VERMELHO'}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         )}

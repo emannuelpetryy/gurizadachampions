@@ -186,9 +186,14 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
 
               const badgesList = [];
               if (mvpCount > 0) badgesList.push({ title: 'MVP da Partida', desc: `Melhor jogador da partida ${mvpCount}x no campeonato`, icon: '🏆', color: 'var(--gold)' });
-              if (hasHardCarry) badgesList.push({ title: 'Hard Carry', desc: 'Teve desempenho monstruoso com K/D > 2.0 em uma partida', icon: '🔥', color: 'var(--cyan)' });
-              if (hasMonstroDoFrag) badgesList.push({ title: 'Monstro do Frag', desc: 'Fez 30 ou mais Kills em uma única partida', icon: '🎯', color: '#ff9800' });
-              if (isReiDaResenha) badgesList.push({ title: 'Rei da Resenha', desc: 'Dono do maior número de assistências de toda a liga', icon: '👑', color: '#ab47bc' });
+              if (kdRaw >= 1.4) badgesList.push({ title: 'Clutch God', desc: 'Frio nas situações 1vX com K/D superior a 1.40 na liga', icon: '👑', color: '#ffd700' });
+              if (kdRaw >= 1.2) badgesList.push({ title: 'One Tap King', desc: 'Precisão milimétrica de HS e HS K/D superior a 1.20', icon: '🎯', color: 'var(--cyan)' });
+              if (player.assists >= 10) badgesList.push({ title: 'Pai da Smoke', desc: 'Excelência no uso de utilitários e assistências táticas', icon: '💨', color: '#00e676' });
+              if (mvpCount >= 2) badgesList.push({ title: 'Bomb Master', desc: 'Mestre em plantar, defusar e garantir o round decisivo', icon: '💣', color: '#ff9800' });
+              if (playerMatches.length >= 3) badgesList.push({ title: 'Âncora de B', desc: 'Defesa inabalável e pilar de consistência da equipe', icon: '🛡️', color: '#ab47bc' });
+              if (hasHardCarry) badgesList.push({ title: 'Hard Carry', desc: 'Desempenho monstruoso com K/D > 2.0 em partida', icon: '🔥', color: '#ff3366' });
+              if (hasMonstroDoFrag) badgesList.push({ title: 'Monstro do Frag', desc: 'Fez 30 ou mais Kills em uma única partida', icon: '⚡', color: '#ff9800' });
+              if (isReiDaResenha) badgesList.push({ title: 'Rei da Resenha', desc: 'Dono do maior número de assistências de toda a liga', icon: '⭐', color: '#ab47bc' });
               if (isSwapped) badgesList.push({ title: 'Trocado', desc: 'Jogador envolvido em troca de equipe durante a liga', icon: '🔄', color: '#00e676' });
               if (hasDifficilCarregar) badgesList.push({ title: 'Difícil Carregar', desc: 'Teve o menor K/D em uma partida do campeonato', icon: '⚓', color: 'var(--accent-red)' });
 
