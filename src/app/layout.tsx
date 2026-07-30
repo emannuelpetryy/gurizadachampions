@@ -28,15 +28,17 @@ export default function RootLayout({
       <body className={`${rajdhani.variable} ${inter.variable}`}>
         <nav className="top-nav">
           <div className="nav-container">
-            <Link href="/" className="nav-brand">GURIZADA<span className="text-cyan">CHAMPIONS</span></Link>
+            <Link href="/" className="nav-brand">
+              <span className="nav-brand-icon">🏆</span> GURIZADA<span className="text-cyan">CHAMPIONS</span>
+            </Link>
             <div className="nav-links">
-              <Link href="/">INÍCIO</Link>
-              <Link href="/ranking">RANKING & STATS</Link>
-              <Link href="/selecao" style={{ color: '#ffd700', fontWeight: 'bold' }}>🌟 SELEÇÕES & BAGRES</Link>
-              <Link href="/lobby" style={{ color: 'var(--cyan)', fontWeight: 'bold' }}>🎮 LOBBY (5v5)</Link>
-              <Link href="/comparacao">COMPARAR 1V1</Link>
-              <Link href="/jogadores">JOGADORES (TIERS)</Link>
-              <Link href="/sobre">REGULAMENTO</Link>
+              <Link href="/" className="nav-item">INÍCIO</Link>
+              <Link href="/ranking" className="nav-item">RANKING & STATS</Link>
+              <Link href="/selecao" className="nav-item nav-item-gold">🌟 SELEÇÕES</Link>
+              <Link href="/lobby" className="nav-item nav-item-lobby">🎮 LOBBY (5v5)</Link>
+              <Link href="/comparacao" className="nav-item">COMPARAR 1V1</Link>
+              <Link href="/jogadores" className="nav-item">JOGADORES</Link>
+              <Link href="/sobre" className="nav-item">REGULAMENTO</Link>
             </div>
           </div>
         </nav>
