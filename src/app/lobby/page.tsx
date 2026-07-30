@@ -11,6 +11,7 @@ export default function LobbyPage() {
   const [loading, setLoading] = useState(true);
   const [selectedPlayer, setSelectedPlayer] = useState('');
   const [customName, setCustomName] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [activeSlotModal, setActiveSlotModal] = useState<number | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -496,63 +497,149 @@ export default function LobbyPage() {
           </div>
         </div>
 
-        {/* MODAL SELECIONAR JOGADOR */}
+        {/* MODAL SELECIONAR JOGADOR COM BUSCA EM TEMPO REAL */}
         {activeSlotModal !== null && (
-          <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-            <div className="glass-card" style={{ width: '100%', maxWidth: '450px', padding: '2rem', border: '1px solid var(--cyan)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h3 style={{ margin: 0, color: '#fff', fontSize: '1.3rem' }}>🎯 ENTRAR NA VAGA #{activeSlotModal}</h3>
-                <button onClick={() => setActiveSlotModal(null)} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+          <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(10px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+            <div className="glass-card" style={{ width: '100%', maxWidth: '480px', padding: '1.8rem', border: '1px solid var(--cyan)', boxShadow: '0 0 40px rgba(0,240,255,0.2)' }}>
+              
+              {/* Header do Modal */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.8rem' }}>
+                <div>
+                  <h3 style={{ margin: 0, color: '#fff', fontSize: '1.3rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 800 }}>
+                    🎯 SELEÇÃO DE PERFIL — VAGA #{activeSlotModal}
+                  </h3>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Pesquise seu nick ou time abaixo para entrar</span>
+                </div>
+                <button
+                  onClick={() => { setActiveSlotModal(null); setSearchTerm(''); setSelectedPlayer(''); setCustomName(''); }}
+                  style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '1rem' }}
+                >
+                  ✕
+                </button>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.4rem', fontWeight: 'bold' }}>
-                    Escolher Jogador do Torneio:
-                  </label>
-                  <select
-                    value={selectedPlayer}
-                    onChange={e => { setSelectedPlayer(e.target.value); setCustomName(''); }}
-                    style={{ width: '100%', background: 'rgba(10,15,30,0.95)', border: '1px solid var(--card-border)', color: '#fff', padding: '0.7rem', borderRadius: '10px', fontSize: '0.95rem' }}
-                  >
-                    <option value="">-- Selecione seu perfil --</option>
-                    {players.map(p => (
-                      <option key={p.name} value={p.name}>{p.name} ({getTeam(p.teamId).name})</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.8rem' }}>— OU —</div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.4rem', fontWeight: 'bold' }}>
-                    Digitar Nome de Visitante / Convidado:
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Ex: Gaules"
-                    value={customName}
-                    onChange={e => { setCustomName(e.target.value); setSelectedPlayer(''); }}
-                    style={{ width: '100%', background: 'rgba(10,15,30,0.95)', border: '1px solid var(--card-border)', color: '#fff', padding: '0.7rem', borderRadius: '10px', fontSize: '0.95rem' }}
-                  />
-                </div>
-
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
-                  <button
-                    onClick={() => handleJoinSlot(activeSlotModal)}
-                    disabled={actionLoading}
-                    style={{ flex: 1, background: 'linear-gradient(135deg, #00f0ff, #0099ff)', color: '#080d1a', border: 'none', padding: '0.8rem', borderRadius: '12px', fontWeight: 800, fontSize: '1rem', cursor: 'pointer' }}
-                  >
-                    {actionLoading ? 'Salvando...' : 'Confirmar Vaga'}
-                  </button>
-                  <button
-                    onClick={() => setActiveSlotModal(null)}
-                    style={{ background: 'rgba(255,255,255,0.1)', color: '#fff', border: 'none', padding: '0.8rem 1.2rem', borderRadius: '12px', fontWeight: 700, cursor: 'pointer' }}
-                  >
-                    Cancelar
-                  </button>
-                </div>
+              {/* BARRA DE PESQUISA EM TEMPO REAL */}
+              <div style={{ marginBottom: '1rem', position: 'relative' }}>
+                <input
+                  type="text"
+                  placeholder="🔍 Digite para pesquisar (ex: Gusta, Acyd, Manko, Venvanse)..."
+                  value={searchTerm}
+                  onChange={e => { setSearchTerm(e.target.value); }}
+                  autoFocus
+                  style={{
+                    width: '100%',
+                    background: 'rgba(10,15,30,0.95)',
+                    border: '1.5px solid var(--cyan)',
+                    color: '#fff',
+                    padding: '0.75rem 1rem',
+                    borderRadius: '12px',
+                    fontSize: '0.92rem',
+                    boxShadow: '0 0 15px rgba(0,240,255,0.15)',
+                    outline: 'none'
+                  }}
+                />
               </div>
+
+              {/* LISTA DE JOGADORES FILTRADOS */}
+              <div style={{ maxHeight: '240px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem', paddingRight: '4px', marginBottom: '1.2rem' }}>
+                {(() => {
+                  const filtered = players.filter(p => {
+                    const t = getTeam(p.teamId);
+                    const q = searchTerm.toLowerCase().trim();
+                    return !q || p.name.toLowerCase().includes(q) || t.name.toLowerCase().includes(q);
+                  });
+
+                  if (filtered.length === 0) {
+                    return (
+                      <div style={{ textAlign: 'center', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px dashed rgba(255,255,255,0.1)' }}>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>Nenhum jogador encontrado com "{searchTerm}".</p>
+                        <button
+                          onClick={() => { setCustomName(searchTerm); setSelectedPlayer(''); }}
+                          style={{ marginTop: '0.8rem', background: 'rgba(0,240,255,0.15)', color: 'var(--cyan)', border: '1px solid var(--cyan)', padding: '0.4rem 0.9rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800, cursor: 'pointer' }}
+                        >
+                          Usar "{searchTerm}" como Nick de Convidado
+                        </button>
+                      </div>
+                    );
+                  }
+
+                  return filtered.map(p => {
+                    const t = getTeam(p.teamId);
+                    const isSelected = selectedPlayer === p.name;
+
+                    return (
+                      <div
+                        key={p.name}
+                        onClick={() => { setSelectedPlayer(p.name); setCustomName(''); }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          background: isSelected ? 'rgba(0,240,255,0.2)' : 'rgba(10,15,30,0.8)',
+                          border: isSelected ? '1.5px solid var(--cyan)' : '1px solid rgba(255,255,255,0.08)',
+                          borderRadius: '10px',
+                          padding: '0.6rem 0.9rem',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          boxShadow: isSelected ? '0 0 15px rgba(0,240,255,0.2)' : 'none',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
+                          <PlayerAvatar teamName={t.name} playerName={p.name} badgeColor={isSelected ? 'var(--cyan)' : '#ffd700'} size={36} />
+                          <div>
+                            <strong style={{ fontSize: '0.98rem', color: isSelected ? 'var(--cyan)' : '#fff', display: 'block' }}>{p.name}</strong>
+                            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{t.name}</span>
+                          </div>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          {isSelected && <span style={{ color: 'var(--cyan)', fontWeight: 800, fontSize: '0.9rem' }}>✓</span>}
+                        </div>
+                      </div>
+                    );
+                  });
+                })()}
+              </div>
+
+              {/* CAMPO DE CONVIDADO (CASO PREFIRA DIGITAR) */}
+              {customName && (
+                <div style={{ background: 'rgba(255,215,0,0.1)', border: '1px solid #ffd700', padding: '0.6rem 0.9rem', borderRadius: '10px', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '0.8rem', color: '#ffd700', fontWeight: 800 }}>👤 Convidado: <strong>{customName}</strong></span>
+                  <button onClick={() => setCustomName('')} style={{ background: 'none', border: 'none', color: '#ffd700', cursor: 'pointer', fontWeight: 800 }}>✕</button>
+                </div>
+              )}
+
+              {/* BOTOES DE AÇÃO */}
+              <div style={{ display: 'flex', gap: '0.8rem' }}>
+                <button
+                  onClick={() => handleJoinSlot(activeSlotModal)}
+                  disabled={actionLoading || (!selectedPlayer && !customName)}
+                  style={{
+                    flex: 1,
+                    background: (selectedPlayer || customName) ? 'linear-gradient(135deg, #00f0ff, #0099ff)' : 'rgba(255,255,255,0.1)',
+                    color: (selectedPlayer || customName) ? '#080d1a' : 'var(--text-muted)',
+                    border: 'none',
+                    padding: '0.85rem',
+                    borderRadius: '12px',
+                    fontWeight: 800,
+                    fontSize: '1rem',
+                    cursor: (selectedPlayer || customName) ? 'pointer' : 'not-allowed',
+                    fontFamily: 'var(--font-rajdhani)',
+                    boxShadow: (selectedPlayer || customName) ? '0 0 20px rgba(0,240,255,0.4)' : 'none',
+                    transition: 'all 0.3s'
+                  }}
+                >
+                  {actionLoading ? 'Entrando...' : selectedPlayer ? `Confirmar ${selectedPlayer} na Vaga #${activeSlotModal}` : 'Selecione um Perfil'}
+                </button>
+
+                <button
+                  onClick={() => { setActiveSlotModal(null); setSearchTerm(''); setSelectedPlayer(''); setCustomName(''); }}
+                  style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)', padding: '0.85rem 1.2rem', borderRadius: '12px', fontWeight: 700, cursor: 'pointer' }}
+                >
+                  Cancelar
+                </button>
+              </div>
+
             </div>
           </div>
         )}
