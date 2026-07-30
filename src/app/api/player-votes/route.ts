@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '../../lib/supabase';
 
-const NAMESPACE = 'gurizadachampions_v2';
+const NAMESPACE = 'gurizadachampions_v3';
 const API_BASE = `https://api.counterapi.dev/v1/${NAMESPACE}`;
 
 export async function GET(request: NextRequest) {

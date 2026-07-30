@@ -59,11 +59,21 @@ export default function SelecoesPage() {
 
   useEffect(() => {
     try {
-      const starStorage = localStorage.getItem('gc_voted_star_players');
-      if (starStorage) setVotedStar(JSON.parse(starStorage));
+      const VOTE_VERSION = 'v3';
+      const storedVersion = localStorage.getItem('gc_vote_version');
 
-      const bagreStorage = localStorage.getItem('gc_voted_bagre_players');
-      if (bagreStorage) setVotedBagre(JSON.parse(bagreStorage));
+      if (storedVersion !== VOTE_VERSION) {
+        // Houve reset de votos — limpar tudo do dispositivo
+        localStorage.removeItem('gc_voted_star_players');
+        localStorage.removeItem('gc_voted_bagre_players');
+        localStorage.setItem('gc_vote_version', VOTE_VERSION);
+      } else {
+        const starStorage = localStorage.getItem('gc_voted_star_players');
+        if (starStorage) setVotedStar(JSON.parse(starStorage));
+
+        const bagreStorage = localStorage.getItem('gc_voted_bagre_players');
+        if (bagreStorage) setVotedBagre(JSON.parse(bagreStorage));
+      }
     } catch (e) {
       // Ignore
     }

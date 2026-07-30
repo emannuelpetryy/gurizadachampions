@@ -99,6 +99,14 @@ export default function PlayerAvatar({
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validar tamanho máximo: 50MB
+    const MAX_SIZE_MB = 50;
+    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+      alert(`⚠️ A foto selecionada excede o limite máximo permitido de ${MAX_SIZE_MB}MB! Escolha uma imagem menor.`);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
     setUploading(true);
     setUploadSuccess(false);
 
