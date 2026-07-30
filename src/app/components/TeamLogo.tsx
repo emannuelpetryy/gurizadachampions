@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function TeamLogo({ 
   logo, 
@@ -17,6 +17,16 @@ export default function TeamLogo({
 }) {
   const [imgError, setImgError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    setIsLoaded(false);
+    setImgError(false);
+
+    if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
+      setIsLoaded(true);
+    }
+  }, [logo]);
 
   // Se não tem logo ou se deu erro de carregamento, renderiza o badge com as iniciais do time
   if (!logo || imgError) {
@@ -75,7 +85,8 @@ export default function TeamLogo({
             justifyContent: 'center',
             color: '#fff',
             fontFamily: 'var(--font-rajdhani)',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            zIndex: 0
           }}
         >
           {initials}
@@ -83,16 +94,16 @@ export default function TeamLogo({
       )}
 
       <img 
+        ref={imgRef}
         src={encodeURI(logo)} 
         alt="" 
         style={{ 
           width: '100%', 
           height: '100%', 
           objectFit: 'cover',
-          opacity: isLoaded ? 1 : 0,
-          transition: 'opacity 0.2s ease-in-out',
           position: 'relative',
-          zIndex: 1
+          zIndex: 1,
+          display: 'block'
         }}
         onLoad={() => setIsLoaded(true)}
         onError={() => setImgError(true)}

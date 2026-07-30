@@ -138,6 +138,17 @@ export default function PlayerAvatar({
     }
   };
 
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    setIsLoaded(false);
+    setImgError(false);
+
+    if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
+      setIsLoaded(true);
+    }
+  }, [imgSrc]);
+
   const Placeholder = (
     <div
       style={{
@@ -191,22 +202,32 @@ export default function PlayerAvatar({
               fontFamily: 'var(--font-rajdhani)', fontWeight: 'bold',
               fontSize: `${size * 0.38}px`, color: '#fff',
               textShadow: `0 0 8px ${badgeColor}`, letterSpacing: '1px',
+              zIndex: 0,
             }}>
               {initials}
             </div>
           )}
           <img
+            ref={imgRef}
             src={imgSrc}
             alt={playerName}
             style={{
               width: '100%', height: '100%', objectFit: 'cover',
-              opacity: isLoaded ? 1 : 0, transition: 'opacity 0.2s ease-in-out',
               position: 'relative', zIndex: 1,
+              display: 'block',
             }}
             onLoad={() => setIsLoaded(true)}
             onError={() => {
-              photoCache[slug] = null;
-              setImgError(true);
+              if (imgSrc && imgSrc.endsWith('.jpg')) {
+                const nextSrc = imgSrc.replace(/\.jpg$/, '.png');
+                setImgSrc(nextSrc);
+              } else if (imgSrc && imgSrc.endsWith('.png')) {
+                const nextSrc = imgSrc.replace(/\.png$/, '.jpeg');
+                setImgSrc(nextSrc);
+              } else {
+                photoCache[slug] = null;
+                setImgError(true);
+              }
             }}
           />
         </div>
