@@ -370,8 +370,8 @@ export async function POST(request: NextRequest) {
     }
 
     if (action === 'reset') {
-      // Limpar todos os slots
-      const deleteUrl = `${supabaseUrl}/rest/v1/match_lobby?slot_id=gt.0`;
+      // Limpar apenas os slots dos jogadores (1-10) e o sorteio (99), PRESERVANDO o ranking de ELO (96) e histórico (98)
+      const deleteUrl = `${supabaseUrl}/rest/v1/match_lobby?slot_id=in.(1,2,3,4,5,6,7,8,9,10,99)`;
       await fetch(deleteUrl, {
         method: 'DELETE',
         headers: {

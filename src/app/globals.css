@@ -501,6 +501,43 @@ h1, h2, h3, h4, h5, h6 {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 0.8rem !important;
   }
+
+  .ranking-table th, .ranking-table td {
+    padding: 0.6rem 0.4rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  .ranking-table th {
+    font-size: 0.8rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+
+  .hero-title {
+    font-size: 1.8rem !important;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem !important;
+  }
+
+  .glass-card {
+    padding: 1rem 0.6rem !important;
+    border-radius: 12px !important;
+  }
+
+  .player-stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  button, .btn-primary, .btn-secondary {
+    padding: 0.7rem 1.2rem !important;
+    font-size: 0.9rem !important;
+  }
 }
 
 
