@@ -51,19 +51,21 @@ export default function SelecoesPage() {
   const [votedStar, setVotedStar] = useState<Record<string, boolean>>({});
   const [votedBagre, setVotedBagre] = useState<Record<string, boolean>>({});
 
+  const [draftStar, setDraftStar] = useState<Record<string, boolean>>({});
+  const [draftBagre, setDraftBagre] = useState<Record<string, boolean>>({});
+
   const [hoveredBadgePlayer, setHoveredBadgePlayer] = useState<string | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const [submittingSlug, setSubmittingSlug] = useState<string | null>(null);
+  const [isSubmittingVotes, setIsSubmittingVotes] = useState(false);
 
   useEffect(() => {
     try {
-      const VOTE_VERSION = 'v3';
+      const VOTE_VERSION = 'v4'; // Atualizado para zerar votos locais anteriores
       const storedVersion = localStorage.getItem('gc_vote_version');
 
       if (storedVersion !== VOTE_VERSION) {
-        // Houve reset de votos — limpar tudo do dispositivo
         localStorage.removeItem('gc_voted_star_players');
         localStorage.removeItem('gc_voted_bagre_players');
         localStorage.setItem('gc_vote_version', VOTE_VERSION);
@@ -98,44 +100,75 @@ export default function SelecoesPage() {
     fetchVotes();
   }, []);
 
-  const handleVote = async (playerName: string, type: 'star' | 'bagre') => {
-    const slug = cleanSlug(playerName);
-    if (type === 'star' && votedStar[slug]) return;
-    if (type === 'bagre' && votedBagre[slug]) return;
+  const openModal = () => {
+    setDraftStar({ ...votedStar });
+    setDraftBagre({ ...votedBagre });
+    setIsModalOpen(true);
+  };
 
-    setSubmittingSlug(`${type}_${slug}`);
+  const toggleDraftStar = (slug: string) => {
+    if (votedStar[slug]) return;
+    setDraftStar(prev => ({
+      ...prev,
+      [slug]: !prev[slug]
+    }));
+  };
+
+  const toggleDraftBagre = (slug: string) => {
+    if (votedBagre[slug]) return;
+    setDraftBagre(prev => ({
+      ...prev,
+      [slug]: !prev[slug]
+    }));
+  };
+
+  // Votação só é enviada ao Banco de Dados APÓS o usuário clicar no botão "Concluir Votação"
+  const handleFinalSubmitVotes = async () => {
+    const newVotesToSubmit: { playerSlug: string; type: 'star' | 'bagre' }[] = [];
+
+    Object.keys(draftStar).forEach(slug => {
+      if (draftStar[slug] && !votedStar[slug]) {
+        newVotesToSubmit.push({ playerSlug: slug, type: 'star' });
+      }
+    });
+
+    Object.keys(draftBagre).forEach(slug => {
+      if (draftBagre[slug] && !votedBagre[slug]) {
+        newVotesToSubmit.push({ playerSlug: slug, type: 'bagre' });
+      }
+    });
+
+    if (newVotesToSubmit.length === 0) {
+      setIsModalOpen(false);
+      return;
+    }
+
+    setIsSubmittingVotes(true);
 
     try {
       const res = await fetch('/api/player-votes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerSlug: slug, type })
+        body: JSON.stringify({ votes: newVotesToSubmit })
       });
 
       if (res.ok) {
-        const data = await res.json();
-        setVotes(prev => ({
-          ...prev,
-          [slug]: {
-            ...prev[slug],
-            [type]: data.count
-          }
-        }));
+        const updatedStars = { ...votedStar, ...draftStar };
+        const updatedBagres = { ...votedBagre, ...draftBagre };
 
-        if (type === 'star') {
-          const updated = { ...votedStar, [slug]: true };
-          setVotedStar(updated);
-          localStorage.setItem('gc_voted_star_players', JSON.stringify(updated));
-        } else {
-          const updated = { ...votedBagre, [slug]: true };
-          setVotedBagre(updated);
-          localStorage.setItem('gc_voted_bagre_players', JSON.stringify(updated));
-        }
+        setVotedStar(updatedStars);
+        setVotedBagre(updatedBagres);
+
+        localStorage.setItem('gc_voted_star_players', JSON.stringify(updatedStars));
+        localStorage.setItem('gc_voted_bagre_players', JSON.stringify(updatedBagres));
+
+        await fetchVotes();
+        setIsModalOpen(false);
       }
     } catch (e) {
       console.error(e);
     } finally {
-      setSubmittingSlug(null);
+      setIsSubmittingVotes(false);
     }
   };
 
@@ -369,8 +402,7 @@ export default function SelecoesPage() {
                       </span>
                     ) : (
                       <button
-                        disabled={submittingSlug === `star_${player.slug}`}
-                        onClick={() => handleVote(player.name, 'star')}
+                        onClick={openModal}
                         style={{ marginTop: '0.7rem', width: '100%', background: 'linear-gradient(135deg, #ffd700, #ffaa00)', color: '#080d1a', border: 'none', padding: '0.45rem 0.2rem', borderRadius: '8px', fontWeight: 800, fontSize: '0.72rem', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.3rem' }}
                       >
                         <span>🌟</span> VOTAR NELE
@@ -490,8 +522,7 @@ export default function SelecoesPage() {
                       </span>
                     ) : (
                       <button
-                        disabled={submittingSlug === `bagre_${player.slug}`}
-                        onClick={() => handleVote(player.name, 'bagre')}
+                        onClick={openModal}
                         style={{ marginTop: '0.7rem', width: '100%', background: 'linear-gradient(135deg, #00f0ff, #0099ff)', color: '#080d1a', border: 'none', padding: '0.45rem 0.2rem', borderRadius: '8px', fontWeight: 800, fontSize: '0.72rem', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.3rem' }}
                       >
                         <span>🐟</span> VOTAR BAGRE
@@ -583,10 +614,10 @@ export default function SelecoesPage() {
               <div style={{ padding: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.4)' }}>
                 <div>
                   <h3 style={{ fontSize: '1.6rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, color: '#fff', margin: 0 }}>
-                    🗳️ VOTAÇÃO DA TORCIDA
+                    🗳️ ESCALAÇÃO & VOTAÇÃO DA TORCIDA
                   </h3>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0.2rem 0 0 0' }}>
-                    Vote nos seus favoritos para o Dream Team e nos Bagres do Campeonato!
+                  <p style={{ fontSize: '0.8rem', color: 'var(--cyan)', margin: '0.2rem 0 0 0', fontWeight: 600 }}>
+                    Selecione suas escolhas abaixo. Os votos só serão computados ao clicar em "Concluir Votação"!
                   </p>
                 </div>
 
@@ -608,10 +639,10 @@ export default function SelecoesPage() {
               <div style={{ padding: '1.5rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.8rem', flex: 1 }} className="custom-scrollbar">
                 {filteredPlayers.map((player) => {
                   const team = getTeam(player.teamId);
-                  const isStarVoted = votedStar[player.slug];
-                  const isBagreVoted = votedBagre[player.slug];
-                  const isStarLoading = submittingSlug === `star_${player.slug}`;
-                  const isBagreLoading = submittingSlug === `bagre_${player.slug}`;
+                  const isStarSelected = draftStar[player.slug];
+                  const isBagreSelected = draftBagre[player.slug];
+                  const isStarAlreadyVoted = votedStar[player.slug];
+                  const isBagreAlreadyVoted = votedBagre[player.slug];
 
                   return (
                     <div key={player.name} style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '0.8rem 1.2rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', gap: '1rem' }}>
@@ -625,48 +656,52 @@ export default function SelecoesPage() {
                       </div>
 
                       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexShrink: 0 }}>
+                        {/* Botão Star */}
                         <button
-                          disabled={isStarVoted || isStarLoading}
-                          onClick={() => handleVote(player.name, 'star')}
+                          disabled={isStarAlreadyVoted}
+                          onClick={() => toggleDraftStar(player.slug)}
                           style={{
-                            background: isStarVoted ? 'rgba(255, 215, 0, 0.15)' : 'linear-gradient(135deg, #ffd700, #ffaa00)',
-                            color: isStarVoted ? '#ffd700' : '#080d1a',
-                            border: isStarVoted ? '1px solid #ffd700' : 'none',
+                            background: isStarAlreadyVoted ? 'rgba(255, 215, 0, 0.15)' : isStarSelected ? 'linear-gradient(135deg, #ffd700, #ffaa00)' : 'rgba(255, 215, 0, 0.1)',
+                            color: isStarAlreadyVoted ? '#ffd700' : isStarSelected ? '#080d1a' : '#ffd700',
+                            border: isStarAlreadyVoted ? '1px solid #ffd700' : isStarSelected ? 'none' : '1px solid rgba(255, 215, 0, 0.3)',
                             padding: '0.5rem 0.8rem',
                             borderRadius: '8px',
                             fontWeight: 800,
                             fontSize: '0.75rem',
-                            cursor: isStarVoted ? 'default' : 'pointer',
+                            cursor: isStarAlreadyVoted ? 'default' : 'pointer',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '0.3rem',
-                            opacity: isStarLoading ? 0.6 : 1
+                            boxShadow: isStarSelected ? '0 0 15px rgba(255,215,0,0.4)' : 'none',
+                            transition: 'all 0.2s'
                           }}
                         >
                           <span>🌟</span>
-                          <span>{isStarVoted ? 'MELHOR ✅' : 'MELHOR'} ({player.starVotes})</span>
+                          <span>{isStarAlreadyVoted ? 'VOTADO ✅' : isStarSelected ? 'SELECIONADO ✨' : '+ MELHOR'}</span>
                         </button>
 
+                        {/* Botão Bagre */}
                         <button
-                          disabled={isBagreVoted || isBagreLoading}
-                          onClick={() => handleVote(player.name, 'bagre')}
+                          disabled={isBagreAlreadyVoted}
+                          onClick={() => toggleDraftBagre(player.slug)}
                           style={{
-                            background: isBagreVoted ? 'rgba(0, 240, 255, 0.15)' : 'linear-gradient(135deg, #00f0ff, #0099ff)',
-                            color: isBagreVoted ? 'var(--cyan)' : '#080d1a',
-                            border: isBagreVoted ? '1px solid var(--cyan)' : 'none',
+                            background: isBagreAlreadyVoted ? 'rgba(0, 240, 255, 0.15)' : isBagreSelected ? 'linear-gradient(135deg, #00f0ff, #0099ff)' : 'rgba(0, 240, 255, 0.1)',
+                            color: isBagreAlreadyVoted ? 'var(--cyan)' : isBagreSelected ? '#080d1a' : 'var(--cyan)',
+                            border: isBagreAlreadyVoted ? '1px solid var(--cyan)' : isBagreSelected ? 'none' : '1px solid rgba(0, 240, 255, 0.3)',
                             padding: '0.5rem 0.8rem',
                             borderRadius: '8px',
                             fontWeight: 800,
                             fontSize: '0.75rem',
-                            cursor: isBagreVoted ? 'default' : 'pointer',
+                            cursor: isBagreAlreadyVoted ? 'default' : 'pointer',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '0.3rem',
-                            opacity: isBagreLoading ? 0.6 : 1
+                            boxShadow: isBagreSelected ? '0 0 15px rgba(0,240,255,0.4)' : 'none',
+                            transition: 'all 0.2s'
                           }}
                         >
                           <span>🐟</span>
-                          <span>{isBagreVoted ? 'BAGRE ✅' : 'BAGRE'} ({player.bagreVotes})</span>
+                          <span>{isBagreAlreadyVoted ? 'VOTADO ✅' : isBagreSelected ? 'SELECIONADO ✨' : '+ BAGRE'}</span>
                         </button>
                       </div>
                     </div>
@@ -674,10 +709,31 @@ export default function SelecoesPage() {
                 })}
               </div>
 
-              <div style={{ padding: '1rem 1.5rem', background: 'rgba(0,0,0,0.4)', borderTop: '1px solid rgba(255,255,255,0.08)', textAlign: 'right' }}>
-                <button onClick={() => setIsModalOpen(false)} className="btn-secondary" style={{ padding: '0.6rem 1.5rem', fontSize: '0.9rem', margin: 0 }}>
-                  Concluir Votação
-                </button>
+              <div style={{ padding: '1rem 1.5rem', background: 'rgba(0,0,0,0.4)', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                  Total Selecionado: <strong style={{ color: '#ffd700' }}>{Object.values(draftStar).filter(Boolean).length} Melhores</strong> • <strong style={{ color: 'var(--cyan)' }}>{Object.values(draftBagre).filter(Boolean).length} Bagres</strong>
+                </span>
+
+                <div style={{ display: 'flex', gap: '0.8rem' }}>
+                  <button
+                    onClick={handleFinalSubmitVotes}
+                    disabled={isSubmittingVotes}
+                    style={{
+                      padding: '0.7rem 1.8rem',
+                      fontSize: '0.95rem',
+                      fontWeight: 800,
+                      background: 'linear-gradient(135deg, #00f0ff, #0099ff)',
+                      color: '#080d1a',
+                      border: 'none',
+                      borderRadius: '12px',
+                      cursor: 'pointer',
+                      boxShadow: '0 0 25px rgba(0,240,255,0.4)',
+                      transition: 'all 0.3s'
+                    }}
+                  >
+                    {isSubmittingVotes ? '🚀 ENVIANDO VOTOS...' : '🚀 CONCLUIR E ENVIAR VOTAÇÃO'}
+                  </button>
+                </div>
               </div>
 
             </div>
