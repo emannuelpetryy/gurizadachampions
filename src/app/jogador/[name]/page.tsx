@@ -5,6 +5,7 @@ import PlayerChart from './PlayerChart';
 import PlayerAvatar from './PlayerAvatar';
 import GamersClubLink from './GamersClubLink';
 import PlayerCardGenerator from './PlayerCardGenerator';
+import PlayerEloBadge from './PlayerEloBadge';
 
 export default async function JogadorPage({ params }: { params: Promise<{ name: string }> }) {
   const resolvedParams = await params;
@@ -95,6 +96,7 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
                 </Link>
               </div>
               <GamersClubLink playerName={player.name} lvl={playerLvlVal} />
+              <PlayerEloBadge playerName={player.name} />
               <PlayerCardGenerator
                 playerName={player.name}
                 teamName={team.name}
