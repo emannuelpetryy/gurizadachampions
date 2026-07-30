@@ -29,11 +29,14 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
   // Determinar o Tier do jogador
   let playerTier = 'Não ranqueado';
   let tierLvl = '';
+  let playerLvlVal: number | undefined = undefined;
+
   for (const [tierName, tierPlayers] of Object.entries(tiers)) {
     const found = tierPlayers.find(tp => tp.name.toLowerCase().includes(decodedName.toLowerCase()) || decodedName.toLowerCase().includes(tp.name.toLowerCase()));
     if (found) {
       playerTier = `Tier ${tierName}`;
       tierLvl = `(Lvl ${found.lvl})`;
+      playerLvlVal = found.lvl;
       break;
     }
   }
@@ -90,7 +93,7 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
                   </span>
                 </Link>
               </div>
-              <GamersClubLink playerName={player.name} />
+              <GamersClubLink playerName={player.name} lvl={playerLvlVal} />
             </div>
 
             {/* Estatísticas Gerais */}
