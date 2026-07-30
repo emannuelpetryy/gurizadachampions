@@ -35,7 +35,7 @@ export default function PlayerEloBadge({ playerName }: { playerName: string }) {
   const totalMatches = wins + losses;
   const winrate = totalMatches > 0 ? ((wins / totalMatches) * 100).toFixed(1) : '0.0';
 
-  const faceitLevel = elo >= 1500 ? 10 : elo >= 1350 ? 9 : elo >= 1200 ? 8 : elo >= 1100 ? 6 : elo >= 1000 ? 4 : 2;
+  const gcRatingLevel = elo >= 1500 ? 10 : elo >= 1350 ? 9 : elo >= 1200 ? 8 : elo >= 1100 ? 6 : elo >= 1000 ? 4 : 2;
   const badgeColor = elo >= 1400 ? '#ffd700' : elo >= 1200 ? '#00f0ff' : '#a4b0be';
 
   return (
@@ -63,7 +63,7 @@ export default function PlayerEloBadge({ playerName }: { playerName: string }) {
           letterSpacing: '0.5px',
         }}
       >
-        FACEIT LVL {faceitLevel}
+        GC RATING LVL {gcRatingLevel}
       </div>
 
       <div style={{ textAlign: 'left' }}>

@@ -7,7 +7,7 @@ import PlayerAvatar from '../jogador/[name]/PlayerAvatar';
 import TeamLogo from '../components/TeamLogo';
 
 export default function Ranking() {
-  const [activeTab, setActiveTab] = useState<'championship' | 'faceit'>('championship');
+  const [activeTab, setActiveTab] = useState<'championship' | 'elo_rating'>('championship');
   const [eloMap, setEloMap] = useState<Record<string, any>>({});
   const [loadingElo, setLoadingElo] = useState(true);
 
@@ -105,22 +105,22 @@ export default function Ranking() {
           </button>
 
           <button
-            onClick={() => setActiveTab('faceit')}
+            onClick={() => setActiveTab('elo_rating')}
             style={{
-              background: activeTab === 'faceit' ? 'linear-gradient(135deg, #ffd700, #ffaa00)' : 'rgba(255,255,255,0.05)',
-              color: activeTab === 'faceit' ? '#080d1a' : '#fff',
-              border: activeTab === 'faceit' ? 'none' : '1px solid rgba(255,255,255,0.15)',
+              background: activeTab === 'elo_rating' ? 'linear-gradient(135deg, #ffd700, #ffaa00)' : 'rgba(255,255,255,0.05)',
+              color: activeTab === 'elo_rating' ? '#080d1a' : '#fff',
+              border: activeTab === 'elo_rating' ? 'none' : '1px solid rgba(255,255,255,0.15)',
               padding: '0.9rem 2rem',
               borderRadius: '20px',
               fontWeight: 800,
               fontSize: '1rem',
               fontFamily: 'var(--font-rajdhani)',
               cursor: 'pointer',
-              boxShadow: activeTab === 'faceit' ? '0 0 25px rgba(255,215,0,0.4)' : 'none',
+              boxShadow: activeTab === 'elo_rating' ? '0 0 25px rgba(255,215,0,0.4)' : 'none',
               transition: 'all 0.3s',
             }}
           >
-            ⚡ RANKING ELO FACEIT (AMISTOSOS 5V5)
+            ⚡ RANKING DE ELO DA GURIZADA (AMISTOSOS 5V5)
           </button>
         </div>
 
@@ -197,11 +197,11 @@ export default function Ranking() {
           </>
         )}
 
-        {/* TAB 2: RANKING ELO FACEIT AMISTOSOS */}
-        {activeTab === 'faceit' && (
+        {/* TAB 2: RANKING DE ELO DA GURIZADA (AMISTOSOS) */}
+        {activeTab === 'elo_rating' && (
           <div>
             <h1 className="hero-title" style={{ fontSize: '3.2rem', textAlign: 'center', textShadow: 'none' }}>
-              RANKING ELO <span className="text-gold">FACEIT (5V5)</span>
+              RANKING DE ELO <span className="text-gold">DA GURIZADA</span>
             </h1>
             <p className="hero-subtitle" style={{ textAlign: 'center', marginBottom: '3rem' }}>
               Pontuação individual acumulada nas partidas amistosas do Lobby (+25 ELO vitória / -15 ELO derrota)
@@ -228,7 +228,7 @@ export default function Ranking() {
                     const matchedP = players.find(p => p.name.toLowerCase() === player.name.toLowerCase());
                     const team = matchedP ? getTeam(matchedP.teamId) : { name: 'Convidado' };
                     
-                    const faceitLevel = player.elo >= 1500 ? 10 : player.elo >= 1350 ? 9 : player.elo >= 1200 ? 8 : player.elo >= 1100 ? 6 : player.elo >= 1000 ? 4 : 2;
+                    const ratingLevel = player.elo >= 1500 ? 10 : player.elo >= 1350 ? 9 : player.elo >= 1200 ? 8 : player.elo >= 1100 ? 6 : player.elo >= 1000 ? 4 : 2;
                     const badgeColor = player.elo >= 1400 ? '#ffd700' : player.elo >= 1200 ? '#00f0ff' : '#a4b0be';
 
                     return (
@@ -250,7 +250,7 @@ export default function Ranking() {
 
                         <div style={{ textAlign: 'right' }}>
                           <span style={{ background: badgeColor, color: '#080d1a', padding: '0.25rem 0.7rem', borderRadius: '8px', fontWeight: 900, fontSize: '0.75rem', display: 'inline-block', marginBottom: '0.3rem' }}>
-                            FACEIT LVL {faceitLevel}
+                            GC RATING LVL {ratingLevel}
                           </span>
                           <strong style={{ fontSize: '1.4rem', color: badgeColor, display: 'block', fontFamily: 'var(--font-rajdhani)' }}>
                             {player.elo} ELO

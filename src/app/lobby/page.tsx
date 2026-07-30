@@ -908,12 +908,12 @@ export default function LobbyPage() {
           </div>
         )}
 
-        {/* LEADERBOARD DE ELO INDIVIDUAL DOS JOGADORES (ESTILO FACEIT) */}
+        {/* LEADERBOARD DE ELO INDIVIDUAL DOS JOGADORES (GURIZADA RATING) */}
         {Object.keys(eloMap).length > 0 && (
           <div style={{ marginTop: '3.5rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '1.8rem' }}>
               <h2 style={{ fontSize: '2rem', color: '#fff', margin: 0, fontFamily: 'var(--font-rajdhani)', fontWeight: 800 }}>
-                🏆 RANKING ELO DA GURIZADA (ESTILO FACEIT)
+                🏆 RANKING DE ELO DA GURIZADA
               </h2>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.4rem' }}>
                 Pontuação individual dos jogadores acumulada nos amistosos 5v5 (+25 ELO por vitória / -15 ELO por derrota)
@@ -929,7 +929,7 @@ export default function LobbyPage() {
                   const matchedP = players.find(p => p.name.toLowerCase() === player.name.toLowerCase());
                   const team = matchedP ? getTeam(matchedP.teamId) : { name: 'Convidado' };
                   
-                  const faceitLevel = player.elo >= 1500 ? 10 : player.elo >= 1350 ? 9 : player.elo >= 1200 ? 8 : player.elo >= 1100 ? 6 : player.elo >= 1000 ? 4 : 2;
+                  const ratingLevel = player.elo >= 1500 ? 10 : player.elo >= 1350 ? 9 : player.elo >= 1200 ? 8 : player.elo >= 1100 ? 6 : player.elo >= 1000 ? 4 : 2;
                   const badgeColor = player.elo >= 1400 ? '#ffd700' : player.elo >= 1200 ? '#00f0ff' : '#a4b0be';
 
                   return (
@@ -947,7 +947,7 @@ export default function LobbyPage() {
 
                       <div style={{ textAlign: 'right' }}>
                         <span style={{ background: badgeColor, color: '#080d1a', padding: '0.2rem 0.6rem', borderRadius: '8px', fontWeight: 900, fontSize: '0.75rem', display: 'inline-block', marginBottom: '0.3rem' }}>
-                          FACEIT LVL {faceitLevel}
+                          GC RATING LVL {ratingLevel}
                         </span>
                         <strong style={{ fontSize: '1.3rem', color: badgeColor, display: 'block', fontFamily: 'var(--font-rajdhani)' }}>
                           {player.elo} ELO
