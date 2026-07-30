@@ -9,9 +9,11 @@ export default function LobbyPage() {
   const [slots, setSlots] = useState<any[]>(Array(10).fill(null));
   const [drawResult, setDrawResult] = useState<any>(null);
   const [matchHistory, setMatchHistory] = useState<any[]>([]);
+  const [eloMap, setEloMap] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
   const [selectedPlayer, setSelectedPlayer] = useState('');
   const [customName, setCustomName] = useState('');
+  const [guestLevel, setGuestLevel] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSlotModal, setActiveSlotModal] = useState<number | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
@@ -33,6 +35,7 @@ export default function LobbyPage() {
             setSlots(data.slots || Array(10).fill(null));
             if (data.drawResult) setDrawResult(data.drawResult);
             if (data.matchHistory) setMatchHistory(data.matchHistory);
+            if (data.eloMap) setEloMap(data.eloMap);
             if (data.vetoState) {
               if (Array.isArray(data.vetoState.bannedMaps)) setBannedMaps(data.vetoState.bannedMaps);
               if (data.vetoState.vetoTurn) setVetoTurn(data.vetoState.vetoTurn);
@@ -67,7 +70,7 @@ export default function LobbyPage() {
       const res = await fetch('/api/lobby', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'join', slotId, playerName: pName }),
+        body: JSON.stringify({ action: 'join', slotId, playerName: pName, customLevel: customName ? guestLevel : undefined }),
       });
 
       if (res.ok) {
@@ -237,7 +240,8 @@ export default function LobbyPage() {
       if (res.ok) {
         const data = await res.json();
         if (data.matchHistory) setMatchHistory(data.matchHistory);
-        alert('🏆 Placar do amistoso registrado com sucesso!');
+        if (data.eloMap) setEloMap(data.eloMap);
+        alert('🏆 Placar e Pontuação ELO registrados com sucesso!');
       }
     } catch (e) {
       alert('Erro ao salvar o placar da partida.');
@@ -838,9 +842,34 @@ export default function LobbyPage() {
 
               {/* CAMPO DE CONVIDADO (CASO PREFIRA DIGITAR) */}
               {customName && (
-                <div style={{ background: 'rgba(255,215,0,0.1)', border: '1px solid #ffd700', padding: '0.6rem 0.9rem', borderRadius: '10px', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: '0.8rem', color: '#ffd700', fontWeight: 800 }}>👤 Convidado: <strong>{customName}</strong></span>
-                  <button onClick={() => setCustomName('')} style={{ background: 'none', border: 'none', color: '#ffd700', cursor: 'pointer', fontWeight: 800 }}>✕</button>
+                <div style={{ background: 'rgba(255,215,0,0.1)', border: '1px solid #ffd700', padding: '0.8rem 1rem', borderRadius: '12px', marginBottom: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '0.85rem', color: '#ffd700', fontWeight: 800 }}>👤 Convidado: <strong>{customName}</strong></span>
+                    <button onClick={() => setCustomName('')} style={{ background: 'none', border: 'none', color: '#ffd700', cursor: 'pointer', fontWeight: 800 }}>✕</button>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.4rem', borderTop: '1px solid rgba(255,215,0,0.2)' }}>
+                    <label style={{ fontSize: '0.78rem', color: '#fff', fontWeight: 800 }}>🎯 Nível Gamers Club do Convidado:</label>
+                    <select
+                      value={guestLevel}
+                      onChange={(e) => setGuestLevel(parseInt(e.target.value))}
+                      style={{
+                        background: '#0a0f1d',
+                        color: '#ffd700',
+                        border: '1px solid #ffd700',
+                        borderRadius: '8px',
+                        padding: '0.3rem 0.6rem',
+                        fontWeight: 800,
+                        fontSize: '0.85rem',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {Array.from({ length: 20 }, (_, i) => i + 1).map((lvl) => (
+                        <option key={lvl} value={lvl}>
+                          Level {lvl} {lvl >= 18 ? '(Tier S)' : lvl >= 14 ? '(Tier A)' : lvl >= 10 ? '(Tier B)' : '(Tier C)'}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               )}
 
@@ -864,7 +893,7 @@ export default function LobbyPage() {
                     transition: 'all 0.3s'
                   }}
                 >
-                  {actionLoading ? 'Entrando...' : selectedPlayer ? `Confirmar ${selectedPlayer} na Vaga #${activeSlotModal}` : 'Selecione um Perfil'}
+                  {actionLoading ? 'Entrando...' : selectedPlayer ? `Confirmar ${selectedPlayer} na Vaga #${activeSlotModal}` : customName ? `Confirmar ${customName} (Lvl ${guestLevel})` : 'Selecione um Perfil'}
                 </button>
 
                 <button
@@ -875,6 +904,58 @@ export default function LobbyPage() {
                 </button>
               </div>
 
+            </div>
+          </div>
+        )}
+
+        {/* LEADERBOARD DE ELO INDIVIDUAL DOS JOGADORES (ESTILO FACEIT) */}
+        {Object.keys(eloMap).length > 0 && (
+          <div style={{ marginTop: '3.5rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.8rem' }}>
+              <h2 style={{ fontSize: '2rem', color: '#fff', margin: 0, fontFamily: 'var(--font-rajdhani)', fontWeight: 800 }}>
+                🏆 RANKING ELO DA GURIZADA (ESTILO FACEIT)
+              </h2>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.4rem' }}>
+                Pontuação individual dos jogadores acumulada nos amistosos 5v5 (+25 ELO por vitória / -15 ELO por derrota)
+              </p>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))', gap: '1.2rem', maxWidth: '1000px', margin: '0 auto' }}>
+              {Object.values(eloMap)
+                .sort((a: any, b: any) => b.elo - a.elo)
+                .map((player: any, idx: number) => {
+                  const totalMatches = (player.wins || 0) + (player.losses || 0);
+                  const winrate = totalMatches > 0 ? ((player.wins / totalMatches) * 100).toFixed(1) : '0.0';
+                  const matchedP = players.find(p => p.name.toLowerCase() === player.name.toLowerCase());
+                  const team = matchedP ? getTeam(matchedP.teamId) : { name: 'Convidado' };
+                  
+                  const faceitLevel = player.elo >= 1500 ? 10 : player.elo >= 1350 ? 9 : player.elo >= 1200 ? 8 : player.elo >= 1100 ? 6 : player.elo >= 1000 ? 4 : 2;
+                  const badgeColor = player.elo >= 1400 ? '#ffd700' : player.elo >= 1200 ? '#00f0ff' : '#a4b0be';
+
+                  return (
+                    <div key={player.name} className="glass-card" style={{ padding: '1.2rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: `1px solid ${badgeColor}40`, boxShadow: idx === 0 ? '0 0 25px rgba(255,215,0,0.3)' : 'none' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <span style={{ fontSize: '1.2rem', fontWeight: 900, color: idx === 0 ? '#ffd700' : idx === 1 ? '#c0c0c0' : idx === 2 ? '#cd7f32' : 'var(--text-muted)', width: '28px' }}>
+                          #{idx + 1}
+                        </span>
+                        <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor={badgeColor} size={48} />
+                        <div>
+                          <strong style={{ fontSize: '1.1rem', color: '#fff', display: 'block' }}>{player.name}</strong>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{player.wins || 0}V - {player.losses || 0}D • {winrate}% WR</span>
+                        </div>
+                      </div>
+
+                      <div style={{ textAlign: 'right' }}>
+                        <span style={{ background: badgeColor, color: '#080d1a', padding: '0.2rem 0.6rem', borderRadius: '8px', fontWeight: 900, fontSize: '0.75rem', display: 'inline-block', marginBottom: '0.3rem' }}>
+                          FACEIT LVL {faceitLevel}
+                        </span>
+                        <strong style={{ fontSize: '1.3rem', color: badgeColor, display: 'block', fontFamily: 'var(--font-rajdhani)' }}>
+                          {player.elo} ELO
+                        </strong>
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         )}

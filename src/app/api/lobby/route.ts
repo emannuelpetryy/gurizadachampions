@@ -109,6 +109,7 @@ export async function GET() {
     let storedDrawResult = null;
     let storedMatchHistory: any[] = [];
     let storedVetoState = { bannedMaps: [], vetoTurn: 'teamA' };
+    let storedEloMap: Record<string, { name: string; elo: number; wins: number; losses: number }> = {};
 
     if (Array.isArray(data)) {
       data.forEach(item => {
@@ -121,6 +122,9 @@ export async function GET() {
         } else if (item.slot_id === 97) {
           // Registro reservado para o estado de veto de mapas ao vivo
           try { storedVetoState = JSON.parse(item.player_name); } catch(e) {}
+        } else if (item.slot_id === 96) {
+          // Registro reservado para a pontuação ELO dos jogadores
+          try { storedEloMap = JSON.parse(item.player_name); } catch(e) {}
         } else {
           slotsMap[item.slot_id] = item;
         }
@@ -129,9 +133,9 @@ export async function GET() {
 
     const slots = Array.from({ length: 10 }, (_, i) => slotsMap[i + 1] || null);
 
-    return NextResponse.json({ slots, drawResult: storedDrawResult, matchHistory: storedMatchHistory, vetoState: storedVetoState });
+    return NextResponse.json({ slots, drawResult: storedDrawResult, matchHistory: storedMatchHistory, vetoState: storedVetoState, eloMap: storedEloMap });
   } catch (e) {
-    return NextResponse.json({ slots: Array(10).fill(null), drawResult: null, matchHistory: [], vetoState: { bannedMaps: [], vetoTurn: 'teamA' } });
+    return NextResponse.json({ slots: Array(10).fill(null), drawResult: null, matchHistory: [], vetoState: { bannedMaps: [], vetoTurn: 'teamA' }, eloMap: {} });
   }
 }
 
@@ -192,7 +196,57 @@ export async function POST(request: NextRequest) {
         }),
       });
 
-      return NextResponse.json({ success: true, matchHistory: updatedHistory });
+      // Atualizar ELO e estatísticas individuais dos jogadores no slot 96 (Estilo FaceIT)
+      const eloQueryUrl = `${supabaseUrl}/rest/v1/match_lobby?select=*&slot_id=eq.96`;
+      const eloRes = await fetch(eloQueryUrl, {
+        headers: { 'Authorization': `Bearer ${supabaseKey}`, 'apikey': supabaseKey },
+        cache: 'no-store',
+      });
+      const eloData = eloRes.ok ? await eloRes.json() : [];
+      let currentEloMap: Record<string, { name: string; elo: number; wins: number; losses: number }> = {};
+      if (eloData.length > 0) {
+        try { currentEloMap = JSON.parse(eloData[0].player_name); } catch(e) {}
+      }
+
+      const winners = scoreA > scoreB ? (teamA || []) : scoreB > scoreA ? (teamB || []) : [];
+      const losers = scoreA > scoreB ? (teamB || []) : scoreB > scoreA ? (teamA || []) : [];
+
+      winners.forEach((p: any) => {
+        if (!p || !p.player_name) return;
+        const s = cleanSlug(p.player_name);
+        const playerStats = currentEloMap[s] || { name: p.player_name, elo: 1000, wins: 0, losses: 0 };
+        playerStats.name = p.player_name;
+        playerStats.elo += 25;
+        playerStats.wins += 1;
+        currentEloMap[s] = playerStats;
+      });
+
+      losers.forEach((p: any) => {
+        if (!p || !p.player_name) return;
+        const s = cleanSlug(p.player_name);
+        const playerStats = currentEloMap[s] || { name: p.player_name, elo: 1000, wins: 0, losses: 0 };
+        playerStats.name = p.player_name;
+        playerStats.elo = Math.max(100, playerStats.elo - 15);
+        playerStats.losses += 1;
+        currentEloMap[s] = playerStats;
+      });
+
+      await fetch(upsertUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabaseKey}`,
+          'apikey': supabaseKey,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates',
+        },
+        body: JSON.stringify({
+          slot_id: 96,
+          player_name: JSON.stringify(currentEloMap),
+          joined_at: new Date().toISOString(),
+        }),
+      });
+
+      return NextResponse.json({ success: true, matchHistory: updatedHistory, eloMap: currentEloMap });
     }
 
     if (action === 'ban_map') {
@@ -257,12 +311,13 @@ export async function POST(request: NextRequest) {
     }
 
     if (action === 'join') {
+      const { customLevel } = await request.json().catch(() => ({}));
       if (!slotId || !playerName) {
         return NextResponse.json({ error: 'Falta slotId ou playerName' }, { status: 400 });
       }
 
       const slug = cleanSlug(playerName);
-      const lvl = getPlayerLevel(playerName);
+      const lvl = customLevel ? parseInt(customLevel) : getPlayerLevel(playerName);
       const matchedPlayer = players.find(p => p.name.toLowerCase() === playerName.toLowerCase());
       const finalTeamId = teamId || matchedPlayer?.teamId || 'desacreditados';
 
