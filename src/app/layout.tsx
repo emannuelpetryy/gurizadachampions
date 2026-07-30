@@ -32,6 +32,7 @@ export default function RootLayout({
             <div className="nav-links">
               <Link href="/">INÍCIO</Link>
               <Link href="/ranking">RANKING & STATS</Link>
+              <Link href="/selecao" style={{ color: '#ffd700', fontWeight: 'bold' }}>🌟 SELEÇÕES & BAGRES</Link>
               <Link href="/comparacao">COMPARAR 1V1</Link>
               <Link href="/jogadores">JOGADORES (TIERS)</Link>
               <Link href="/sobre">REGULAMENTO</Link>

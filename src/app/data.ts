@@ -12,22 +12,15 @@ export const teams = [
 export const getTeam = (id: string) => teams.find(t => t.id === id) || teams[0];
 
 export const matches = [
-  { id: 4, teamA: 'maconhaco', teamB: 'whitelemon', scoreA: 1, scoreB: 0, status: 'Encerrado', date: 'Rodada 1', group: 'B' },
-  { id: 1, teamA: 'jalin', teamB: 'desacreditados', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'qui., 23/07/2026 21:00', group: 'A' },
-  { id: 2, teamA: 'assentamento', teamB: 'gilsons', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'seg., 27/07/2026 20:00', group: 'B' },
-  { id: 3, teamA: '5cones', teamB: 'venvanse', scoreA: 0, scoreB: 1, status: 'Encerrado', date: 'qui., 23/07/2026 22:10', group: 'A' },
-  { id: 5, teamA: 'gilsons', teamB: 'whitelemon', scoreA: 1, scoreB: 0, status: 'Encerrado', date: 'ter., 28/07/2026 21:00', group: 'B' },
+  { id: 4, teamA: 'maconhaco', teamB: 'whitelemon', scoreA: 13, scoreB: 10, status: 'Encerrado', date: 'Rodada 1', group: 'B' },
+  { id: 1, teamA: 'jalin', teamB: 'desacreditados', scoreA: 7, scoreB: 13, status: 'Encerrado', date: 'qui., 23/07/2026 21:00', group: 'A' },
+  { id: 2, teamA: 'assentamento', teamB: 'gilsons', scoreA: 19, scoreB: 22, status: 'Encerrado', date: 'seg., 27/07/2026 20:00', group: 'B' },
+  { id: 3, teamA: '5cones', teamB: 'venvanse', scoreA: 12, scoreB: 16, status: 'Encerrado', date: 'qui., 23/07/2026 22:10', group: 'A' },
+  { id: 5, teamA: 'gilsons', teamB: 'whitelemon', scoreA: 13, scoreB: 6, status: 'Encerrado', date: 'ter., 28/07/2026 21:00', group: 'B' },
+  { id: 6, teamA: 'maconhaco', teamB: 'assentamento', scoreA: 13, scoreB: 5, status: 'Encerrado', date: 'qua., 29/07/2026 21:30', group: 'B' },
 ];
 
 export const upcomingMatches = [
-  {
-    id: 202,
-    teamA: 'assentamento',
-    teamB: 'maconhaco',
-    date: '2026-07-29T21:30:00-03:00',
-    dateDisplay: 'Quarta-Feira, 29/07 às 21:30',
-    group: 'Rodada 2 - Grupo B'
-  },
   {
     id: 203,
     teamA: 'desacreditados',
@@ -48,7 +41,7 @@ export const upcomingMatches = [
 
 export const matchDetails: Record<string, any> = {
   '1': {
-    map: 'Mirage', roundsA: 0, roundsB: 1, teamARounds: 9, teamBRounds: 13,
+    map: 'Inferno', roundsA: 0, roundsB: 1, teamARounds: 7, teamBRounds: 13,
     vodUrl: 'https://www.twitch.tv/videos/2827426394',
     teamA_stats: [
       { name: 'Dash', kills: 15, deaths: 15, assists: 2 },
@@ -66,14 +59,14 @@ export const matchDetails: Record<string, any> = {
     ]
   },
   '2': {
-    map: 'Inferno', roundsA: 0, roundsB: 1, teamARounds: 16, teamBRounds: 19,
+    map: 'Dust II', roundsA: 19, roundsB: 22, teamARounds: 19, teamBRounds: 22,
     vodUrl: 'https://www.twitch.tv/videos/2830666292',
     teamA_stats: [
       { name: 'Nil', kills: 39, deaths: 31, assists: 9 },
       { name: 'Leco', kills: 48, deaths: 29, assists: 11 },
       { name: 'Math', kills: 13, deaths: 28, assists: 14 },
       { name: 'Cobes', kills: 27, deaths: 29, assists: 7 },
-      { name: 'João Marcelo', kills: 17, deaths: 28, assists: 7 },
+      { name: 'Demoleison', kills: 17, deaths: 28, assists: 7 },
     ],
     teamB_stats: [
       { name: 'Gilson Tedesko', kills: 17, deaths: 33, assists: 5 },
@@ -84,7 +77,7 @@ export const matchDetails: Record<string, any> = {
     ]
   },
   '3': {
-    map: 'Nuke', roundsA: 0, roundsB: 1, teamARounds: 11, teamBRounds: 13,
+    map: 'Ancient', roundsA: 0, roundsB: 1, teamARounds: 12, teamBRounds: 16,
     vodUrl: 'https://www.twitch.tv/videos/2827426394',
     teamA_stats: [
       { name: 'ChapaChaplin', kills: 15, deaths: 20, assists: 8 },
@@ -105,11 +98,11 @@ export const matchDetails: Record<string, any> = {
     map: 'Anúbis', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 10,
     vodUrl: 'https://www.twitch.tv/videos/2830666292',
     teamA_stats: [
-      { name: 'Gusta', kills: 19, deaths: 18, assists: 8 },
+      { name: 'Majaster', kills: 19, deaths: 18, assists: 8 },
       { name: 'Acyd', kills: 33, deaths: 17, assists: 4 },
       { name: 'Lucas', kills: 15, deaths: 18, assists: 7 },
-      { name: 'Dark', kills: 10, deaths: 17, assists: 6 },
-      { name: 'Natan', kills: 7, deaths: 18, assists: 6 },
+      { name: 'EasyMoneyrasta', kills: 10, deaths: 17, assists: 6 },
+      { name: 'LaColombia', kills: 7, deaths: 18, assists: 6 },
     ],
     teamB_stats: [
       { name: 'Hallow', kills: 14, deaths: 19, assists: 6 },
@@ -121,7 +114,7 @@ export const matchDetails: Record<string, any> = {
   },
   '5': {
     map: 'Dust II', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 6,
-    vodUrl: 'https://www.twitch.tv/ggustatc',
+    vodUrl: 'https://www.twitch.tv/beckeryeshua',
     teamA_stats: [
       { name: 'Alemão', kills: 14, deaths: 10, assists: 6 },
       { name: 'SimboladaPAZ', kills: 9, deaths: 11, assists: 5 },
@@ -136,30 +129,77 @@ export const matchDetails: Record<string, any> = {
       { name: 'Daddy Money', kills: 17, deaths: 18, assists: 2 },
       { name: 'Fernandinho - Peida Leite', kills: 8, deaths: 15, assists: 5 },
     ]
+  },
+  '6': {
+    map: 'Mirage', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 5,
+    vodUrl: 'https://www.twitch.tv/beckeryeshua',
+    teamA_stats: [
+      { name: 'Acyd', kills: 23, deaths: 6, assists: 2 },
+      { name: 'Majaster', kills: 14, deaths: 13, assists: 5 },
+      { name: 'LaColombia', kills: 14, deaths: 7, assists: 3 },
+      { name: 'Lucas', kills: 12, deaths: 11, assists: 2 },
+      { name: 'EasyMoneyrasta', kills: 9, deaths: 11, assists: 2 },
+    ],
+    teamB_stats: [
+      { name: 'Leco', kills: 17, deaths: 14, assists: 4 },
+      { name: 'Math', kills: 10, deaths: 11, assists: 4 },
+      { name: 'Cobes', kills: 9, deaths: 15, assists: 2 },
+      { name: 'Nil', kills: 8, deaths: 17, assists: 2 },
+      { name: 'Demoleison', kills: 3, deaths: 15, assists: 2 },
+    ]
   }
 };
 
 export const groupA = [
-  { teamId: 'venvanse', p: 1, pj: 1, v: 1, d: 0 },
-  { teamId: 'desacreditados', p: 1, pj: 1, v: 1, d: 0 },
-  { teamId: '5cones', p: 0, pj: 1, v: 0, d: 1 },
-  { teamId: 'jalin', p: 0, pj: 1, v: 0, d: 1 },
+  { teamId: 'desacreditados', p: 1, pj: 1, v: 1, d: 0, rd: 6 },
+  { teamId: 'venvanse', p: 1, pj: 1, v: 1, d: 0, rd: 4 },
+  { teamId: '5cones', p: 0, pj: 1, v: 0, d: 1, rd: -4 },
+  { teamId: 'jalin', p: 0, pj: 1, v: 0, d: 1, rd: -6 },
 ];
 
 export const groupB = [
-  { teamId: 'gilsons', p: 2, pj: 2, v: 2, d: 0 },
-  { teamId: 'maconhaco', p: 1, pj: 1, v: 1, d: 0 },
-  { teamId: 'assentamento', p: 0, pj: 1, v: 0, d: 1 },
-  { teamId: 'whitelemon', p: 0, pj: 2, v: 0, d: 2 },
+  { teamId: 'maconhaco', p: 2, pj: 2, v: 2, d: 0, rd: 11 },
+  { teamId: 'gilsons', p: 2, pj: 2, v: 2, d: 0, rd: 10 },
+  { teamId: 'whitelemon', p: 0, pj: 2, v: 0, d: 2, rd: -10 },
+  { teamId: 'assentamento', p: 0, pj: 2, v: 0, d: 2, rd: -11 },
 ];
 
 // Re-computando a lista global de players a partir das matchDetails para ter o DB exato.
-export const players: Array<{name: string, teamId: string, kills: number, deaths: number, assists: number}> = [];
+export interface PlayerSummary {
+  name: string;
+  teamId: string;
+  kills: number;
+  deaths: number;
+  assists: number;
+  matches: number;
+}
+
+const rawPlayersMap: Record<string, PlayerSummary> = {};
+
 const addPlayersToGlobal = (matchDetailsMap: Record<string, any>, matchId: string, teamAId: string, teamBId: string) => {
   const details = matchDetailsMap[matchId];
   if (details) {
-    details.teamA_stats.forEach((p: any) => players.push({ name: p.name, teamId: teamAId, kills: p.kills, deaths: p.deaths, assists: p.assists }));
-    details.teamB_stats.forEach((p: any) => players.push({ name: p.name, teamId: teamBId, kills: p.kills, deaths: p.deaths, assists: p.assists }));
+    const processPlayer = (p: any, teamId: string) => {
+      const key = p.name.toLowerCase();
+      if (!rawPlayersMap[key]) {
+        rawPlayersMap[key] = {
+          name: p.name,
+          teamId,
+          kills: 0,
+          deaths: 0,
+          assists: 0,
+          matches: 0,
+        };
+      }
+      rawPlayersMap[key].kills += p.kills;
+      rawPlayersMap[key].deaths += p.deaths;
+      rawPlayersMap[key].assists += p.assists;
+      rawPlayersMap[key].matches += 1;
+      rawPlayersMap[key].teamId = teamId;
+    };
+
+    details.teamA_stats.forEach((p: any) => processPlayer(p, teamAId));
+    details.teamB_stats.forEach((p: any) => processPlayer(p, teamBId));
   }
 };
 
@@ -168,6 +208,9 @@ addPlayersToGlobal(matchDetails, '2', 'assentamento', 'gilsons');
 addPlayersToGlobal(matchDetails, '3', '5cones', 'venvanse');
 addPlayersToGlobal(matchDetails, '4', 'maconhaco', 'whitelemon');
 addPlayersToGlobal(matchDetails, '5', 'gilsons', 'whitelemon');
+addPlayersToGlobal(matchDetails, '6', 'maconhaco', 'assentamento');
+
+export const players: Array<PlayerSummary> = Object.values(rawPlayersMap);
 
 export const tiers = {
   S: [

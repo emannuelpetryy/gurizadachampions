@@ -151,15 +151,17 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
               </div>
               
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <span style={{ fontSize: '1rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.5rem' }}>GRUPO {match.group}</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', background: 'rgba(0,0,0,0.5)', padding: '1rem 2rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <span style={{ fontSize: '3.5rem', fontWeight: 'bold', color: 'var(--text-main)', fontFamily: 'var(--font-rajdhani)' }}>{match.scoreA}</span>
-                  <span style={{ fontSize: '1.5rem', color: 'var(--cyan)' }}>-</span>
-                  <span style={{ fontSize: '3.5rem', fontWeight: 'bold', color: 'var(--text-main)', fontFamily: 'var(--font-rajdhani)' }}>{match.scoreB}</span>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.5rem' }}>GRUPO {match.group}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', background: 'rgba(0,0,0,0.6)', padding: '0.8rem 2rem', borderRadius: '16px', border: '1px solid rgba(0,240,255,0.3)', boxShadow: '0 0 20px rgba(0,240,255,0.15)' }}>
+                  <span style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', lineHeight: 1 }}>{match.scoreA}</span>
+                  <span style={{ fontSize: '1.8rem', color: '#fff', fontWeight: 'bold' }}>x</span>
+                  <span style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', lineHeight: 1 }}>{match.scoreB}</span>
                 </div>
-                <span style={{ background: 'var(--accent-red)', color: '#fff', padding: '0.2rem 1.5rem', borderRadius: '20px', fontSize: '0.9rem', fontWeight: 'bold', marginTop: '1rem', textTransform: 'uppercase' }}>
-                  {match.status}
-                </span>
+                {details.map && (
+                  <span style={{ background: 'rgba(0,240,255,0.15)', border: '1px solid var(--cyan)', color: 'var(--cyan)', padding: '0.3rem 1.2rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold', marginTop: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    📍 MAPA: {details.map}
+                  </span>
+                )}
               </div>
 
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>

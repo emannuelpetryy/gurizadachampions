@@ -17,6 +17,7 @@ export default function Ranking() {
               <th style={{ textAlign: 'center' }}>J</th>
               <th style={{ textAlign: 'center' }}>V</th>
               <th style={{ textAlign: 'center' }}>D</th>
+              <th style={{ textAlign: 'center', color: '#2ed573' }}>RD</th>
             </tr>
           </thead>
           <tbody>
@@ -41,13 +42,16 @@ export default function Ranking() {
                   <td style={{ textAlign: 'center' }}>{row.pj}</td>
                   <td style={{ textAlign: 'center', color: '#00F0FF' }}>{row.v}</td>
                   <td style={{ textAlign: 'center', color: '#ff3366' }}>{row.d}</td>
+                  <td style={{ textAlign: 'center', color: row.rd > 0 ? '#2ed573' : row.rd < 0 ? '#ff4757' : 'var(--text-muted)', fontWeight: 'bold' }}>
+                    {row.rd > 0 ? `+${row.rd}` : row.rd}
+                  </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
-      <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>* Top 2 classificam para as semifinais</p>
+      <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>* Top 2 classificam para as semifinais | RD = Saldo de Rounds</p>
     </div>
   );
 
@@ -64,7 +68,7 @@ export default function Ranking() {
           {renderGroupTable('B', groupB)}
         </div>
 
-        <h2 className="hero-title" style={{ fontSize: '2.5rem', textAlign: 'center', marginTop: '5rem', marginBottom: '2rem', textShadow: 'none' }}>RANKING GERAL DE <span className="text-gold">KDA</span></h2>
+        <h2 className="hero-title" style={{ fontSize: '2.5rem', textAlign: 'center', marginTop: '5rem', marginBottom: '2rem', textShadow: 'none' }}>RANKING GERAL DE <span className="text-gold">DESEMPENHO</span></h2>
         
         <div className="glass-card" style={{ padding: '1.5rem' }}>
           <div style={{ overflowX: 'auto' }}>
@@ -74,16 +78,19 @@ export default function Ranking() {
                   <th style={{ width: '80px', textAlign: 'center' }}>RANK</th>
                   <th>JOGADOR</th>
                   <th>EQUIPE</th>
+                  <th style={{ textAlign: 'center' }}>J</th>
                   <th style={{ textAlign: 'center', color: 'var(--cyan)' }}>KILLS</th>
                   <th style={{ textAlign: 'center', color: 'var(--accent-red)' }}>DEATHS</th>
                   <th style={{ textAlign: 'center' }}>ASSISTS</th>
                   <th style={{ textAlign: 'center', color: 'var(--gold)' }}>K/D</th>
+                  <th style={{ textAlign: 'center', color: 'var(--cyan)' }}>KDA</th>
                 </tr>
               </thead>
               <tbody>
                 {[...players].sort((a, b) => (b.kills / (b.deaths || 1)) - (a.kills / (a.deaths || 1))).map((player, index) => {
                   const team = getTeam(player.teamId);
                   const kd = (player.kills / (player.deaths || 1)).toFixed(2);
+                  const kda = ((player.kills + player.assists) / (player.deaths || 1)).toFixed(2);
                   return (
                     <tr key={player.name} className={`rank-${index + 1}`}>
                       <td style={{ textAlign: 'center' }}><span className="rank-number" style={{ fontSize: index < 3 ? '1.5rem' : '1.2rem' }}>#{index + 1}</span></td>
@@ -101,10 +108,12 @@ export default function Ranking() {
                           </div>
                         </Link>
                       </td>
+                      <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{player.matches || 1}</td>
                       <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '1.2rem' }}>{player.kills}</td>
                       <td style={{ textAlign: 'center', color: 'var(--accent-red)' }}>{player.deaths}</td>
                       <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{player.assists}</td>
                       <td style={{ textAlign: 'center', color: 'var(--gold)', fontWeight: 'bold', fontSize: '1.2rem' }}>{kd}</td>
+                      <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '1.2rem' }}>{kda}</td>
                     </tr>
                   );
                 })}

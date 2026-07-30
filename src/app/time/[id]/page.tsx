@@ -56,7 +56,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                           </Link>
                         </div>
                       </td>
-                      <td style={{ textAlign: 'center' }}>1</td>
+                      <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{player.matches || 1}</td>
                       <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 'bold' }}>{player.kills}</td>
                       <td style={{ textAlign: 'center', color: 'var(--accent-red)' }}>{player.deaths}</td>
                       <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{player.assists}</td>
@@ -78,6 +78,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
           {teamMatches.map(match => {
             const teamA = getTeam(match.teamA);
             const teamB = getTeam(match.teamB);
+            const detail = matchDetails[String(match.id)];
             return (
               <Link href={`/partida/${match.id}`} key={match.id} style={{ textDecoration: 'none' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.4)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', transition: 'all 0.2s', cursor: 'pointer' }} className="match-card-hover">
@@ -87,10 +88,14 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                   </div>
                   
                   <div style={{ padding: '0 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '120px' }}>
-                    <span style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--text-main)', fontFamily: 'var(--font-rajdhani)' }}>
-                      {match.scoreA} <span className="text-cyan">-</span> {match.scoreB}
+                    <span style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', letterSpacing: '1px' }}>
+                      {match.scoreA} <span style={{ color: '#fff', fontSize: '1.3rem', margin: '0 0.2rem' }}>x</span> {match.scoreB}
                     </span>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--accent-red)', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '1px' }}>{match.status}</span>
+                    {detail?.map && (
+                      <span style={{ fontSize: '0.65rem', background: 'rgba(0, 240, 255, 0.1)', border: '1px solid var(--cyan)', color: 'var(--cyan)', padding: '0.1rem 0.6rem', borderRadius: '10px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold', marginTop: '0.2rem' }}>
+                        {detail.map}
+                      </span>
+                    )}
                   </div>
 
                   <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '1rem' }}>

@@ -15,30 +15,59 @@ export default function MatchPrediction({
   const [userVote, setUserVote] = useState<'a' | 'b' | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [justVoted, setJustVoted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const savedVotes = localStorage.getItem(`gc_pred_votes_${matchId}`);
+    // 1. Carregar o voto pessoal deste dispositivo
     const savedUserVote = localStorage.getItem(`gc_pred_user_${matchId}`);
-    if (savedVotes) {
-      try { setVotes(JSON.parse(savedVotes)); } catch (e) {}
-    }
     if (savedUserVote === 'a' || savedUserVote === 'b') {
       setUserVote(savedUserVote);
     }
-    setLoaded(true);
+
+    // 2. Carregar votos GLOBAIS compartilhados da API
+    fetch(`/api/votes?matchId=${matchId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data && typeof data.a === 'number' && typeof data.b === 'number') {
+          setVotes({ a: data.a, b: data.b });
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoaded(true));
   }, [matchId]);
 
-  const handleVote = (team: 'a' | 'b') => {
-    if (userVote) return;
+  const handleVote = async (team: 'a' | 'b') => {
+    if (userVote || isSubmitting) return;
+
+    setIsSubmitting(true);
+    // Atualização otimista local
     const newVotes = { ...votes, [team]: votes[team] + 1 };
     setVotes(newVotes);
     setUserVote(team);
     setJustVoted(true);
-    localStorage.setItem(`gc_pred_votes_${matchId}`, JSON.stringify(newVotes));
+
+    // Salvar escolha deste dispositivo
     localStorage.setItem(`gc_pred_user_${matchId}`, team);
-    
-    // Animação do voto
-    setTimeout(() => setJustVoted(false), 1500);
+
+    // Enviar voto GLOBAL para o servidor/cloud DB
+    try {
+      const res = await fetch('/api/votes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ matchId, team })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && typeof data.a === 'number' && typeof data.b === 'number') {
+          setVotes({ a: data.a, b: data.b });
+        }
+      }
+    } catch (e) {
+      console.error('Erro ao enviar voto global:', e);
+    } finally {
+      setIsSubmitting(false);
+      setTimeout(() => setJustVoted(false), 2000);
+    }
   };
 
   const total = votes.a + votes.b;
@@ -49,7 +78,7 @@ export default function MatchPrediction({
   if (!loaded) {
     return (
       <div style={{ width: '100%', background: 'rgba(13, 20, 36, 0.8)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(0,240,255,0.1)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-        Carregando palpites...
+        Carregando estatísticas dos palpites...
       </div>
     );
   }
@@ -69,10 +98,10 @@ export default function MatchPrediction({
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={{ fontSize: '0.8rem', color: justVoted ? '#2ed573' : 'var(--cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'color 0.3s' }}>
-          {justVoted ? '🎉 Voto registrado com sucesso!' : userVote ? '🗳️ Seu palpite foi computado' : '🗳️ Quem vai vencer? Vote!'}
+          {justVoted ? '🎉 Voto registrado no servidor!' : userVote ? '🗳️ Seu palpite foi computado' : '🗳️ Quem vai vencer? Vote!'}
         </span>
         <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-          {total} voto{total !== 1 ? 's' : ''}
+          {total} voto global{total !== 1 ? 's' : ''}
         </span>
       </div>
 
@@ -80,7 +109,7 @@ export default function MatchPrediction({
       <div style={{ display: 'flex', gap: '0.6rem' }}>
         <button
           onClick={() => handleVote('a')}
-          disabled={!!userVote}
+          disabled={!!userVote || isSubmitting}
           style={{
             flex: 1,
             padding: '0.7rem 0.8rem',
@@ -92,7 +121,7 @@ export default function MatchPrediction({
             color: '#fff',
             fontWeight: 'bold',
             fontSize: '0.85rem',
-            cursor: userVote ? 'default' : 'pointer',
+            cursor: userVote || isSubmitting ? 'default' : 'pointer',
             transition: 'all 0.25s ease',
             display: 'flex',
             flexDirection: 'column',
@@ -125,7 +154,7 @@ export default function MatchPrediction({
 
         <button
           onClick={() => handleVote('b')}
-          disabled={!!userVote}
+          disabled={!!userVote || isSubmitting}
           style={{
             flex: 1,
             padding: '0.7rem 0.8rem',
@@ -133,11 +162,11 @@ export default function MatchPrediction({
             border: userVote === 'b' ? '2px solid var(--accent-red)' : '1px solid rgba(255,255,255,0.12)',
             background: userVote === 'b' 
               ? 'linear-gradient(135deg, rgba(255,51,102,0.25), rgba(255,51,102,0.1))' 
-              : 'rgba(255,255,255,0.04)',
+              : 'rgba(255,51,102,0.04)',
             color: '#fff',
             fontWeight: 'bold',
             fontSize: '0.85rem',
-            cursor: userVote ? 'default' : 'pointer',
+            cursor: userVote || isSubmitting ? 'default' : 'pointer',
             transition: 'all 0.25s ease',
             display: 'flex',
             flexDirection: 'column',
@@ -192,7 +221,7 @@ export default function MatchPrediction({
       {/* Estado vazio */}
       {!hasVotes && !userVote && (
         <div style={{ textAlign: 'center', fontSize: '0.7rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-          Seja o primeiro a votar neste confronto! Seu voto é salvo automaticamente.
+          Seja o primeiro a votar neste confronto! Seu voto acumula globalmente na torcida.
         </div>
       )}
     </div>

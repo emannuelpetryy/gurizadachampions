@@ -74,7 +74,7 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', position: 'relative', zIndex: 1 }}>
             
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexDirection: 'column' }}>
-              <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor={badgeColor} />
+              <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor={badgeColor} editable={true} />
               <h1 className="hero-title" style={{ fontSize: '3rem', margin: 0, textShadow: 'none' }}>{player.name}</h1>
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                 {playerTier !== 'Não ranqueado' && (

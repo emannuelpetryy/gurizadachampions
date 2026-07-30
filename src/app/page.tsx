@@ -1,4 +1,4 @@
-import { getTeam, matches, players, teams, upcomingMatches } from './data';
+import { getTeam, matches, matchDetails, players, teams, upcomingMatches } from './data';
 import Link from 'next/link';
 import PlayerAvatar from './jogador/[name]/PlayerAvatar';
 import Comments from '../components/Comments';
@@ -6,13 +6,15 @@ import Countdown from '../components/Countdown';
 import TeamLogo from './components/TeamLogo';
 import MatchPrediction from './components/MatchPrediction';
 import MapPoolStats from './components/MapPoolStats';
+import CommunitySelection from './components/CommunitySelection';
+import TwitchLiveStream from './components/TwitchLiveStream';
 
 export default function Home() {
-  // Ordenar jogadores pelo KDA: (K + A) / D
-  const topKDA = [...players].sort((a, b) => {
-    const kdaA = a.kills / (a.deaths || 1);
-    const kdaB = b.kills / (b.deaths || 1);
-    return kdaB - kdaA; // Decrescente
+  // Ordenar jogadores pelo K/D ratio (principal)
+  const topKD = [...players].sort((a, b) => {
+    const kdA = a.kills / (a.deaths || 1);
+    const kdB = b.kills / (b.deaths || 1);
+    return kdB - kdA; // Decrescente
   });
 
   return (
@@ -52,26 +54,8 @@ export default function Home() {
       <section className="container" style={{ padding: '4rem 2rem' }}>
         <div className="grid-2">
           
-          {/* Twitch Live Stream Banner (ggustatc) */}
-          <div className="glass-card" style={{ gridColumn: '1 / -1', marginBottom: '2.5rem', border: '1px solid var(--cyan)', boxShadow: '0 0 35px rgba(0,240,255,0.2)', background: 'linear-gradient(135deg, rgba(13,20,36,0.95) 0%, rgba(0,240,255,0.08) 100%)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem', flexWrap: 'wrap', gap: '1rem' }}>
-              <h3 className="card-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.4rem' }}>
-                <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '50%', background: '#ff3366', boxShadow: '0 0 12px #ff3366' }}></span>
-                🔴 TRANSMISSÃO AO VIVO NA TWITCH (@ggustatc)
-              </h3>
-              <a href="https://www.twitch.tv/ggustatc" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ padding: '0.6rem 1.4rem', fontSize: '0.9rem', textDecoration: 'none' }}>
-                Abrir Live na Twitch ↗
-              </a>
-            </div>
-            <div style={{ position: 'relative', paddingBottom: '45%', height: 0, borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <iframe
-                src="https://player.twitch.tv/?channel=ggustatc&parent=gurizadachampions.vercel.app&parent=localhost&autoplay=false"
-                title="Transmissão Ao Vivo Gusta CS2"
-                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
-                allowFullScreen
-              ></iframe>
-            </div>
-          </div>
+          {/* Twitch Live Stream Minimizable Banner */}
+          <TwitchLiveStream />
 
           {/* Próximos Confrontos com Countdown & Palpites */}
           {upcomingMatches.length > 0 && (
@@ -128,6 +112,7 @@ export default function Home() {
               {matches.map((match) => {
                 const teamA = getTeam(match.teamA);
                 const teamB = getTeam(match.teamB);
+                const detail = matchDetails[String(match.id)];
                 return (
                   <Link href={`/partida/${match.id}`} key={match.id} style={{ textDecoration: 'none' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.4)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', transition: 'all 0.2s', cursor: 'pointer' }} className="match-card-hover">
@@ -136,11 +121,15 @@ export default function Home() {
                         <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', color: '#fff' }}>{teamA.name}</strong>
                       </div>
                       
-                      <div style={{ padding: '0 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '100px' }}>
-                        <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-main)', fontFamily: 'var(--font-rajdhani)' }}>
-                          {match.scoreA} <span className="text-cyan">-</span> {match.scoreB}
+                      <div style={{ padding: '0 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '120px' }}>
+                        <span style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', letterSpacing: '1px' }}>
+                          {match.scoreA} <span style={{ color: '#fff', fontSize: '1.2rem', margin: '0 0.2rem' }}>x</span> {match.scoreB}
                         </span>
-                        <span style={{ fontSize: '0.65rem', color: 'var(--accent-red)', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '1px' }}>{match.status}</span>
+                        {detail?.map && (
+                          <span style={{ fontSize: '0.65rem', background: 'rgba(0, 240, 255, 0.1)', border: '1px solid var(--cyan)', color: 'var(--cyan)', padding: '0.1rem 0.5rem', borderRadius: '10px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold', marginTop: '0.2rem' }}>
+                            {detail.map}
+                          </span>
+                        )}
                       </div>
 
                       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '1rem' }}>
@@ -154,22 +143,44 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Votação das Seleções da Torcida (Dream Team & Top 5 Bagres) */}
+          <CommunitySelection />
+
           <div className="glass-card" style={{ gridColumn: '1 / -1' }}>
             <h3 className="card-title">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-              Ranking Geral de KDA
+              Ranking Geral de K/D Ratio
             </h3>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Todos os jogadores ranqueados por maior KDA</p>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Todos os jogadores ranqueados por maior K/D (Kills / Deaths)</p>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.8rem', maxHeight: '600px', overflowY: 'auto', paddingRight: '0.5rem' }} className="custom-scrollbar">
-              {topKDA.map((player, index) => {
+              {topKD.map((player, index) => {
                 const team = getTeam(player.teamId);
-                const kdaRaw = player.kills / (player.deaths || 1);
+                const kdRaw = player.kills / (player.deaths || 1);
+                const kdaRaw = (player.kills + player.assists) / (player.deaths || 1);
+                const kd = kdRaw.toFixed(2);
                 const kda = kdaRaw.toFixed(2);
-                let badgeColor = '#666';
-                if (kdaRaw >= 1.5) badgeColor = 'var(--cyan)';
-                else if (kdaRaw >= 1.0) badgeColor = '#4caf50';
-                else if (kdaRaw >= 0.7) badgeColor = '#f57c00';
-                else badgeColor = 'var(--accent-red)';
+
+                let badgeBg = 'rgba(0, 240, 255, 0.15)';
+                let badgeBorder = '1px solid var(--cyan)';
+                let badgeText = 'var(--cyan)';
+
+                if (kdRaw >= 2.0) {
+                  badgeBg = 'linear-gradient(135deg, #ffd700, #ffaa00)';
+                  badgeBorder = 'none';
+                  badgeText = '#080d1a';
+                } else if (kdRaw >= 1.5) {
+                  badgeBg = 'rgba(0, 240, 255, 0.2)';
+                  badgeBorder = '1px solid var(--cyan)';
+                  badgeText = '#00f0ff';
+                } else if (kdRaw >= 1.0) {
+                  badgeBg = 'rgba(46, 213, 115, 0.2)';
+                  badgeBorder = '1px solid #2ed573';
+                  badgeText = '#2ed573';
+                } else {
+                  badgeBg = 'rgba(255, 71, 87, 0.2)';
+                  badgeBorder = '1px solid #ff4757';
+                  badgeText = '#ff4757';
+                }
                 
                 return (
                   <li key={player.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.3)', padding: '0.8rem 1rem', borderRadius: '8px', borderLeft: index === 0 ? '4px solid #FFD700' : index === 1 ? '4px solid #C0C0C0' : index === 2 ? '4px solid #CD7F32' : '4px solid transparent' }}>
@@ -182,16 +193,18 @@ export default function Home() {
                           <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none' }} className="match-card-hover">
                             <p style={{ fontWeight: 'bold', fontSize: '1rem', color: '#fff' }}>{player.name}</p>
                           </Link>
-                          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{team.name}</p>
+                          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{team.name} • {player.matches || 1} J</p>
                         </div>
                       </div>
                     </div>
-                    <div style={{ textAlign: 'right', display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: '100px' }}>
+                    <div style={{ textAlign: 'right', display: 'flex', gap: '1.2rem', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                         <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{player.kills}K / {player.deaths}D / {player.assists}A</span>
+                        <span style={{ fontSize: '0.72rem', color: '#a0aec0', fontWeight: 'bold' }}>KDA {kda}</span>
                       </div>
-                      <div style={{ background: badgeColor, padding: '0.2rem 1rem', borderRadius: '6px', minWidth: '60px', textAlign: 'center' }}>
-                        <span style={{ fontWeight: 'bold', color: '#fff', fontSize: '1.1rem', fontFamily: 'var(--font-rajdhani)' }}>{kda}</span>
+                      <div style={{ background: badgeBg, border: badgeBorder, padding: '0.3rem 0.9rem', borderRadius: '8px', minWidth: '75px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: kdRaw >= 2.0 ? '0 0 12px rgba(255,215,0,0.4)' : 'none' }}>
+                        <span style={{ fontSize: '0.6rem', color: badgeText === '#080d1a' ? '#080d1a' : 'rgba(255,255,255,0.7)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>K/D</span>
+                        <span style={{ fontWeight: '800', color: badgeText, fontSize: '1.15rem', fontFamily: 'var(--font-rajdhani)', lineHeight: 1 }}>{kd}</span>
                       </div>
                     </div>
                   </li>

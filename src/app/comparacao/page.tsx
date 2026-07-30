@@ -54,9 +54,56 @@ export default function ComparacaoPage() {
   const tierA = getTierLvl(pA.name);
   const tierB = getTierLvl(pB.name);
 
-  const StatComparisonRow = ({ label, valA, valB, format = (v: any) => v }: { label: string, valA: number, valB: number, format?: (v: any) => any }) => {
-    const isAWinner = valA > valB;
-    const isBWinner = valB > valA;
+  // Badges por jogador
+  const getPlayerBadges = (playerName: string) => {
+    const badges: { icon: string; title: string; desc: string; color: string }[] = [];
+    let totalKills = 0;
+    let totalDeaths = 0;
+    let totalAssists = 0;
+
+    Object.values(matchDetails).forEach((det: any) => {
+      const allP = [...det.teamA_stats, ...det.teamB_stats];
+      const stat = allP.find((s: any) => s.name.toLowerCase() === playerName.toLowerCase());
+      if (stat) {
+        totalKills += stat.kills;
+        totalDeaths += stat.deaths;
+        totalAssists += stat.assists;
+      }
+    });
+
+    const overallKd = totalKills / (totalDeaths || 1);
+
+    if (overallKd >= 1.5) badges.push({ icon: '🔥', title: 'Hard Carry', desc: 'K/D geral acima de 1.50', color: '#ff4757' });
+    if (totalAssists >= 10) badges.push({ icon: '🤝', title: 'Rei da Resenha', desc: '10+ assistências no campeonato', color: '#2ed573' });
+    if (totalKills >= 30) badges.push({ icon: '🎯', title: 'Pistoleiro Elite', desc: '30+ kills acumuladas no campeonato', color: '#ffa502' });
+    if (overallKd >= 1.2 && overallKd < 1.5) badges.push({ icon: '⚡', title: 'Maestro', desc: 'Desempenho tático superior', color: '#eccc68' });
+    if (overallKd <= 0.7) badges.push({ icon: '🎒', title: 'Mochila', desc: 'K/D abaixo de 0.70', color: '#70a1ff' });
+
+    return badges;
+  };
+
+  const badgesA = getPlayerBadges(pA.name);
+  const badgesB = getPlayerBadges(pB.name);
+
+  const StatComparisonRow = ({ 
+    label, 
+    valA, 
+    valB, 
+    format = (v: any) => v, 
+    lowerIsBetter = false 
+  }: { 
+    label: string, 
+    valA: number, 
+    valB: number, 
+    format?: (v: any) => any, 
+    lowerIsBetter?: boolean 
+  }) => {
+    const isAWinner = lowerIsBetter ? valA < valB : valA > valB;
+    const isBWinner = lowerIsBetter ? valB < valA : valB > valA;
+
+    // Para barras visuais quando menor é melhor (ex: mortes), invertemos os pesos
+    const weightA = lowerIsBetter ? (valB || 1) : (valA || 1);
+    const weightB = lowerIsBetter ? (valA || 1) : (valB || 1);
 
     return (
       <div style={{ marginBottom: '1.5rem', background: 'rgba(0,0,0,0.3)', padding: '1.2rem 1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
@@ -70,10 +117,10 @@ export default function ComparacaoPage() {
           </strong>
         </div>
 
-        {/* Visual Bar Comparison */}
+        {/* Bar Comparison */}
         <div style={{ display: 'flex', height: '8px', borderRadius: '4px', overflow: 'hidden', background: 'rgba(255,255,255,0.1)', gap: '2px' }}>
-          <div style={{ flex: valA || 1, background: isAWinner ? 'var(--cyan)' : 'rgba(0,240,255,0.4)', transition: 'all 0.3s' }}></div>
-          <div style={{ flex: valB || 1, background: isBWinner ? '#ab47bc' : 'rgba(171,71,188,0.4)', transition: 'all 0.3s' }}></div>
+          <div style={{ flex: weightA, background: isAWinner ? 'var(--cyan)' : 'rgba(0,240,255,0.4)', transition: 'all 0.3s' }}></div>
+          <div style={{ flex: weightB, background: isBWinner ? '#ab47bc' : 'rgba(171,71,188,0.4)', transition: 'all 0.3s' }}></div>
         </div>
       </div>
     );
@@ -136,18 +183,72 @@ export default function ComparacaoPage() {
         </div>
 
         {/* Head-to-Head Stats Comparison Card */}
-        <div className="glass-card" style={{ padding: '2.5rem 2rem' }}>
+        <div className="glass-card" style={{ padding: '2.5rem 2rem', marginBottom: '3rem' }}>
           <h3 className="hero-title" style={{ fontSize: '2rem', marginBottom: '2rem', textShadow: 'none', textAlign: 'center' }}>
             DUELO DE ESTATÍSTICAS
           </h3>
 
           <StatComparisonRow label="K/D Ratio" valA={kdA} valB={kdB} format={(v) => v.toFixed(2)} />
           <StatComparisonRow label="Total Kills" valA={pA.kills} valB={pB.kills} />
-          <StatComparisonRow label="Total Deaths" valA={pA.deaths} valB={pB.deaths} />
+          <StatComparisonRow label="Total Deaths" valA={pA.deaths} valB={pB.deaths} lowerIsBetter={true} />
           <StatComparisonRow label="Total Assists" valA={pA.assists} valB={pB.assists} />
           <StatComparisonRow label="Títulos de MVP" valA={mvpsA} valB={mvpsB} />
           <StatComparisonRow label="Nível de Tier" valA={tierA.lvl} valB={tierB.lvl} format={(v) => `Lvl ${v}`} />
+        </div>
 
+        {/* Badges Comparison Card */}
+        <div className="glass-card" style={{ padding: '2.5rem 2rem' }}>
+          <h3 className="hero-title" style={{ fontSize: '2rem', marginBottom: '2rem', textShadow: 'none', textAlign: 'center' }}>
+            BADGES & CONQUISTAS DO CAMPEONATO
+          </h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+            {/* Player A Badges */}
+            <div style={{ background: 'rgba(0,0,0,0.3)', padding: '1.5rem', borderRadius: '14px', border: '1px solid rgba(0,240,255,0.2)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.8rem' }}>
+                <PlayerAvatar teamName={teamA.name} playerName={pA.name} badgeColor="var(--cyan)" size={40} />
+                <strong style={{ fontSize: '1.2rem', color: 'var(--cyan)' }}>{pA.name}</strong>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                {badgesA.length > 0 ? (
+                  badgesA.map((b, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', background: 'rgba(0,0,0,0.4)', padding: '0.6rem 1rem', borderRadius: '8px', border: `1px solid ${b.color}44` }}>
+                      <span style={{ fontSize: '1.4rem' }}>{b.icon}</span>
+                      <div>
+                        <strong style={{ color: b.color, fontSize: '0.95rem', display: 'block' }}>{b.title}</strong>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{b.desc}</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>Nenhuma badge conquistada ainda</span>
+                )}
+              </div>
+            </div>
+
+            {/* Player B Badges */}
+            <div style={{ background: 'rgba(0,0,0,0.3)', padding: '1.5rem', borderRadius: '14px', border: '1px solid rgba(171,71,188,0.2)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.8rem' }}>
+                <PlayerAvatar teamName={teamB.name} playerName={pB.name} badgeColor="#ab47bc" size={40} />
+                <strong style={{ fontSize: '1.2rem', color: '#ab47bc' }}>{pB.name}</strong>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                {badgesB.length > 0 ? (
+                  badgesB.map((b, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', background: 'rgba(0,0,0,0.4)', padding: '0.6rem 1rem', borderRadius: '8px', border: `1px solid ${b.color}44` }}>
+                      <span style={{ fontSize: '1.4rem' }}>{b.icon}</span>
+                      <div>
+                        <strong style={{ color: b.color, fontSize: '0.95rem', display: 'block' }}>{b.title}</strong>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{b.desc}</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>Nenhuma badge conquistada ainda</span>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
       </section>
