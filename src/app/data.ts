@@ -98,7 +98,7 @@ export const matchDetails: Record<string, any> = {
     map: 'Anúbis', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 10,
     vodUrl: 'https://www.twitch.tv/videos/2830666292',
     teamA_stats: [
-      { name: 'Majaster', kills: 19, deaths: 18, assists: 8 },
+      { name: 'Gusta', kills: 19, deaths: 18, assists: 8 },
       { name: 'Acyd', kills: 33, deaths: 17, assists: 4 },
       { name: 'Lucas', kills: 15, deaths: 18, assists: 7 },
       { name: 'EasyMoneyrasta', kills: 10, deaths: 17, assists: 6 },
@@ -135,7 +135,7 @@ export const matchDetails: Record<string, any> = {
     vodUrl: 'https://www.twitch.tv/beckeryeshua',
     teamA_stats: [
       { name: 'Acyd', kills: 23, deaths: 6, assists: 2 },
-      { name: 'Majaster', kills: 14, deaths: 13, assists: 5 },
+      { name: 'Gusta', kills: 14, deaths: 13, assists: 5 },
       { name: 'LaColombia', kills: 14, deaths: 7, assists: 3 },
       { name: 'Lucas', kills: 12, deaths: 11, assists: 2 },
       { name: 'EasyMoneyrasta', kills: 9, deaths: 11, assists: 2 },

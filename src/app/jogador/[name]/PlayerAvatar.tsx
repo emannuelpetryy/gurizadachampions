@@ -9,6 +9,8 @@ const LOCAL_PHOTOS: Record<string, string> = {
   'Samuka': '/Fotos Jogadores/Venvanse/Samuka.jpg',
   'Galaxy': '/Fotos Jogadores/Os Desacreditados/Galaxy.jpg',
   'Gustavo Majaster': '/Fotos Jogadores/Maconhaco E-Sports/Gustavo Majaster.png',
+  'Gusta': '/Fotos Jogadores/Maconhaco E-Sports/Gustavo Majaster.png',
+  'Majaster': '/Fotos Jogadores/Maconhaco E-Sports/Gustavo Majaster.png',
 };
 
 // Cache em memória de URLs do Supabase para não re-fetchar
