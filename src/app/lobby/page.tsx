@@ -162,6 +162,35 @@ export default function LobbyPage() {
     }, 1500); // 1.5s de efeito roleta
   };
 
+  // Estado do Veto de Mapas do CS2
+  const CS2_ACTIVE_DUTY = [
+    { name: 'Dust II', icon: '🏜️', desc: 'Deserto Clássico & AWP Duals', color: '#f39c12' },
+    { name: 'Mirage', icon: '🏰', desc: 'Palácio de Marrakesh & Meio disputado', color: '#e67e22' },
+    { name: 'Inferno', icon: '🔥', desc: 'Vilas Italianas & Banana Flamejante', color: '#e74c3c' },
+    { name: 'Nuke', icon: '⚛️', desc: 'Usina Nuclear & Rota Secreta B', color: '#3498db' },
+    { name: 'Anubis', icon: '⚖️', desc: 'Ruínas do Egito & Águas de B', color: '#9b59b6' },
+    { name: 'Ancient', icon: '🗿', desc: 'Selva Maia & Ruínas de Pedra', color: '#2ecc71' },
+    { name: 'Train', icon: '🚂', desc: 'Pátio de Trens & Trilhos Frios', color: '#1abc9c' },
+  ];
+
+  const [bannedMaps, setBannedMaps] = useState<string[]>([]);
+  const [vetoTurn, setVetoTurn] = useState<'teamA' | 'teamB'>('teamA');
+
+  const handleBanMap = (mapName: string) => {
+    if (bannedMaps.includes(mapName)) return;
+    const updated = [...bannedMaps, mapName];
+    setBannedMaps(updated);
+    setVetoTurn(prev => (prev === 'teamA' ? 'teamB' : 'teamA'));
+  };
+
+  const handleResetVeto = () => {
+    setBannedMaps([]);
+    setVetoTurn('teamA');
+  };
+
+  const remainingMaps = CS2_ACTIVE_DUTY.filter(m => !bannedMaps.includes(m.name));
+  const finalChosenMap = remainingMaps.length === 1 ? remainingMaps[0] : null;
+
   const filledCount = slots.filter(Boolean).length;
 
   return (
@@ -299,6 +328,106 @@ export default function LobbyPage() {
                 </div>
               </div>
             </div>
+
+            {/* --- SEÇÃO VETO DE MAPAS CS2 (ACTIVE DUTY) --- */}
+            <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px dashed rgba(255,255,255,0.15)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+                <div>
+                  <h3 style={{ fontSize: '1.8rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, color: '#fff', margin: 0, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                    🗺️ FASE DE VETO DE MAPAS (CS2 ACTIVE DUTY)
+                  </h3>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '0.2rem 0 0 0' }}>
+                    Banam os mapas alternadamente até sobrar o mapa oficial da partida!
+                  </p>
+                </div>
+
+                {bannedMaps.length > 0 && (
+                  <button
+                    onClick={handleResetVeto}
+                    style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '0.4rem 1rem', borderRadius: '8px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: 700 }}
+                  >
+                    🔄 Reiniciar Veto
+                  </button>
+                )}
+              </div>
+
+              {/* Status Banner do Veto */}
+              {finalChosenMap ? (
+                <div style={{ background: 'linear-gradient(135deg, rgba(255,215,0,0.25), rgba(255,170,0,0.1))', border: '2px solid #ffd700', padding: '1.2rem', borderRadius: '16px', textAlign: 'center', marginBottom: '1.8rem', boxShadow: '0 0 35px rgba(255,215,0,0.3)' }}>
+                  <span style={{ fontSize: '2rem' }}>🏆</span>
+                  <h4 style={{ fontSize: '1.8rem', color: '#ffd700', margin: '0.4rem 0 0.1rem 0', fontFamily: 'var(--font-rajdhani)', fontWeight: 800 }}>
+                    MAPA DEFINIDO PARA O CONFRONTO: {finalChosenMap.name.toUpperCase()} {finalChosenMap.icon}
+                  </h4>
+                  <p style={{ fontSize: '0.9rem', color: '#fff', margin: 0 }}>
+                    {finalChosenMap.desc} • Boa sorte a ambas as equipes!
+                  </p>
+                </div>
+              ) : (
+                <div style={{ background: vetoTurn === 'teamA' ? 'rgba(0, 240, 255, 0.12)' : 'rgba(255, 51, 102, 0.12)', border: `1px solid ${vetoTurn === 'teamA' ? 'var(--cyan)' : 'var(--accent-red)'}`, padding: '0.8rem 1.2rem', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.8rem' }}>
+                  <span style={{ color: vetoTurn === 'teamA' ? 'var(--cyan)' : 'var(--accent-red)', fontWeight: 800, fontSize: '1rem', fontFamily: 'var(--font-rajdhani)' }}>
+                    {vetoTurn === 'teamA' ? '⚡ VEZ DO TIME ALPHA BANIR UM MAPA' : '🔥 VEZ DO TIME BRAVO BANIR UM MAPA'}
+                  </span>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                    Mapas Banidos: {bannedMaps.length} / 6
+                  </span>
+                </div>
+              )}
+
+              {/* Grid de 7 Mapas */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem' }}>
+                {CS2_ACTIVE_DUTY.map(map => {
+                  const isBanned = bannedMaps.includes(map.name);
+                  const isWinner = finalChosenMap?.name === map.name;
+
+                  return (
+                    <div
+                      key={map.name}
+                      onClick={() => { if (!isBanned && !finalChosenMap) handleBanMap(map.name); }}
+                      style={{
+                        position: 'relative',
+                        background: isWinner
+                          ? 'linear-gradient(135deg, rgba(255,215,0,0.3), rgba(15,20,35,0.95))'
+                          : isBanned
+                          ? 'rgba(10, 15, 25, 0.5)'
+                          : 'rgba(255, 255, 255, 0.04)',
+                        border: isWinner
+                          ? '2px solid #ffd700'
+                          : isBanned
+                          ? '1px solid rgba(255, 51, 102, 0.3)'
+                          : '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '14px',
+                        padding: '1.2rem 0.8rem',
+                        textAlign: 'center',
+                        cursor: (!isBanned && !finalChosenMap) ? 'pointer' : 'default',
+                        opacity: isBanned ? 0.45 : 1,
+                        boxShadow: isWinner ? '0 0 25px rgba(255,215,0,0.4)' : 'none',
+                        transition: 'all 0.25s ease',
+                        overflow: 'hidden'
+                      }}
+                    >
+                      {/* Carimbo de BANIDO */}
+                      {isBanned && (
+                        <div style={{ position: 'absolute', top: '40%', left: 0, width: '100%', background: 'rgba(255, 51, 102, 0.9)', color: '#fff', fontSize: '0.75rem', fontWeight: 900, padding: '0.2rem 0', transform: 'rotate(-12deg)', letterSpacing: '2px', boxShadow: '0 0 10px rgba(0,0,0,0.8)' }}>
+                          BANIDO 🚫
+                        </div>
+                      )}
+
+                      <div style={{ fontSize: '2.4rem', marginBottom: '0.4rem' }}>{map.icon}</div>
+                      <strong style={{ fontSize: '1.1rem', color: isWinner ? '#ffd700' : isBanned ? 'var(--text-muted)' : '#fff', display: 'block', fontFamily: 'var(--font-rajdhani)', fontWeight: 800 }}>
+                        {map.name}
+                      </strong>
+
+                      {!isBanned && !finalChosenMap && (
+                        <span style={{ marginTop: '0.6rem', display: 'inline-block', fontSize: '0.7rem', background: vetoTurn === 'teamA' ? 'rgba(0,240,255,0.2)' : 'rgba(255,51,102,0.2)', color: vetoTurn === 'teamA' ? 'var(--cyan)' : 'var(--accent-red)', border: `1px solid ${vetoTurn === 'teamA' ? 'var(--cyan)' : 'var(--accent-red)'}`, padding: '0.2rem 0.6rem', borderRadius: '6px', fontWeight: 800 }}>
+                          [ BANIR MAPA ]
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
           </div>
         )}
 
