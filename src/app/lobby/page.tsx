@@ -301,98 +301,199 @@ export default function LobbyPage() {
           </div>
         )}
 
-        {/* GRID DOS 10 SLOTS DO LOBBY */}
-        <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem', color: '#fff' }}>
-          📍 VAGAS NO LOBBY ({filledCount}/10)
+        {/* SALA 5V5: LADO A vs LADO B */}
+        <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem', color: '#fff', textAlign: 'center' }}>
+          📍 VAGAS NA SALA ({filledCount}/10 JOGADORES)
         </h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.2rem' }}>
-          {slots.map((slot, idx) => {
-            const slotNum = idx + 1;
-            const isOccupied = slot && slot.player_name;
-            const team = isOccupied ? getTeam(slot.team_id) : null;
+        <div className="grid-2" style={{ gap: '2rem' }}>
+          {/* LADO A: VAGAS 1 A 5 */}
+          <div style={{ background: 'rgba(0, 240, 255, 0.04)', border: '1px solid rgba(0, 240, 255, 0.25)', borderRadius: '20px', padding: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem', borderBottom: '1px solid rgba(0,240,255,0.2)', paddingBottom: '0.6rem' }}>
+              <span style={{ color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, fontSize: '1.3rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                ⚡ LADO AZUL (VAGAS 1-5)
+              </span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--cyan)', background: 'rgba(0,240,255,0.15)', padding: '0.2rem 0.7rem', borderRadius: '10px', fontWeight: 800 }}>
+                {slots.slice(0, 5).filter(Boolean).length} / 5
+              </span>
+            </div>
 
-            return (
-              <div
-                key={slotNum}
-                style={{
-                  background: isOccupied ? 'linear-gradient(180deg, rgba(20,25,45,0.95), rgba(8,12,24,0.98))' : 'rgba(10, 15, 30, 0.5)',
-                  border: isOccupied ? '1px solid var(--cyan)' : '2px dashed rgba(255,255,255,0.15)',
-                  borderRadius: '16px',
-                  padding: '1.2rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  minHeight: '180px',
-                  position: 'relative',
-                  boxShadow: isOccupied ? '0 5px 15px rgba(0,240,255,0.1)' : 'none',
-                  transition: 'all 0.3s',
-                }}
-              >
-                <span style={{ position: 'absolute', top: '10px', left: '12px', fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 800 }}>
-                  SLOT #{slotNum}
-                </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+              {slots.slice(0, 5).map((slot, idx) => {
+                const slotNum = idx + 1;
+                const isOccupied = slot && slot.player_name;
+                const team = isOccupied ? getTeam(slot.team_id) : null;
 
-                {isOccupied ? (
-                  <>
-                    <div style={{ marginTop: '0.8rem', marginBottom: '0.5rem' }}>
-                      <PlayerAvatar teamName={team?.name || ''} playerName={slot.player_name} badgeColor="var(--cyan)" size={56} />
-                    </div>
-                    <strong style={{ fontSize: '1.1rem', color: '#fff', textAlign: 'center' }}>{slot.player_name}</strong>
-                    
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.3rem' }}>
-                      {team && <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={16} borderRadius="4px" />}
-                      <span style={{ fontSize: '0.75rem', color: '#ffd700', fontWeight: 800 }}>Lvl {slot.lvl}</span>
+                return (
+                  <div
+                    key={slotNum}
+                    onClick={() => { if (!isOccupied && !actionLoading) setActiveSlotModal(slotNum); }}
+                    style={{
+                      background: isOccupied
+                        ? 'linear-gradient(135deg, rgba(15,25,45,0.95), rgba(8,14,28,0.98))'
+                        : 'rgba(10, 15, 30, 0.6)',
+                      border: isOccupied
+                        ? '1px solid var(--cyan)'
+                        : '1.5px dashed rgba(0, 240, 255, 0.3)',
+                      borderRadius: '14px',
+                      padding: '0.8rem 1.2rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      cursor: isOccupied ? 'default' : 'pointer',
+                      transition: 'all 0.25s ease',
+                      boxShadow: isOccupied ? '0 4px 15px rgba(0, 240, 255, 0.1)' : 'none',
+                    }}
+                    className={!isOccupied ? 'match-card-hover' : ''}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--cyan)', background: 'rgba(0,240,255,0.15)', padding: '0.3rem 0.6rem', borderRadius: '8px', fontFamily: 'var(--font-rajdhani)' }}>
+                        #{slotNum}
+                      </span>
+
+                      {isOccupied ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                          <PlayerAvatar teamName={team?.name || ''} playerName={slot.player_name} badgeColor="var(--cyan)" size={42} />
+                          <div>
+                            <strong style={{ fontSize: '1.05rem', color: '#fff', display: 'block', fontFamily: 'var(--font-rajdhani)' }}>{slot.player_name}</strong>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                              {team && <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={14} borderRadius="3px" />}
+                              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{team?.name}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                          <div style={{ width: '42px', height: '42px', borderRadius: '50%', border: '1px dashed rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--cyan)', fontSize: '1.2rem' }}>
+                            +
+                          </div>
+                          <div>
+                            <span style={{ fontSize: '0.9rem', color: 'var(--cyan)', fontWeight: 700, display: 'block' }}>VAGA DISPONÍVEL</span>
+                            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Clique para selecionar seu perfil</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    <button
-                      onClick={() => handleLeaveSlot(slotNum)}
-                      disabled={actionLoading}
-                      style={{
-                        marginTop: '0.8rem',
-                        background: 'rgba(255,51,102,0.15)',
-                        color: 'var(--accent-red)',
-                        border: '1px solid var(--accent-red)',
-                        padding: '0.3rem 0.8rem',
-                        borderRadius: '10px',
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      🚪 Sair da Vaga
-                    </button>
-                  </>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem' }}>
-                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', border: '1px dashed rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', color: 'var(--text-muted)' }}>
-                      +
+                    <div>
+                      {isOccupied ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                          <span style={{ background: 'rgba(255,215,0,0.15)', color: '#ffd700', border: '1px solid #ffd700', padding: '0.2rem 0.6rem', borderRadius: '8px', fontWeight: 800, fontSize: '0.75rem' }}>
+                            Lvl {slot.lvl}
+                          </span>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleLeaveSlot(slotNum); }}
+                            disabled={actionLoading}
+                            style={{ background: 'rgba(255,51,102,0.15)', color: 'var(--accent-red)', border: '1px solid var(--accent-red)', padding: '0.3rem 0.6rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}
+                          >
+                            🚪 Sair
+                          </button>
+                        </div>
+                      ) : (
+                        <span style={{ background: 'linear-gradient(135deg, #00f0ff, #0099ff)', color: '#080d1a', padding: '0.4rem 0.9rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800 }}>
+                          🎯 Entrar
+                        </span>
+                      )}
                     </div>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Vaga Livre</span>
-                    
-                    <button
-                      onClick={() => setActiveSlotModal(slotNum)}
-                      disabled={actionLoading}
-                      style={{
-                        background: 'linear-gradient(135deg, #00f0ff, #0099ff)',
-                        color: '#080d1a',
-                        border: 'none',
-                        padding: '0.45rem 1rem',
-                        borderRadius: '12px',
-                        fontSize: '0.8rem',
-                        fontWeight: 800,
-                        cursor: 'pointer',
-                        boxShadow: '0 0 10px rgba(0,240,255,0.3)',
-                      }}
-                    >
-                      🎯 Entrar na Vaga #{slotNum}
-                    </button>
                   </div>
-                )}
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+          </div>
+
+          {/* LADO B: VAGAS 6 A 10 */}
+          <div style={{ background: 'rgba(255, 51, 102, 0.04)', border: '1px solid rgba(255, 51, 102, 0.25)', borderRadius: '20px', padding: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem', borderBottom: '1px solid rgba(255,51,102,0.2)', paddingBottom: '0.6rem' }}>
+              <span style={{ color: 'var(--accent-red)', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, fontSize: '1.3rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                🔥 LADO VERMELHO (VAGAS 6-10)
+              </span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--accent-red)', background: 'rgba(255,51,102,0.15)', padding: '0.2rem 0.7rem', borderRadius: '10px', fontWeight: 800 }}>
+                {slots.slice(5, 10).filter(Boolean).length} / 5
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+              {slots.slice(5, 10).map((slot, idx) => {
+                const slotNum = idx + 6;
+                const isOccupied = slot && slot.player_name;
+                const team = isOccupied ? getTeam(slot.team_id) : null;
+
+                return (
+                  <div
+                    key={slotNum}
+                    onClick={() => { if (!isOccupied && !actionLoading) setActiveSlotModal(slotNum); }}
+                    style={{
+                      background: isOccupied
+                        ? 'linear-gradient(135deg, rgba(35,18,30,0.95), rgba(20,10,18,0.98))'
+                        : 'rgba(10, 15, 30, 0.6)',
+                      border: isOccupied
+                        ? '1px solid var(--accent-red)'
+                        : '1.5px dashed rgba(255, 51, 102, 0.3)',
+                      borderRadius: '14px',
+                      padding: '0.8rem 1.2rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      cursor: isOccupied ? 'default' : 'pointer',
+                      transition: 'all 0.25s ease',
+                      boxShadow: isOccupied ? '0 4px 15px rgba(255, 51, 102, 0.1)' : 'none',
+                    }}
+                    className={!isOccupied ? 'match-card-hover' : ''}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--accent-red)', background: 'rgba(255,51,102,0.15)', padding: '0.3rem 0.6rem', borderRadius: '8px', fontFamily: 'var(--font-rajdhani)' }}>
+                        #{slotNum}
+                      </span>
+
+                      {isOccupied ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                          <PlayerAvatar teamName={team?.name || ''} playerName={slot.player_name} badgeColor="var(--accent-red)" size={42} />
+                          <div>
+                            <strong style={{ fontSize: '1.05rem', color: '#fff', display: 'block', fontFamily: 'var(--font-rajdhani)' }}>{slot.player_name}</strong>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                              {team && <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={14} borderRadius="3px" />}
+                              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{team?.name}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                          <div style={{ width: '42px', height: '42px', borderRadius: '50%', border: '1px dashed rgba(255,51,102,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-red)', fontSize: '1.2rem' }}>
+                            +
+                          </div>
+                          <div>
+                            <span style={{ fontSize: '0.9rem', color: 'var(--accent-red)', fontWeight: 700, display: 'block' }}>VAGA DISPONÍVEL</span>
+                            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Clique para selecionar seu perfil</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      {isOccupied ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                          <span style={{ background: 'rgba(255,215,0,0.15)', color: '#ffd700', border: '1px solid #ffd700', padding: '0.2rem 0.6rem', borderRadius: '8px', fontWeight: 800, fontSize: '0.75rem' }}>
+                            Lvl {slot.lvl}
+                          </span>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleLeaveSlot(slotNum); }}
+                            disabled={actionLoading}
+                            style={{ background: 'rgba(255,51,102,0.15)', color: 'var(--accent-red)', border: '1px solid var(--accent-red)', padding: '0.3rem 0.6rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}
+                          >
+                            🚪 Sair
+                          </button>
+                        </div>
+                      ) : (
+                        <span style={{ background: 'linear-gradient(135deg, #ff3366, #ff6b81)', color: '#fff', padding: '0.4rem 0.9rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800 }}>
+                          🎯 Entrar
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         {/* MODAL SELECIONAR JOGADOR */}

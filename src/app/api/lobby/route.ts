@@ -19,7 +19,8 @@ function getPlayerLevel(playerName: string): number {
   return 10; // Nível padrão
 }
 
-// Algoritmo de Balanceamento Perfeito 5vs5 (Minimizar a diferença da soma dos níveis)
+// Algoritmo de Balanceamento Perfeito 5vs5
+// Regra de Ouro: Jogadores Tier S (Lvl >= 17) DEVEM ser divididos igualmente entre os dois times (ex: 1 pro Time A, 1 pro Time B)!
 function balanceTeams(slots: any[]) {
   const validPlayers = slots.filter(s => s && s.player_name);
   if (validPlayers.length < 2) return null;
@@ -39,24 +40,38 @@ function balanceTeams(slots: any[]) {
   }
 
   const combinations = getCombinations(validPlayers, teamSize);
-  let bestDiff = Infinity;
-  let bestTeams: { teamA: any[]; teamB: any[]; sumA: number; sumB: number; diff: number }[] = [];
+  const HIGH_LEVEL_THRESHOLD = 17; // Jogadores de Nível Alto / Tier S
 
-  const totalSum = validPlayers.reduce((acc, p) => acc + (p.lvl || 10), 0);
+  let bestHighDiff = Infinity;
+  let bestSumDiff = Infinity;
+  let bestTeams: { teamA: any[]; teamB: any[]; sumA: number; sumB: number; diff: number }[] = [];
 
   combinations.forEach(teamA => {
     const idsA = new Set(teamA.map(p => p.slot_id));
     const teamB = validPlayers.filter(p => !idsA.has(p.slot_id));
 
+    // Contar quantos Tier S ficaram em cada time
+    const highA = teamA.filter(p => (p.lvl || 10) >= HIGH_LEVEL_THRESHOLD).length;
+    const highB = teamB.filter(p => (p.lvl || 10) >= HIGH_LEVEL_THRESHOLD).length;
+    const highDiff = Math.abs(highA - highB);
+
     const sumA = teamA.reduce((acc, p) => acc + (p.lvl || 10), 0);
     const sumB = teamB.reduce((acc, p) => acc + (p.lvl || 10), 0);
-    const diff = Math.abs(sumA - sumB);
+    const sumDiff = Math.abs(sumA - sumB);
 
-    if (diff < bestDiff) {
-      bestDiff = diff;
-      bestTeams = [{ teamA, teamB, sumA, sumB, diff }];
-    } else if (diff === bestDiff) {
-      bestTeams.push({ teamA, teamB, sumA, sumB, diff });
+    // Prioridade 1: Dividir jogadores Tier S (20, 19, 18, 17) de forma igual (highDiff = 0 ou mínimo)
+    // Prioridade 2: Minimizar a diferença da soma de níveis total (sumDiff)
+    if (highDiff < bestHighDiff) {
+      bestHighDiff = highDiff;
+      bestSumDiff = sumDiff;
+      bestTeams = [{ teamA, teamB, sumA, sumB, diff: sumDiff }];
+    } else if (highDiff === bestHighDiff) {
+      if (sumDiff < bestSumDiff) {
+        bestSumDiff = sumDiff;
+        bestTeams = [{ teamA, teamB, sumA, sumB, diff: sumDiff }];
+      } else if (sumDiff === bestSumDiff) {
+        bestTeams.push({ teamA, teamB, sumA, sumB, diff: sumDiff });
+      }
     }
   });
 
