@@ -273,8 +273,8 @@ export default function SelecoesPage() {
               </p>
             </div>
 
-            {/* GRID SEM OVERFLOW HIDDEN PARA NÃO CORTAR OS TITULOS */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: '1rem', paddingTop: '0.5rem', paddingBottom: '1rem' }}>
+            {/* GRID RESPONSIVO: DESKTOP 5 COLUNAS / MOBILE SWIPEABLE CAROUSEL */}
+            <div className="selecao-cards-grid">
               {topStars.map((player, idx) => {
                 const team = getTeam(player.teamId);
                 const kd = (player.kills / (player.deaths || 1)).toFixed(2);
@@ -286,6 +286,7 @@ export default function SelecoesPage() {
                 return (
                   <div
                     key={player.name}
+                    className="selecao-card-item"
                     style={{
                       background: 'linear-gradient(180deg, rgba(20, 25, 45, 0.95) 0%, rgba(8, 12, 24, 0.98) 100%)',
                       border: idx === 0 ? '2px solid #ffd700' : '1px solid rgba(255, 215, 0, 0.4)',
@@ -394,7 +395,8 @@ export default function SelecoesPage() {
               </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: '1rem', paddingTop: '0.5rem', paddingBottom: '1rem' }}>
+            {/* GRID RESPONSIVO: DESKTOP 5 COLUNAS / MOBILE SWIPEABLE CAROUSEL */}
+            <div className="selecao-cards-grid">
               {topBagres.map((player, idx) => {
                 const team = getTeam(player.teamId);
                 const kd = (player.kills / (player.deaths || 1)).toFixed(2);
@@ -406,6 +408,7 @@ export default function SelecoesPage() {
                 return (
                   <div
                     key={player.name}
+                    className="selecao-card-item"
                     style={{
                       background: 'linear-gradient(180deg, rgba(20, 25, 45, 0.95) 0%, rgba(8, 12, 24, 0.98) 100%)',
                       border: idx === 0 ? '2px solid var(--cyan)' : '1px solid rgba(0, 240, 255, 0.4)',

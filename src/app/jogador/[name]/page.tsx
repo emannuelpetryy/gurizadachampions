@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PlayerChart from './PlayerChart';
 import PlayerAvatar from './PlayerAvatar';
+import GamersClubLink from './GamersClubLink';
 
 export default async function JogadorPage({ params }: { params: Promise<{ name: string }> }) {
   const resolvedParams = await params;
@@ -89,10 +90,11 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
                   </span>
                 </Link>
               </div>
+              <GamersClubLink playerName={player.name} />
             </div>
 
             {/* Estatísticas Gerais */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', width: '100%', maxWidth: '800px', marginTop: '2rem' }}>
+            <div className="player-stats-grid">
               <div style={{ background: 'rgba(0,240,255,0.1)', border: '1px solid rgba(0,240,255,0.2)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 'bold' }}>KILLS</span>
                 <span style={{ color: 'var(--cyan)', fontSize: '2.5rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 'bold', lineHeight: 1 }}>{player.kills}</span>

@@ -7,7 +7,7 @@ export default function Ranking() {
   const renderGroupTable = (groupName: string, groupData: any[]) => (
     <div className="glass-card" style={{ marginBottom: '2rem', padding: '1.5rem' }}>
       <h3 className="card-title" style={{ textAlign: 'center', justifyContent: 'center' }}>GRUPO {groupName}</h3>
-      <div style={{ overflowX: 'auto' }}>
+      <div className="table-responsive">
         <table className="ranking-table">
           <thead>
             <tr>
@@ -71,7 +71,7 @@ export default function Ranking() {
         <h2 className="hero-title" style={{ fontSize: '2.5rem', textAlign: 'center', marginTop: '5rem', marginBottom: '2rem', textShadow: 'none' }}>RANKING GERAL DE <span className="text-gold">DESEMPENHO</span></h2>
         
         <div className="glass-card" style={{ padding: '1.5rem' }}>
-          <div style={{ overflowX: 'auto' }}>
+          <div className="table-responsive">
             <table className="ranking-table">
               <thead>
                 <tr>
