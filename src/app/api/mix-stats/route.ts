@@ -92,10 +92,45 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Supabase não configurado' }, { status: 500 });
   }
 
+  // 1. Validação de Autenticação via Authorization: Bearer <key>
+  const expectedApiKey = process.env.WEBSYNC_API_KEY || process.env.MIX_API_KEY;
+  if (expectedApiKey) {
+    const authHeader = request.headers.get('authorization') || '';
+    const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+    if (token !== expectedApiKey) {
+      return NextResponse.json({ error: 'Não autorizado. Chave de API inválida.' }, { status: 401 });
+    }
+  }
+
   try {
     const body = await request.json();
 
-    // Se o POST for para atualizar/adicionar alias de nomes
+    // 2. Tratamento do Sinal de Wipe (ex: !rating_wipe => {"wipe": true})
+    if (body && (body.wipe === true || body.wipe === 'true')) {
+      const upsertUrl = `${supabaseUrl}/rest/v1/match_lobby`;
+      await fetch(upsertUrl, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${supabaseKey}`,
+          apikey: supabaseKey,
+          'Content-Type': 'application/json',
+          Prefer: 'resolution=merge-duplicates',
+        },
+        body: JSON.stringify({
+          slot_id: 96,
+          player_name: JSON.stringify({}),
+          joined_at: new Date().toISOString(),
+        }),
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: 'Rating wipe efetuado e salvo no Supabase com sucesso',
+        wipe: true,
+      }, { status: 200 });
+    }
+
+    // 3. Adicionar Alias / Mapeamento de Nome (action: 'add_alias')
     if (body.action === 'add_alias' && body.steamNick && body.champName) {
       const currentAliasMap = await getAliasMap(supabaseUrl, supabaseKey);
       currentAliasMap[cleanSlug(body.steamNick)] = cleanSlug(body.champName);
@@ -116,13 +151,22 @@ export async function POST(request: Request) {
         }),
       });
 
-      return NextResponse.json({ success: true, aliases: currentAliasMap });
+      return NextResponse.json({ success: true, aliases: currentAliasMap }, { status: 200 });
     }
 
-    const incomingPlayers = Array.isArray(body.players) ? body.players : [body];
+    // 4. Lote de Jogadores ou Jogador Único
+    const incomingPlayers = Array.isArray(body.players)
+      ? body.players
+      : (body.name || body.steamid ? [body] : []);
+
+    if (incomingPlayers.length === 0) {
+      // Caso seja um payload genérico ou desconhecido, responder 200 para não travar o plugin
+      return NextResponse.json({ success: true, message: 'Payload recebido' }, { status: 200 });
+    }
+
     const aliasMap = await getAliasMap(supabaseUrl, supabaseKey);
 
-    // Buscar mapa ELO atual
+    // Buscar mapa ELO atual do Supabase
     const eloQueryUrl = `${supabaseUrl}/rest/v1/match_lobby?select=*&slot_id=eq.96`;
     const eloRes = await fetch(eloQueryUrl, {
       headers: { Authorization: `Bearer ${supabaseKey}`, apikey: supabaseKey },
@@ -158,7 +202,7 @@ export async function POST(request: Request) {
       };
     });
 
-    // Upsert no slot 96
+    // 5. Salvar / Persistir mapa atualizado no Supabase (slot_id = 96)
     const upsertUrl = `${supabaseUrl}/rest/v1/match_lobby`;
     await fetch(upsertUrl, {
       method: 'POST',
@@ -175,7 +219,7 @@ export async function POST(request: Request) {
       }),
     });
 
-    return NextResponse.json({ success: true, count: incomingPlayers.length });
+    return NextResponse.json({ success: true, count: incomingPlayers.length }, { status: 200 });
   } catch (e: any) {
     return NextResponse.json({ error: e?.message || 'Erro ao sincronizar estatísticas do servidor' }, { status: 500 });
   }
