@@ -9,21 +9,29 @@ function cleanSlug(name: string) {
 export default function GamersClubLink({ playerName, lvl }: { playerName: string; lvl?: number }) {
   const slug = cleanSlug(playerName);
   const [gcUrl, setGcUrl] = useState<string | null>(null);
+  const [steamNick, setSteamNick] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [inputGc, setInputGc] = useState('');
+  const [inputSteam, setInputSteam] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    async function fetchGcLink() {
+    async function fetchPlayerData() {
       try {
         const res = await fetch(`/api/player-gc?slug=${encodeURIComponent(slug)}`);
         if (res.ok) {
           const data = await res.json();
-          if (!cancelled && data.gcUrl) {
-            setGcUrl(data.gcUrl);
-            setInputValue(data.gcUrl);
+          if (!cancelled) {
+            if (data.gcUrl) {
+              setGcUrl(data.gcUrl);
+              setInputGc(data.gcUrl);
+            }
+            if (data.steamNick) {
+              setSteamNick(data.steamNick);
+              setInputSteam(data.steamNick);
+            }
           }
         }
       } catch (e) {
@@ -32,7 +40,7 @@ export default function GamersClubLink({ playerName, lvl }: { playerName: string
         if (!cancelled) setLoading(false);
       }
     }
-    fetchGcLink();
+    fetchPlayerData();
     return () => { cancelled = true; };
   }, [slug]);
 
@@ -42,14 +50,19 @@ export default function GamersClubLink({ playerName, lvl }: { playerName: string
       const res = await fetch('/api/player-gc', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerSlug: slug, gcUrl: inputValue }),
+        body: JSON.stringify({
+          playerSlug: slug,
+          gcUrl: inputGc,
+          steamNick: inputSteam,
+        }),
       });
       if (res.ok) {
         const data = await res.json();
         setGcUrl(data.gcUrl || null);
+        setSteamNick(data.steamNick || null);
         setIsEditing(false);
       } else {
-        alert('Erro ao salvar o link da GamersClub.');
+        alert('Erro ao salvar os dados.');
       }
     } catch (e) {
       alert('Erro de conexão ao salvar.');
@@ -72,7 +85,8 @@ export default function GamersClubLink({ playerName, lvl }: { playerName: string
 
   return (
     <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.8rem', width: '100%' }}>
-      {/* Badge de Nível GamersClub */}
+      
+      {/* Badges de Nível GamersClub, Perfil GC & Nick Steam */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', flexWrap: 'wrap', justifyContent: 'center' }}>
         <div
           style={{
@@ -118,6 +132,25 @@ export default function GamersClubLink({ playerName, lvl }: { playerName: string
           </a>
         ) : null}
 
+        {steamNick ? (
+          <span
+            style={{
+              background: 'rgba(255,215,0,0.12)',
+              border: '1px solid #ffd700',
+              color: '#ffd700',
+              padding: '0.5rem 1.2rem',
+              borderRadius: '20px',
+              fontWeight: 800,
+              fontSize: '0.85rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+            }}
+          >
+            <span>💨</span> STEAM: {steamNick}
+          </span>
+        ) : null}
+
         {!isEditing && (
           <button
             onClick={() => setIsEditing(true)}
@@ -135,59 +168,84 @@ export default function GamersClubLink({ playerName, lvl }: { playerName: string
               gap: '0.4rem',
             }}
           >
-            ✏️ {gcUrl ? 'Editar Link GC' : 'Adicionar Link GC'}
+            ✏️ {gcUrl || steamNick ? 'Editar Nicks / Links' : 'Vincular GC / Nick Steam'}
           </button>
         )}
       </div>
 
       {/* Form de Edição */}
       {isEditing && (
-        <div style={{ display: 'flex', gap: '0.5rem', width: '100%', maxWidth: '440px', alignItems: 'center', marginTop: '0.3rem' }}>
-          <input
-            type="url"
-            placeholder="Cole seu link da GC (ex: gamersclub.com.br/jogador/...)"
-            value={inputValue}
-            onChange={e => setInputValue(e.target.value)}
-            style={{
-              flex: 1,
-              background: 'rgba(10,15,30,0.95)',
-              border: '1px solid var(--cyan)',
-              padding: '0.6rem 0.9rem',
-              borderRadius: '10px',
-              color: '#fff',
-              fontSize: '0.85rem',
-            }}
-          />
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            style={{
-              background: 'linear-gradient(135deg, #00f0ff, #0099ff)',
-              color: '#080d1a',
-              border: 'none',
-              padding: '0.6rem 1.2rem',
-              borderRadius: '10px',
-              fontWeight: 800,
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-            }}
-          >
-            {saving ? '...' : 'Salvar'}
-          </button>
-          <button
-            onClick={() => setIsEditing(false)}
-            style={{
-              background: 'rgba(255,255,255,0.1)',
-              color: '#fff',
-              border: 'none',
-              padding: '0.6rem 0.9rem',
-              borderRadius: '10px',
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-            }}
-          >
-            ✕
-          </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', width: '100%', maxWidth: '440px', background: 'rgba(0,0,0,0.5)', padding: '1.2rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.15)' }}>
+          <div>
+            <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.3rem', fontWeight: 'bold' }}>🎮 LINK GAMERSCLUB:</label>
+            <input
+              type="url"
+              placeholder="Ex: gamersclub.com.br/jogador/..."
+              value={inputGc}
+              onChange={e => setInputGc(e.target.value)}
+              style={{
+                width: '100%',
+                background: 'rgba(10,15,30,0.95)',
+                border: '1px solid var(--cyan)',
+                padding: '0.6rem 0.9rem',
+                borderRadius: '10px',
+                color: '#fff',
+                fontSize: '0.85rem',
+              }}
+            />
+          </div>
+
+          <div>
+            <label style={{ fontSize: '0.75rem', color: '#ffd700', display: 'block', marginBottom: '0.3rem', fontWeight: 'bold' }}>💨 NICK NO SERVIDOR/STEAM (ex: VVS Perry):</label>
+            <input
+              type="text"
+              placeholder="Digite seu nick exato no CS2/Steam"
+              value={inputSteam}
+              onChange={e => setInputSteam(e.target.value)}
+              style={{
+                width: '100%',
+                background: 'rgba(10,15,30,0.95)',
+                border: '1px solid #ffd700',
+                padding: '0.6rem 0.9rem',
+                borderRadius: '10px',
+                color: '#fff',
+                fontSize: '0.85rem',
+              }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+            <button
+              onClick={() => setIsEditing(false)}
+              style={{
+                background: 'rgba(255,255,255,0.1)',
+                color: '#fff',
+                border: 'none',
+                padding: '0.6rem 1.2rem',
+                borderRadius: '10px',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+              }}
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              style={{
+                background: 'linear-gradient(135deg, #00f0ff, #0099ff)',
+                color: '#080d1a',
+                border: 'none',
+                padding: '0.6rem 1.5rem',
+                borderRadius: '10px',
+                fontWeight: 800,
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+              }}
+            >
+              {saving ? 'Salvar...' : 'Salvar'}
+            </button>
+          </div>
         </div>
       )}
     </div>
