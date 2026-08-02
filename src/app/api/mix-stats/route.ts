@@ -190,21 +190,45 @@ export async function POST(request: Request) {
       const s = resolvePlayerSlug(ip.name, ip.steamid, aliasMap);
       const existing = currentEloMap[s] || {};
 
+      const wins = ip.wins !== undefined ? ip.wins : (existing.wins || 0);
+      const losses = ip.losses !== undefined ? ip.losses : (existing.losses || 0);
+      const matches = ip.matches !== undefined ? ip.matches : (existing.matches || wins + losses);
+      const kills = ip.kills !== undefined ? ip.kills : (existing.kills || 0);
+      const deaths = ip.deaths !== undefined ? ip.deaths : (existing.deaths || 0);
+      const assists = ip.assists !== undefined ? ip.assists : (existing.assists || 0);
+      const damage = ip.damage !== undefined ? ip.damage : (existing.damage || 0);
+      const mvps = ip.mvps !== undefined ? ip.mvps : (existing.mvps || 0);
+
+      // Calcular ELO / Rating Dinâmico baseado em performance individual (Estilo FaceIT / GamersClub)
+      let computedRating = ip.rating !== undefined ? ip.rating : (ip.elo !== undefined ? ip.elo : null);
+
+      if (computedRating === null) {
+        // Se o rating não veio pronto do plugin, calcula a fórmula dinâmica com bônus por K/D, ADR e MVPs:
+        const kdRatio = kills / Math.max(1, deaths);
+        const avgDmg = matches > 0 ? (damage / (matches * 20)) : 0;
+        const baseScore = 1000 + (wins * 20) - (losses * 15);
+        const kdBonus = Math.round((kdRatio - 1.0) * 40);
+        const adrBonus = Math.round((avgDmg - 75) * 0.5);
+        const mvpBonus = mvps * 2;
+
+        computedRating = Math.max(100, Math.round(baseScore + kdBonus + adrBonus + mvpBonus));
+      }
+
       currentEloMap[s] = {
         ...existing,
         name: existing.name || ip.name,
         serverName: ip.name,
         steamid: ip.steamid || existing.steamid || '',
-        rating: ip.rating !== undefined ? ip.rating : (ip.elo !== undefined ? ip.elo : (existing.rating || existing.elo || 1000)),
-        elo: ip.rating !== undefined ? ip.rating : (ip.elo !== undefined ? ip.elo : (existing.elo || existing.rating || 1000)),
-        matches: ip.matches !== undefined ? ip.matches : (existing.matches || (existing.wins || 0) + (existing.losses || 0)),
-        wins: ip.wins !== undefined ? ip.wins : (existing.wins || 0),
-        losses: ip.losses !== undefined ? ip.losses : (existing.losses || 0),
-        kills: ip.kills !== undefined ? ip.kills : (existing.kills || 0),
-        deaths: ip.deaths !== undefined ? ip.deaths : (existing.deaths || 0),
-        assists: ip.assists !== undefined ? ip.assists : (existing.assists || 0),
-        damage: ip.damage !== undefined ? ip.damage : (existing.damage || 0),
-        mvps: ip.mvps !== undefined ? ip.mvps : (existing.mvps || 0),
+        rating: computedRating,
+        elo: computedRating,
+        matches,
+        wins,
+        losses,
+        kills,
+        deaths,
+        assists,
+        damage,
+        mvps,
         created_at: ip.created_at || existing.created_at || new Date().toISOString(),
       };
     });
