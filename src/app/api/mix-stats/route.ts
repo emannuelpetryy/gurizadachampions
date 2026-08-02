@@ -84,6 +84,20 @@ export async function GET() {
   }
 }
 
+function getProp(obj: any, ...possibleKeys: string[]) {
+  if (!obj || typeof obj !== 'object') return undefined;
+  for (const k of possibleKeys) {
+    if (obj[k] !== undefined) return obj[k];
+  }
+  const keys = Object.keys(obj);
+  for (const k of possibleKeys) {
+    const lower = k.toLowerCase();
+    const foundKey = keys.find(key => key.toLowerCase() === lower);
+    if (foundKey && obj[foundKey] !== undefined) return obj[foundKey];
+  }
+  return undefined;
+}
+
 export async function POST(request: Request) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -113,7 +127,7 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     // 2. Tratamento do Sinal de Wipe (ex: !rating_wipe => {"wipe": true})
-    if (body && (body.wipe === true || body.wipe === 'true')) {
+    if (body && (getProp(body, 'wipe') === true || getProp(body, 'wipe') === 'true')) {
       const upsertUrl = `${supabaseUrl}/rest/v1/match_lobby`;
       await fetch(upsertUrl, {
         method: 'POST',
@@ -138,9 +152,13 @@ export async function POST(request: Request) {
     }
 
     // 3. Adicionar Alias / Mapeamento de Nome (action: 'add_alias')
-    if (body.action === 'add_alias' && body.steamNick && body.champName) {
+    const action = getProp(body, 'action');
+    const steamNick = getProp(body, 'steamNick', 'steam_nick', 'SteamNick');
+    const champName = getProp(body, 'champName', 'champ_name', 'ChampName');
+
+    if (action === 'add_alias' && steamNick && champName) {
       const currentAliasMap = await getAliasMap(supabaseUrl, supabaseKey);
-      currentAliasMap[cleanSlug(body.steamNick)] = cleanSlug(body.champName);
+      currentAliasMap[cleanSlug(steamNick)] = cleanSlug(champName);
 
       const upsertUrl = `${supabaseUrl}/rest/v1/match_lobby`;
       await fetch(upsertUrl, {
@@ -161,13 +179,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, aliases: currentAliasMap }, { status: 200 });
     }
 
-    // 4. Lote de Jogadores ou Jogador Único
-    const incomingPlayers = Array.isArray(body.players)
-      ? body.players
-      : (body.name || body.steamid ? [body] : []);
+    // 4. Lote de Jogadores ou Jogador Único (suporta C# PascalCase e JSON camelCase/snake_case)
+    const rawPlayers = getProp(body, 'players', 'Players', 'data', 'Data', 'stats', 'Stats');
+    const incomingPlayers = Array.isArray(rawPlayers)
+      ? rawPlayers
+      : (getProp(body, 'name', 'Name') || getProp(body, 'steamid', 'SteamID', 'SteamId') ? [body] : []);
 
     if (incomingPlayers.length === 0) {
-      // Caso seja um payload genérico ou desconhecido, responder 200 para não travar o plugin
       return NextResponse.json({ success: true, message: 'Payload recebido' }, { status: 200 });
     }
 
@@ -186,24 +204,36 @@ export async function POST(request: Request) {
     }
 
     incomingPlayers.forEach((ip: any) => {
-      if (!ip || !ip.name) return;
-      const s = resolvePlayerSlug(ip.name, ip.steamid, aliasMap);
+      const name = getProp(ip, 'name', 'Name', 'PlayerName', 'player_name', 'nick', 'Nick');
+      if (!name) return;
+      
+      const steamid = getProp(ip, 'steamid', 'SteamID', 'SteamId', 'steam_id') || '';
+      const s = resolvePlayerSlug(name, steamid, aliasMap);
       const existing = currentEloMap[s] || {};
 
-      const wins = ip.wins !== undefined ? ip.wins : (existing.wins || 0);
-      const losses = ip.losses !== undefined ? ip.losses : (existing.losses || 0);
-      const matches = ip.matches !== undefined ? ip.matches : (existing.matches || wins + losses);
-      const kills = ip.kills !== undefined ? ip.kills : (existing.kills || 0);
-      const deaths = ip.deaths !== undefined ? ip.deaths : (existing.deaths || 0);
-      const assists = ip.assists !== undefined ? ip.assists : (existing.assists || 0);
-      const damage = ip.damage !== undefined ? ip.damage : (existing.damage || 0);
-      const mvps = ip.mvps !== undefined ? ip.mvps : (existing.mvps || 0);
+      const rawWins = getProp(ip, 'wins', 'Wins');
+      const rawLosses = getProp(ip, 'losses', 'Losses');
+      const rawMatches = getProp(ip, 'matches', 'Matches');
+      const rawKills = getProp(ip, 'kills', 'Kills');
+      const rawDeaths = getProp(ip, 'deaths', 'Deaths');
+      const rawAssists = getProp(ip, 'assists', 'Assists');
+      const rawDamage = getProp(ip, 'damage', 'Damage');
+      const rawMvps = getProp(ip, 'mvps', 'MVPs', 'Mvps');
+      const rawRating = getProp(ip, 'rating', 'Rating', 'elo', 'Elo');
+
+      const wins = rawWins !== undefined ? Number(rawWins) : (existing.wins || 0);
+      const losses = rawLosses !== undefined ? Number(rawLosses) : (existing.losses || 0);
+      const matches = rawMatches !== undefined ? Number(rawMatches) : (existing.matches || wins + losses);
+      const kills = rawKills !== undefined ? Number(rawKills) : (existing.kills || 0);
+      const deaths = rawDeaths !== undefined ? Number(rawDeaths) : (existing.deaths || 0);
+      const assists = rawAssists !== undefined ? Number(rawAssists) : (existing.assists || 0);
+      const damage = rawDamage !== undefined ? Number(rawDamage) : (existing.damage || 0);
+      const mvps = rawMvps !== undefined ? Number(rawMvps) : (existing.mvps || 0);
 
       // Calcular ELO / Rating Dinâmico baseado em performance individual (Estilo FaceIT / GamersClub)
-      let computedRating = ip.rating !== undefined ? ip.rating : (ip.elo !== undefined ? ip.elo : null);
+      let computedRating = rawRating !== undefined ? Number(rawRating) : null;
 
       if (computedRating === null) {
-        // Se o rating não veio pronto do plugin, calcula a fórmula dinâmica com bônus por K/D, ADR e MVPs:
         const kdRatio = kills / Math.max(1, deaths);
         const avgDmg = matches > 0 ? (damage / (matches * 20)) : 0;
         const baseScore = 1000 + (wins * 20) - (losses * 15);
@@ -216,9 +246,9 @@ export async function POST(request: Request) {
 
       currentEloMap[s] = {
         ...existing,
-        name: existing.name || ip.name,
-        serverName: ip.name,
-        steamid: ip.steamid || existing.steamid || '',
+        name: existing.name || name,
+        serverName: name,
+        steamid: steamid || existing.steamid || '',
         rating: computedRating,
         elo: computedRating,
         matches,
@@ -229,7 +259,7 @@ export async function POST(request: Request) {
         assists,
         damage,
         mvps,
-        created_at: ip.created_at || existing.created_at || new Date().toISOString(),
+        created_at: getProp(ip, 'created_at', 'CreatedAt') || existing.created_at || new Date().toISOString(),
       };
     });
 
