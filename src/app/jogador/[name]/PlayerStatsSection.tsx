@@ -265,11 +265,11 @@ export default function PlayerStatsSection({
             </div>
 
             <div style={{ background: 'rgba(255,152,0,0.12)', border: '1px solid rgba(255,152,0,0.3)', padding: '1.2rem', borderRadius: '12px', textAlign: 'center' }}>
-              <span style={{ color: '#ff9800', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>MVPS NO SERVIDOR</span>
+              <span style={{ color: '#ff9800', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>MVPS DE ROUND NO SERVIDOR</span>
               <strong style={{ display: 'block', color: '#ffd700', fontSize: '1.8rem', fontFamily: 'var(--font-rajdhani)', margin: '0.3rem 0' }}>
-                ⭐ {sMvps} MVPs
+                ⭐ {sMvps} MVPs de Rodada
               </strong>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Melhor Jogador de Round no Servidor</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Estrelas de Melhor Jogador do Round</span>
             </div>
           </div>
 
