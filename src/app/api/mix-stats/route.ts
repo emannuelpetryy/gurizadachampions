@@ -92,14 +92,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Supabase não configurado' }, { status: 500 });
   }
 
-  // 1. Validação de Autenticação via Authorization: Bearer <key>
-  const expectedApiKey = process.env.WEBSYNC_API_KEY || process.env.MIX_API_KEY;
-  if (expectedApiKey) {
-    const authHeader = request.headers.get('authorization') || '';
-    const token = authHeader.replace(/^Bearer\s+/i, '').trim();
-    if (token !== expectedApiKey) {
-      return NextResponse.json({ error: 'Não autorizado. Chave de API inválida.' }, { status: 401 });
-    }
+  // 1. Validação Obrigatória de Autenticação no POST (Bearer <key> / x-api-key / ?key=)
+  const expectedApiKey = process.env.WEBSYNC_API_KEY || process.env.MIX_API_KEY || 'gurizada-mix-secret-key-2026';
+  
+  const authHeader = request.headers.get('authorization') || '';
+  const xApiKey = request.headers.get('x-api-key') || '';
+  const { searchParams } = new URL(request.url);
+  const queryKey = searchParams.get('key') || searchParams.get('token') || '';
+
+  const receivedToken = authHeader.replace(/^Bearer\s+/i, '').trim() || xApiKey.trim() || queryKey.trim();
+
+  if (receivedToken !== expectedApiKey) {
+    return NextResponse.json(
+      { error: 'Não autorizado. Chave de API (WebSyncApiKey) inválida ou não informada.' },
+      { status: 401 }
+    );
   }
 
   try {
