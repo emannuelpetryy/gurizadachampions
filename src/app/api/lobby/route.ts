@@ -167,6 +167,32 @@ export async function POST(request: NextRequest) {
         try { currentHistory = JSON.parse(histData[0].player_name); } catch(e) {}
       }
 
+      // Calcular variação dinâmica de ELO (15 a 25 ELO conforme dominância do placar)
+      const winningScore = Math.max(scoreA, scoreB);
+      const losingScore = Math.min(scoreA, scoreB);
+      const scoreDiff = winningScore - losingScore;
+
+      let eloGain = 25;
+      let eloLoss = 20;
+
+      if (scoreDiff >= 9) {
+        // Dominante / Stomp (ex: 13x0 a 13x4)
+        eloGain = 25;
+        eloLoss = 22;
+      } else if (scoreDiff >= 5) {
+        // Confortável (ex: 13x5 a 13x8)
+        eloGain = 22;
+        eloLoss = 18;
+      } else if (scoreDiff >= 2) {
+        // Apertado (ex: 13x9 a 13x11)
+        eloGain = 18;
+        eloLoss = 15;
+      } else {
+        // Overtime / Empate de rounds (ex: 16x14 ou diferença de 1)
+        eloGain = 15;
+        eloLoss = 12;
+      }
+
       const newMatchRecord = {
         id: Date.now().toString(),
         scoreA,
@@ -174,6 +200,8 @@ export async function POST(request: NextRequest) {
         mapName: mapName || 'Dust II',
         teamA: teamA || [],
         teamB: teamB || [],
+        eloGain,
+        eloLoss,
         date: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }),
       };
 
@@ -217,7 +245,7 @@ export async function POST(request: NextRequest) {
         const existing = currentEloMap[s] || {};
         const wins = (existing.wins || 0) + 1;
         const losses = existing.losses || 0;
-        const newElo = (existing.elo || existing.rating || 1000) + 25;
+        const newElo = (existing.elo || existing.rating || 1000) + eloGain;
 
         currentEloMap[s] = {
           ...existing,
@@ -242,7 +270,7 @@ export async function POST(request: NextRequest) {
         const existing = currentEloMap[s] || {};
         const wins = existing.wins || 0;
         const losses = (existing.losses || 0) + 1;
-        const newElo = Math.max(100, (existing.elo || existing.rating || 1000) - 15);
+        const newElo = Math.max(100, (existing.elo || existing.rating || 1000) - eloLoss);
 
         currentEloMap[s] = {
           ...existing,

@@ -300,7 +300,7 @@ export default function PlayerStatsSection({
 
                       <div style={{ textAlign: 'center' }}>
                         <span style={{ background: won ? 'rgba(0,240,255,0.15)' : 'rgba(255,51,102,0.15)', color: won ? '#00f0ff' : '#ff3366', padding: '0.3rem 0.9rem', borderRadius: '10px', fontWeight: 800, fontSize: '0.85rem' }}>
-                          {won ? 'VITÓRIA (+25 ELO)' : 'DERROTA (-15 ELO)'}
+                          {won ? `VITÓRIA (+${m.eloGain || 25} ELO)` : `DERROTA (-${m.eloLoss || 15} ELO)`}
                         </span>
                         <div style={{ fontSize: '1.4rem', color: '#fff', fontWeight: 800, fontFamily: 'var(--font-rajdhani)', marginTop: '0.2rem' }}>
                           {m.scoreA} x {m.scoreB}
