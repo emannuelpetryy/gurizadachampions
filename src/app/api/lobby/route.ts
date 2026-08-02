@@ -203,7 +203,7 @@ export async function POST(request: NextRequest) {
         cache: 'no-store',
       });
       const eloData = eloRes.ok ? await eloRes.json() : [];
-      let currentEloMap: Record<string, { name: string; elo: number; wins: number; losses: number }> = {};
+      let currentEloMap: Record<string, any> = {};
       if (eloData.length > 0) {
         try { currentEloMap = JSON.parse(eloData[0].player_name); } catch(e) {}
       }
@@ -214,21 +214,51 @@ export async function POST(request: NextRequest) {
       winners.forEach((p: any) => {
         if (!p || !p.player_name) return;
         const s = cleanSlug(p.player_name);
-        const playerStats = currentEloMap[s] || { name: p.player_name, elo: 1000, wins: 0, losses: 0 };
-        playerStats.name = p.player_name;
-        playerStats.elo += 25;
-        playerStats.wins += 1;
-        currentEloMap[s] = playerStats;
+        const existing = currentEloMap[s] || {};
+        const wins = (existing.wins || 0) + 1;
+        const losses = existing.losses || 0;
+        const newElo = (existing.elo || existing.rating || 1000) + 25;
+
+        currentEloMap[s] = {
+          ...existing,
+          name: existing.name || p.player_name,
+          serverName: p.player_name,
+          rating: newElo,
+          elo: newElo,
+          wins,
+          losses,
+          matches: wins + losses,
+          kills: existing.kills || 0,
+          deaths: existing.deaths || 0,
+          assists: existing.assists || 0,
+          damage: existing.damage || 0,
+          mvps: existing.mvps || 0,
+        };
       });
 
       losers.forEach((p: any) => {
         if (!p || !p.player_name) return;
         const s = cleanSlug(p.player_name);
-        const playerStats = currentEloMap[s] || { name: p.player_name, elo: 1000, wins: 0, losses: 0 };
-        playerStats.name = p.player_name;
-        playerStats.elo = Math.max(100, playerStats.elo - 15);
-        playerStats.losses += 1;
-        currentEloMap[s] = playerStats;
+        const existing = currentEloMap[s] || {};
+        const wins = existing.wins || 0;
+        const losses = (existing.losses || 0) + 1;
+        const newElo = Math.max(100, (existing.elo || existing.rating || 1000) - 15);
+
+        currentEloMap[s] = {
+          ...existing,
+          name: existing.name || p.player_name,
+          serverName: p.player_name,
+          rating: newElo,
+          elo: newElo,
+          wins,
+          losses,
+          matches: wins + losses,
+          kills: existing.kills || 0,
+          deaths: existing.deaths || 0,
+          assists: existing.assists || 0,
+          damage: existing.damage || 0,
+          mvps: existing.mvps || 0,
+        };
       });
 
       await fetch(upsertUrl, {
