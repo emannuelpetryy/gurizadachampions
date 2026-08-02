@@ -4,15 +4,49 @@ function cleanSlug(name: string) {
   return name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 }
 
+const DEFAULT_ALIASES: Record<string, string> = {
+  'vvs_perry': 'manu',
+  'vvsperry': 'manu',
+  'perry': 'manu',
+  'manuel': 'manu',
+};
+
+async function getAliasMap(supabaseUrl: string, supabaseKey: string): Promise<Record<string, string>> {
+  try {
+    const aliasQueryUrl = `${supabaseUrl}/rest/v1/match_lobby?select=*&slot_id=eq.95`;
+    const aliasRes = await fetch(aliasQueryUrl, {
+      headers: { Authorization: `Bearer ${supabaseKey}`, apikey: supabaseKey },
+      cache: 'no-store',
+    });
+    const aliasData = aliasRes.ok ? await aliasRes.json() : [];
+    let customMap: Record<string, string> = {};
+    if (aliasData.length > 0) {
+      try { customMap = JSON.parse(aliasData[0].player_name); } catch (e) {}
+    }
+    return { ...DEFAULT_ALIASES, ...customMap };
+  } catch (e) {
+    return DEFAULT_ALIASES;
+  }
+}
+
+function resolvePlayerSlug(name: string, steamid: string = '', aliasMap: Record<string, string>): string {
+  const rawSlug = cleanSlug(name);
+  if (aliasMap[rawSlug]) return aliasMap[rawSlug];
+  if (steamid && aliasMap[steamid]) return aliasMap[steamid];
+  return rawSlug;
+}
+
 export async function GET() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
-    return NextResponse.json({ players: [] });
+    return NextResponse.json({ players: [], aliases: DEFAULT_ALIASES });
   }
 
   try {
+    const aliasMap = await getAliasMap(supabaseUrl, supabaseKey);
+
     const eloQueryUrl = `${supabaseUrl}/rest/v1/match_lobby?select=*&slot_id=eq.96`;
     const eloRes = await fetch(eloQueryUrl, {
       headers: { Authorization: `Bearer ${supabaseKey}`, apikey: supabaseKey },
@@ -44,7 +78,7 @@ export async function GET() {
       };
     });
 
-    return NextResponse.json({ players: playersList });
+    return NextResponse.json({ players: playersList, aliases: aliasMap });
   } catch (e: any) {
     return NextResponse.json({ error: e?.message || 'Erro interno' }, { status: 500 });
   }
@@ -60,9 +94,35 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const incomingPlayers = Array.isArray(body.players) ? body.players : [body];
 
-    // Buscar mapa atual
+    // Se o POST for para atualizar/adicionar alias de nomes
+    if (body.action === 'add_alias' && body.steamNick && body.champName) {
+      const currentAliasMap = await getAliasMap(supabaseUrl, supabaseKey);
+      currentAliasMap[cleanSlug(body.steamNick)] = cleanSlug(body.champName);
+
+      const upsertUrl = `${supabaseUrl}/rest/v1/match_lobby`;
+      await fetch(upsertUrl, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${supabaseKey}`,
+          apikey: supabaseKey,
+          'Content-Type': 'application/json',
+          Prefer: 'resolution=merge-duplicates',
+        },
+        body: JSON.stringify({
+          slot_id: 95,
+          player_name: JSON.stringify(currentAliasMap),
+          joined_at: new Date().toISOString(),
+        }),
+      });
+
+      return NextResponse.json({ success: true, aliases: currentAliasMap });
+    }
+
+    const incomingPlayers = Array.isArray(body.players) ? body.players : [body];
+    const aliasMap = await getAliasMap(supabaseUrl, supabaseKey);
+
+    // Buscar mapa ELO atual
     const eloQueryUrl = `${supabaseUrl}/rest/v1/match_lobby?select=*&slot_id=eq.96`;
     const eloRes = await fetch(eloQueryUrl, {
       headers: { Authorization: `Bearer ${supabaseKey}`, apikey: supabaseKey },
@@ -76,12 +136,13 @@ export async function POST(request: Request) {
 
     incomingPlayers.forEach((ip: any) => {
       if (!ip || !ip.name) return;
-      const s = cleanSlug(ip.name);
+      const s = resolvePlayerSlug(ip.name, ip.steamid, aliasMap);
       const existing = currentEloMap[s] || {};
 
       currentEloMap[s] = {
         ...existing,
-        name: ip.name,
+        name: existing.name || ip.name,
+        serverName: ip.name,
         steamid: ip.steamid || existing.steamid || '',
         rating: ip.rating !== undefined ? ip.rating : (ip.elo !== undefined ? ip.elo : (existing.rating || existing.elo || 1000)),
         elo: ip.rating !== undefined ? ip.rating : (ip.elo !== undefined ? ip.elo : (existing.elo || existing.rating || 1000)),

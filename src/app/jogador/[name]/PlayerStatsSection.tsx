@@ -52,15 +52,39 @@ export default function PlayerStatsSection({
           const data = await res.json();
           const cleanSlug = playerName.toLowerCase().replace(/[^a-z0-9]/g, '');
           
-          if (data.eloMap && data.eloMap[cleanSlug]) {
-            setServerStats(data.eloMap[cleanSlug]);
+          if (data.eloMap) {
+            // Buscar por nome exato do slug ou por apelidos mapeados (ex: VVS Perry => manu)
+            let foundStats = data.eloMap[cleanSlug] || null;
+
+            if (!foundStats) {
+              // Tentar encontrar por apelido alternativo contido na chave ou nome
+              const possibleKeys = Object.keys(data.eloMap).filter(k => {
+                const p = data.eloMap[k];
+                const pName = p.name?.toLowerCase().replace(/[^a-z0-9]/g, '') || '';
+                const pServer = p.serverName?.toLowerCase().replace(/[^a-z0-9]/g, '') || '';
+                return k.includes(cleanSlug) || cleanSlug.includes(k) || pName.includes(cleanSlug) || pServer.includes(cleanSlug);
+              });
+              if (possibleKeys.length > 0) {
+                foundStats = data.eloMap[possibleKeys[0]];
+              }
+            }
+
+            if (foundStats) {
+              setServerStats(foundStats);
+            }
           }
 
           if (Array.isArray(data.matchHistory)) {
-            // Filtrar partidas do lobby onde o jogador participou
+            // Filtrar partidas do lobby onde o jogador participou (por nick do campeonato ou do servidor)
             const pMatches = data.matchHistory.filter((m: any) => {
-              const inA = m.teamA?.some((tp: any) => tp.player_name?.toLowerCase() === playerName.toLowerCase());
-              const inB = m.teamB?.some((tp: any) => tp.player_name?.toLowerCase() === playerName.toLowerCase());
+              const inA = m.teamA?.some((tp: any) => {
+                const tName = tp.player_name?.toLowerCase() || '';
+                return tName.includes(playerName.toLowerCase()) || playerName.toLowerCase().includes(tName);
+              });
+              const inB = m.teamB?.some((tp: any) => {
+                const tName = tp.player_name?.toLowerCase() || '';
+                return tName.includes(playerName.toLowerCase()) || playerName.toLowerCase().includes(tName);
+              });
               return inA || inB;
             });
             setLobbyMatches(pMatches);
