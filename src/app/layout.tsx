@@ -29,7 +29,10 @@ export default function RootLayout({
         <nav className="top-nav">
           <div className="nav-container">
             <Link href="/" className="nav-brand">
-              <span className="nav-brand-icon">🏆</span> GURIZADA<span className="text-cyan">CHAMPIONS</span>
+              <span className="nav-brand-icon animate-glow">🏆</span> GURIZADA<span className="text-cyan">CHAMPIONS</span>
+              <span style={{ fontSize: '0.65rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid #10b981', color: '#10b981', padding: '0.15rem 0.5rem', borderRadius: '12px', display: 'inline-flex', alignItems: 'center', gap: '0.3rem', marginLeft: '0.5rem', fontWeight: 800 }}>
+                <span className="status-pulse-dot"></span> TEMPORADA 1
+              </span>
             </Link>
             <div className="nav-links">
               <Link href="/" className="nav-item">INÍCIO</Link>

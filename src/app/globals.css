@@ -706,4 +706,137 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* ====================================================
+   AAA ESPORTS PORTAL LAYOUT COMPONENTS
+   ==================================================== */
 
+/* Stats Ticker Bar */
+.stats-ticker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.stats-ticker-item {
+  background: linear-gradient(135deg, rgba(15, 25, 48, 0.7) 0%, rgba(7, 14, 28, 0.85) 100%);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 14px;
+  padding: 1.2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stats-ticker-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+}
+
+.stats-ticker-item:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 240, 255, 0.5);
+  box-shadow: 0 8px 30px rgba(0, 240, 255, 0.2);
+}
+
+.stats-ticker-val {
+  font-family: var(--font-rajdhani);
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+}
+
+.stats-ticker-label {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 0.3rem;
+}
+
+/* Pulsing Status Dot */
+.status-pulse-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #10b981;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 10px #10b981;
+  animation: livePulse 2s infinite;
+}
+
+@keyframes livePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.8);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+/* HLTV Style Match Card Map Texture */
+.match-card-hltv {
+  position: relative;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(6, 12, 24, 0.95) 100%);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 14px;
+  padding: 1.4rem;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.match-card-hltv::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.12;
+  filter: blur(1px);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.match-card-hltv:hover::before {
+  opacity: 0.22;
+}
+
+.match-card-hltv:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 240, 255, 0.5);
+  box-shadow: 0 10px 35px rgba(0, 240, 255, 0.2);
+}
+
+/* K/D Visual Progress Bar */
+.kd-progress-bar-bg {
+  width: 100px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.kd-progress-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 992px) {
+  .stats-ticker-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
