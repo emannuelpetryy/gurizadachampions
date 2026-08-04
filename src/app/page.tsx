@@ -68,27 +68,26 @@ export default function Home() {
                 {upcomingMatches.map((match) => {
                   const teamA = getTeam(match.teamA);
                   const teamB = getTeam(match.teamB);
-                  return (
-                    <div key={match.id} style={{ background: 'rgba(0,0,0,0.5)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', gap: '1.2rem', alignItems: 'center' }}>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>{match.group}</span>
+                  re                      <div key={match.id} style={{ background: 'linear-gradient(135deg, rgba(11,20,38,0.9) 0%, rgba(6,12,24,0.95) 100%)', padding: '1.6rem', borderRadius: '16px', border: '1px solid rgba(0,240,255,0.25)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: '1.2rem', alignItems: 'center', transition: 'all 0.3s ease' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 800 }}>{match.group}</span>
                       
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', gap: '1rem' }}>
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
                           <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={48} borderRadius="10px" />
-                          <strong style={{ fontSize: '1rem', color: '#fff', textAlign: 'center' }}>{teamA.name}</strong>
+                          <strong style={{ fontSize: '1.05rem', color: '#fff', textAlign: 'center', fontFamily: 'var(--font-rajdhani)', letterSpacing: '0.5px' }}>{teamA.name}</strong>
                         </div>
 
-                        <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)' }}>VS</span>
+                        <span style={{ fontSize: '1.6rem', fontWeight: 900, color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', textShadow: '0 0 15px rgba(0,240,255,0.6)' }}>VS</span>
 
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
                           <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={48} borderRadius="10px" />
-                          <strong style={{ fontSize: '1rem', color: '#fff', textAlign: 'center' }}>{teamB.name}</strong>
+                          <strong style={{ fontSize: '1.05rem', color: '#fff', textAlign: 'center', fontFamily: 'var(--font-rajdhani)', letterSpacing: '0.5px' }}>{teamB.name}</strong>
                         </div>
                       </div>
 
                       <Countdown targetDate={match.date} />
                       {match.dateDisplay && (
-                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>{match.dateDisplay}</span>
+                        <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>{match.dateDisplay}</span>
                       )}
                       
                       {/* Sistema de Palpites / Votação da Torcida */}
@@ -115,25 +114,25 @@ export default function Home() {
                 const detail = matchDetails[String(match.id)];
                 return (
                   <Link href={`/partida/${match.id}`} key={match.id} style={{ textDecoration: 'none' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.4)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', transition: 'all 0.2s', cursor: 'pointer' }} className="match-card-hover">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'linear-gradient(135deg, rgba(15,23,42,0.8), rgba(6,12,24,0.9))', padding: '1.2rem', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '14px', transition: 'all 0.25s ease', cursor: 'pointer', boxShadow: '0 4px 20px rgba(0,0,0,0.4)' }} className="match-card-hover">
                       <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '1rem' }}>
                         <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={36} borderRadius="8px" />
-                        <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', color: '#fff' }}>{teamA.name}</strong>
+                        <strong style={{ fontSize: '1.05rem', fontFamily: 'var(--font-rajdhani)', color: '#fff' }}>{teamA.name}</strong>
                       </div>
                       
                       <div style={{ padding: '0 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '120px' }}>
-                        <span style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', letterSpacing: '1px' }}>
-                          {match.scoreA} <span style={{ color: '#fff', fontSize: '1.2rem', margin: '0 0.2rem' }}>x</span> {match.scoreB}
+                        <span style={{ fontSize: '1.7rem', fontWeight: '900', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', letterSpacing: '2px', textShadow: '0 0 15px rgba(0,240,255,0.5)' }}>
+                          {match.scoreA} <span style={{ color: '#64748b', fontSize: '1.1rem', margin: '0 0.2rem' }}>x</span> {match.scoreB}
                         </span>
                         {detail?.map && (
-                          <span style={{ fontSize: '0.65rem', background: 'rgba(0, 240, 255, 0.1)', border: '1px solid var(--cyan)', color: 'var(--cyan)', padding: '0.1rem 0.5rem', borderRadius: '10px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold', marginTop: '0.2rem' }}>
+                          <span style={{ fontSize: '0.7rem', background: 'rgba(0, 240, 255, 0.15)', border: '1px solid var(--cyan)', color: 'var(--cyan)', padding: '0.15rem 0.6rem', borderRadius: '10px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold', marginTop: '0.2rem' }}>
                             {detail.map}
                           </span>
                         )}
                       </div>
 
                       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '1rem' }}>
-                        <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', textAlign: 'right', color: '#fff' }}>{teamB.name}</strong>
+                        <strong style={{ fontSize: '1.05rem', fontFamily: 'var(--font-rajdhani)', textAlign: 'right', color: '#fff' }}>{teamB.name}</strong>
                         <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={36} borderRadius="8px" />
                       </div>
                     </div>
@@ -151,7 +150,7 @@ export default function Home() {
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
               Ranking Geral de K/D Ratio
             </h3>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Todos os jogadores ranqueados por maior K/D (Kills / Deaths)</p>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.2rem' }}>Todos os jogadores ranqueados por maior K/D (Kills / Deaths)</p>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.8rem', maxHeight: '600px', overflowY: 'auto', paddingRight: '0.5rem' }} className="custom-scrollbar">
               {topKD.map((player, index) => {
                 const team = getTeam(player.teamId);
@@ -183,28 +182,28 @@ export default function Home() {
                 }
                 
                 return (
-                  <li key={player.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.3)', padding: '0.8rem 1rem', borderRadius: '8px', borderLeft: index === 0 ? '4px solid #FFD700' : index === 1 ? '4px solid #C0C0C0' : index === 2 ? '4px solid #CD7F32' : '4px solid transparent' }}>
+                  <li key={player.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(15, 23, 42, 0.6)', padding: '0.9rem 1.2rem', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.05)', borderLeft: index === 0 ? '4px solid #FFD700' : index === 1 ? '4px solid #C0C0C0' : index === 2 ? '4px solid #CD7F32' : '4px solid transparent', transition: 'all 0.2s ease' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                      <span style={{ fontFamily: 'var(--font-rajdhani)', fontSize: '1.2rem', fontWeight: 'bold', color: index === 0 ? '#ffd700' : index === 1 ? '#c0c0c0' : index === 2 ? '#cd7f32' : 'var(--text-muted)', minWidth: '35px' }}>#{index + 1}</span>
+                      <span style={{ fontFamily: 'var(--font-rajdhani)', fontSize: '1.3rem', fontWeight: 800, color: index === 0 ? '#ffd700' : index === 1 ? '#e2e8f0' : index === 2 ? '#cd7f32' : 'var(--text-muted)', minWidth: '35px' }}>#{index + 1}</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                        <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={28} borderRadius="4px" />
-                        <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor="rgba(255,255,255,0.1)" size={32} />
+                        <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={32} borderRadius="6px" />
+                        <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor="rgba(255,255,255,0.1)" size={36} />
                         <div>
                           <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none' }} className="match-card-hover">
-                            <p style={{ fontWeight: 'bold', fontSize: '1rem', color: '#fff' }}>{player.name}</p>
+                            <p style={{ fontWeight: 800, fontSize: '1.05rem', color: '#fff', margin: 0 }}>{player.name}</p>
                           </Link>
-                          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{team.name} • {player.matches || 1} J</p>
+                          <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>{team.name} • {player.matches || 1} J</p>
                         </div>
                       </div>
                     </div>
                     <div style={{ textAlign: 'right', display: 'flex', gap: '1.2rem', alignItems: 'center' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{player.kills}K / {player.deaths}D / {player.assists}A</span>
-                        <span style={{ fontSize: '0.72rem', color: '#a0aec0', fontWeight: 'bold' }}>KDA {kda}</span>
+                        <span style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>{player.kills}K / {player.deaths}D / {player.assists}A</span>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--cyan)', fontWeight: 'bold' }}>KDA {kda}</span>
                       </div>
-                      <div style={{ background: badgeBg, border: badgeBorder, padding: '0.3rem 0.9rem', borderRadius: '8px', minWidth: '75px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: kdRaw >= 2.0 ? '0 0 12px rgba(255,215,0,0.4)' : 'none' }}>
+                      <div style={{ background: badgeBg, border: badgeBorder, padding: '0.35rem 0.9rem', borderRadius: '8px', minWidth: '75px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: kdRaw >= 2.0 ? '0 0 15px rgba(255,215,0,0.5)' : 'none' }}>
                         <span style={{ fontSize: '0.6rem', color: badgeText === '#080d1a' ? '#080d1a' : 'rgba(255,255,255,0.7)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>K/D</span>
-                        <span style={{ fontWeight: '800', color: badgeText, fontSize: '1.15rem', fontFamily: 'var(--font-rajdhani)', lineHeight: 1 }}>{kd}</span>
+                        <span style={{ fontWeight: '900', color: badgeText, fontSize: '1.2rem', fontFamily: 'var(--font-rajdhani)', lineHeight: 1 }}>{kd}</span>
                       </div>
                     </div>
                   </li>
