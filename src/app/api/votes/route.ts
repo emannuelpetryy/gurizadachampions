@@ -34,8 +34,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { matchId, team } = body;
 
-    if (!matchId || (team !== 'a' && team !== 'b')) {
-      return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
+    // Validação de Segurança e Sanitização de Entrada
+    const cleanMatchId = typeof matchId === 'string' ? matchId.replace(/[^a-zA-Z0-9_-]/g, '') : String(matchId || '');
+    if (!cleanMatchId || (team !== 'a' && team !== 'b')) {
+      return NextResponse.json({ error: 'Dados de votação inválidos' }, { status: 400 });
     }
 
     // Incrementar no CounterAPI
