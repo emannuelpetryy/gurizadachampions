@@ -226,9 +226,6 @@ export async function POST(request: Request) {
       const s = resolvePlayerSlug(name, steamid, aliasMap);
       const existing = currentEloMap[s] || {};
 
-      const rawWins = getProp(ip, 'wins', 'Wins');
-      const rawLosses = getProp(ip, 'losses', 'Losses');
-      const rawMatches = getProp(ip, 'matches', 'Matches');
       const rawKills = getProp(ip, 'kills', 'Kills');
       const rawDeaths = getProp(ip, 'deaths', 'Deaths');
       const rawAssists = getProp(ip, 'assists', 'Assists');
@@ -236,9 +233,29 @@ export async function POST(request: Request) {
       const rawMvps = getProp(ip, 'mvps', 'MVPs', 'Mvps');
       const rawRating = getProp(ip, 'rating', 'Rating', 'elo', 'Elo');
 
-      const wins = rawWins !== undefined ? Number(rawWins) : (existing.wins || 0);
-      const losses = rawLosses !== undefined ? Number(rawLosses) : (existing.losses || 0);
-      const matches = rawMatches !== undefined ? Number(rawMatches) : (existing.matches || wins + losses);
+      // Não confiar nos Wins/Losses do servidor CS2 (frequentemente bugam por causa da troca de lados no half)
+      let wins = existing.wins || 0;
+      let losses = existing.losses || 0;
+      let matches = existing.matches || (wins + losses);
+      
+      // Se a partida acabou (tem scoreA e scoreB), verificar se o jogador estava na partida e dar a vitória/derrota
+      const payloadScoreA = getProp(body, 'scoreA', 'ScoreA', 'score_a');
+      const payloadScoreB = getProp(body, 'scoreB', 'ScoreB', 'score_b');
+      if (payloadScoreA !== undefined && payloadScoreB !== undefined) {
+         const tA = getProp(body, 'teamA', 'TeamA') || [];
+         const tB = getProp(body, 'teamB', 'TeamB') || [];
+         
+         const inA = tA.some((tp: any) => tp.player_name === name || tp.player_name === steamid);
+         const inB = tB.some((tp: any) => tp.player_name === name || tp.player_name === steamid);
+         
+         if (inA || inB) {
+            matches += 1;
+            const won = inA ? Number(payloadScoreA) > Number(payloadScoreB) : Number(payloadScoreB) > Number(payloadScoreA);
+            if (won) wins += 1;
+            else losses += 1;
+         }
+      }
+
       const kills = rawKills !== undefined ? Number(rawKills) : (existing.kills || 0);
       const deaths = rawDeaths !== undefined ? Number(rawDeaths) : (existing.deaths || 0);
       const assists = rawAssists !== undefined ? Number(rawAssists) : (existing.assists || 0);

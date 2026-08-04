@@ -79,11 +79,15 @@ export default function PlayerStatsSection({
             const pMatches = data.matchHistory.filter((m: any) => {
               const inA = m.teamA?.some((tp: any) => {
                 const tName = tp.player_name?.toLowerCase() || '';
-                return tName.includes(playerName.toLowerCase()) || playerName.toLowerCase().includes(tName);
+                return tName.includes(playerName.toLowerCase()) || 
+                       playerName.toLowerCase().includes(tName) || 
+                       (foundStats?.serverName && tName.includes(foundStats.serverName.toLowerCase()));
               });
               const inB = m.teamB?.some((tp: any) => {
                 const tName = tp.player_name?.toLowerCase() || '';
-                return tName.includes(playerName.toLowerCase()) || playerName.toLowerCase().includes(tName);
+                return tName.includes(playerName.toLowerCase()) || 
+                       playerName.toLowerCase().includes(tName) ||
+                       (foundStats?.serverName && tName.includes(foundStats.serverName.toLowerCase()));
               });
               return inA || inB;
             });
@@ -288,7 +292,12 @@ export default function PlayerStatsSection({
             ) : (
               <div style={{ display: 'grid', gap: '1rem' }}>
                 {lobbyMatches.map((m: any, idx: number) => {
-                  const inA = m.teamA?.some((tp: any) => tp.player_name?.toLowerCase() === playerName.toLowerCase());
+                  const inA = m.teamA?.some((tp: any) => {
+                    const tName = tp.player_name?.toLowerCase() || '';
+                    return tName.includes(playerName.toLowerCase()) || 
+                           playerName.toLowerCase().includes(tName) ||
+                           (serverStats?.serverName && tName.includes(serverStats.serverName.toLowerCase()));
+                  });
                   const won = inA ? m.scoreA > m.scoreB : m.scoreB > m.scoreA;
 
                   return (
