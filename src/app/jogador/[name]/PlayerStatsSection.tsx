@@ -128,39 +128,47 @@ export default function PlayerStatsSection({
         <button
           onClick={() => setActiveTab('championship')}
           style={{
-            background: activeTab === 'championship' ? 'linear-gradient(135deg, #00f0ff, #0099ff)' : 'rgba(255,255,255,0.05)',
-            color: activeTab === 'championship' ? '#080d1a' : '#fff',
-            border: activeTab === 'championship' ? 'none' : '1px solid rgba(255,255,255,0.15)',
-            padding: '0.85rem 1.8rem',
-            borderRadius: '20px',
+            background: activeTab === 'championship'
+              ? 'linear-gradient(135deg, #00f0ff 0%, #0099ff 100%)'
+              : 'rgba(255,255,255,0.06)',
+            color: activeTab === 'championship' ? '#030712' : '#e2e8f0',
+            border: activeTab === 'championship' ? 'none' : '1px solid rgba(255,255,255,0.2)',
+            padding: '0.9rem 2rem',
+            borderRadius: '12px',
             fontWeight: 800,
-            fontSize: '0.95rem',
+            fontSize: '1rem',
             fontFamily: 'var(--font-rajdhani)',
+            letterSpacing: '0.5px',
             cursor: 'pointer',
-            boxShadow: activeTab === 'championship' ? '0 0 25px rgba(0,240,255,0.4)' : 'none',
-            transition: 'all 0.3s',
+            boxShadow: activeTab === 'championship' ? '0 0 30px rgba(0,240,255,0.5)' : '0 2px 8px rgba(0,0,0,0.3)',
+            transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+            backdropFilter: 'blur(8px)',
           }}
         >
-          🏆 ESTATÍSTICAS DO CAMPEONATO
+          🏆 CAMPEONATO
         </button>
 
         <button
           onClick={() => setActiveTab('server')}
           style={{
-            background: activeTab === 'server' ? 'linear-gradient(135deg, #ffd700, #ffaa00)' : 'rgba(255,255,255,0.05)',
-            color: activeTab === 'server' ? '#080d1a' : '#fff',
-            border: activeTab === 'server' ? 'none' : '1px solid rgba(255,255,255,0.15)',
-            padding: '0.85rem 1.8rem',
-            borderRadius: '20px',
+            background: activeTab === 'server'
+              ? 'linear-gradient(135deg, #ffd700 0%, #ffaa00 100%)'
+              : 'rgba(255,255,255,0.06)',
+            color: activeTab === 'server' ? '#030712' : '#e2e8f0',
+            border: activeTab === 'server' ? 'none' : '1px solid rgba(255,255,255,0.2)',
+            padding: '0.9rem 2rem',
+            borderRadius: '12px',
             fontWeight: 800,
-            fontSize: '0.95rem',
+            fontSize: '1rem',
             fontFamily: 'var(--font-rajdhani)',
+            letterSpacing: '0.5px',
             cursor: 'pointer',
-            boxShadow: activeTab === 'server' ? '0 0 25px rgba(255,215,0,0.4)' : 'none',
-            transition: 'all 0.3s',
+            boxShadow: activeTab === 'server' ? '0 0 30px rgba(255,215,0,0.5)' : '0 2px 8px rgba(0,0,0,0.3)',
+            transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+            backdropFilter: 'blur(8px)',
           }}
         >
-          ⚡ ESTATÍSTICAS DO SERVIDOR (MIX 5V5)
+          ⚡ MIX 5V5
         </button>
       </div>
 
@@ -170,21 +178,21 @@ export default function PlayerStatsSection({
           
           {/* Grid de Estatísticas do Campeonato */}
           <div className="player-stats-grid">
-            <div style={{ background: 'rgba(0,240,255,0.1)', border: '1px solid rgba(0,240,255,0.2)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 'bold' }}>KILLS</span>
-              <span style={{ color: 'var(--cyan)', fontSize: '2.5rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 'bold', lineHeight: 1 }}>{champKills}</span>
+            <div style={{ background: 'linear-gradient(135deg, rgba(0,240,255,0.15), rgba(0,240,255,0.05))', border: '1px solid rgba(0,240,255,0.35)', padding: '1.6rem', borderRadius: '14px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.4rem', boxShadow: '0 4px 20px rgba(0,240,255,0.12)' }}>
+              <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase' }}>KILLS</span>
+              <span style={{ color: 'var(--cyan)', fontSize: '2.8rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, lineHeight: 1, textShadow: '0 0 20px rgba(0,240,255,0.5)' }}>{champKills}</span>
             </div>
-            <div style={{ background: 'rgba(255,51,102,0.1)', border: '1px solid rgba(255,51,102,0.2)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 'bold' }}>DEATHS</span>
-              <span style={{ color: 'var(--accent-red)', fontSize: '2.5rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 'bold', lineHeight: 1 }}>{champDeaths}</span>
+            <div style={{ background: 'linear-gradient(135deg, rgba(255,51,102,0.15), rgba(255,51,102,0.05))', border: '1px solid rgba(255,51,102,0.35)', padding: '1.6rem', borderRadius: '14px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.4rem', boxShadow: '0 4px 20px rgba(255,51,102,0.12)' }}>
+              <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase' }}>DEATHS</span>
+              <span style={{ color: '#ff3366', fontSize: '2.8rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, lineHeight: 1, textShadow: '0 0 20px rgba(255,51,102,0.5)' }}>{champDeaths}</span>
             </div>
-            <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 'bold' }}>ASSISTS</span>
-              <span style={{ color: '#fff', fontSize: '2.5rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 'bold', lineHeight: 1 }}>{champAssists}</span>
+            <div style={{ background: 'linear-gradient(135deg, rgba(100,116,139,0.15), rgba(100,116,139,0.05))', border: '1px solid rgba(100,116,139,0.4)', padding: '1.6rem', borderRadius: '14px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase' }}>ASSISTS</span>
+              <span style={{ color: '#e2e8f0', fontSize: '2.8rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, lineHeight: 1 }}>{champAssists}</span>
             </div>
-            <div style={{ background: badgeColor, border: `1px solid ${badgeColor}`, padding: '1.5rem', borderRadius: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.5rem', boxShadow: `0 0 15px ${badgeColor}40` }}>
-              <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem', fontWeight: 'bold' }}>K/D RATIO</span>
-              <span style={{ color: '#fff', fontSize: '2.5rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 'bold', lineHeight: 1 }}>{champKd}</span>
+            <div style={{ background: `linear-gradient(135deg, ${badgeColor}22, ${badgeColor}08)`, border: `1px solid ${badgeColor}88`, padding: '1.6rem', borderRadius: '14px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.4rem', boxShadow: `0 4px 20px ${badgeColor}30` }}>
+              <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase' }}>K/D RATIO</span>
+              <span style={{ color: badgeColor, fontSize: '2.8rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, lineHeight: 1, textShadow: `0 0 20px ${badgeColor}80` }}>{champKd}</span>
             </div>
           </div>
 
@@ -243,40 +251,40 @@ export default function PlayerStatsSection({
 
           {/* Grid de Estatísticas Acumuladas no Servidor */}
           <div className="player-stats-grid">
-            <div style={{ background: 'rgba(0,240,255,0.1)', border: '1px solid rgba(0,240,255,0.2)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 'bold' }}>KILLS (MIX)</span>
-              <span style={{ color: 'var(--cyan)', fontSize: '2.5rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 'bold', lineHeight: 1 }}>{sKills}</span>
+            <div style={{ background: 'linear-gradient(135deg, rgba(0,240,255,0.15), rgba(0,240,255,0.05))', border: '1px solid rgba(0,240,255,0.35)', padding: '1.6rem', borderRadius: '14px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.4rem', boxShadow: '0 4px 20px rgba(0,240,255,0.12)' }}>
+              <span style={{ color: '#94a3b8', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase' }}>KILLS (MIX)</span>
+              <span style={{ color: 'var(--cyan)', fontSize: '2.8rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, lineHeight: 1, textShadow: '0 0 20px rgba(0,240,255,0.5)' }}>{sKills}</span>
             </div>
-            <div style={{ background: 'rgba(255,51,102,0.1)', border: '1px solid rgba(255,51,102,0.2)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 'bold' }}>DEATHS (MIX)</span>
-              <span style={{ color: 'var(--accent-red)', fontSize: '2.5rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 'bold', lineHeight: 1 }}>{sDeaths}</span>
+            <div style={{ background: 'linear-gradient(135deg, rgba(255,51,102,0.15), rgba(255,51,102,0.05))', border: '1px solid rgba(255,51,102,0.35)', padding: '1.6rem', borderRadius: '14px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.4rem', boxShadow: '0 4px 20px rgba(255,51,102,0.12)' }}>
+              <span style={{ color: '#94a3b8', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase' }}>DEATHS (MIX)</span>
+              <span style={{ color: '#ff3366', fontSize: '2.8rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, lineHeight: 1, textShadow: '0 0 20px rgba(255,51,102,0.5)' }}>{sDeaths}</span>
             </div>
-            <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 'bold' }}>ASSISTS (MIX)</span>
-              <span style={{ color: '#fff', fontSize: '2.5rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 'bold', lineHeight: 1 }}>{sAssists}</span>
+            <div style={{ background: 'linear-gradient(135deg, rgba(100,116,139,0.15), rgba(100,116,139,0.05))', border: '1px solid rgba(100,116,139,0.4)', padding: '1.6rem', borderRadius: '14px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              <span style={{ color: '#94a3b8', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase' }}>ASSISTS (MIX)</span>
+              <span style={{ color: '#e2e8f0', fontSize: '2.8rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, lineHeight: 1 }}>{sAssists}</span>
             </div>
-            <div style={{ background: 'rgba(255,215,0,0.15)', border: '1px solid #ffd700', padding: '1.5rem', borderRadius: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.85rem', fontWeight: 'bold' }}>K/D RATIO (MIX)</span>
-              <span style={{ color: '#ffd700', fontSize: '2.5rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 'bold', lineHeight: 1 }}>{sKd}</span>
+            <div style={{ background: 'linear-gradient(135deg, rgba(255,215,0,0.18), rgba(255,215,0,0.05))', border: '1px solid rgba(255,215,0,0.5)', padding: '1.6rem', borderRadius: '14px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.4rem', boxShadow: '0 4px 20px rgba(255,215,0,0.15)' }}>
+              <span style={{ color: '#94a3b8', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase' }}>K/D RATIO (MIX)</span>
+              <span style={{ color: '#ffd700', fontSize: '2.8rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, lineHeight: 1, textShadow: '0 0 20px rgba(255,215,0,0.6)' }}>{sKd}</span>
             </div>
           </div>
 
           {/* Dano & MVPs do Servidor */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', width: '100%', maxWidth: '800px' }}>
-            <div style={{ background: 'rgba(171,71,188,0.12)', border: '1px solid rgba(171,71,188,0.3)', padding: '1.2rem', borderRadius: '12px', textAlign: 'center' }}>
-              <span style={{ color: '#ab47bc', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>DANO ACUMULADO / ADR</span>
-              <strong style={{ display: 'block', color: '#fff', fontSize: '1.8rem', fontFamily: 'var(--font-rajdhani)', margin: '0.3rem 0' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.2rem', width: '100%', maxWidth: '800px' }}>
+            <div style={{ background: 'linear-gradient(135deg, rgba(168,85,247,0.18), rgba(168,85,247,0.05))', border: '1px solid rgba(168,85,247,0.4)', padding: '1.4rem', borderRadius: '14px', textAlign: 'center', boxShadow: '0 4px 20px rgba(168,85,247,0.12)' }}>
+              <span style={{ color: '#c084fc', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1.5px' }}>DANO ACUMULADO / ADR</span>
+              <strong style={{ display: 'block', color: '#f8fafc', fontSize: '2rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, margin: '0.4rem 0', lineHeight: 1 }}>
                 {sDamage > 0 ? `${sDamage.toLocaleString('pt-BR')} Dmg` : 'Sem dados'}
               </strong>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>ADR Médio: {adr} Dmg/Round</span>
+              <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>ADR Médio: {adr} Dmg/Round</span>
             </div>
 
-            <div style={{ background: 'rgba(255,152,0,0.12)', border: '1px solid rgba(255,152,0,0.3)', padding: '1.2rem', borderRadius: '12px', textAlign: 'center' }}>
-              <span style={{ color: '#ff9800', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>MVPS DE ROUND NO SERVIDOR</span>
-              <strong style={{ display: 'block', color: '#ffd700', fontSize: '1.8rem', fontFamily: 'var(--font-rajdhani)', margin: '0.3rem 0' }}>
+            <div style={{ background: 'linear-gradient(135deg, rgba(251,191,36,0.18), rgba(251,191,36,0.05))', border: '1px solid rgba(251,191,36,0.4)', padding: '1.4rem', borderRadius: '14px', textAlign: 'center', boxShadow: '0 4px 20px rgba(251,191,36,0.12)' }}>
+              <span style={{ color: '#fbbf24', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1.5px' }}>MVPS DE ROUND NO SERVIDOR</span>
+              <strong style={{ display: 'block', color: '#ffd700', fontSize: '2rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, margin: '0.4rem 0', lineHeight: 1 }}>
                 ⭐ {sMvps} MVPs de Rodada
               </strong>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Estrelas de Melhor Jogador do Round</span>
+              <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Estrelas de Melhor Jogador do Round</span>
             </div>
           </div>
 
@@ -304,18 +312,18 @@ export default function PlayerStatsSection({
                   const won = inA ? m.scoreA > m.scoreB : m.scoreB > m.scoreA;
 
                   return (
-                    <div key={m.id || idx} className="glass-card" style={{ padding: '1.2rem 1.6rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderLeft: `4px solid ${won ? '#00f0ff' : '#ff3366'}`, flexWrap: 'wrap', gap: '1rem' }}>
+                    <div key={m.id || idx} style={{ background: won ? 'linear-gradient(135deg, rgba(0,240,255,0.08), rgba(0,0,0,0.3))' : 'linear-gradient(135deg, rgba(255,51,102,0.08), rgba(0,0,0,0.3))', border: `1px solid ${won ? 'rgba(0,240,255,0.3)' : 'rgba(255,51,102,0.3)'}`, borderLeft: `4px solid ${won ? '#00f0ff' : '#ff3366'}`, borderRadius: '14px', padding: '1.4rem 1.6rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', transition: 'all 0.25s ease', boxShadow: won ? '0 4px 20px rgba(0,240,255,0.08)' : '0 4px 20px rgba(255,51,102,0.08)' }}>
                       <div>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>{m.date || 'Partida Amistosa'}</span>
-                        <strong style={{ fontSize: '1.1rem', color: '#fff' }}>Mapa: {m.mapName || 'Cache'}</strong>
+                        <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginBottom: '0.25rem', letterSpacing: '0.5px' }}>{m.date || 'Partida Amistosa'}</span>
+                        <strong style={{ fontSize: '1.15rem', color: '#f8fafc', fontFamily: 'var(--font-rajdhani)', letterSpacing: '0.5px' }}>🗺️ {m.mapName || 'Cache'}</strong>
                       </div>
 
                       <div style={{ textAlign: 'center' }}>
-                        <span style={{ background: won ? 'rgba(0,240,255,0.15)' : 'rgba(255,51,102,0.15)', color: won ? '#00f0ff' : '#ff3366', padding: '0.3rem 0.9rem', borderRadius: '10px', fontWeight: 800, fontSize: '0.85rem' }}>
-                          {won ? `VITÓRIA (+${m.eloGain || 25} ELO)` : `DERROTA (-${m.eloLoss || 15} ELO)`}
+                        <span style={{ background: won ? 'rgba(0,240,255,0.18)' : 'rgba(255,51,102,0.18)', color: won ? '#00f0ff' : '#ff3366', padding: '0.4rem 1.1rem', borderRadius: '8px', fontWeight: 800, fontSize: '0.9rem', display: 'inline-block', border: `1px solid ${won ? 'rgba(0,240,255,0.4)' : 'rgba(255,51,102,0.4)'}` }}>
+                          {won ? `✅ VITÓRIA (+${m.eloGain || 25} ELO)` : `❌ DERROTA (-${m.eloLoss || 15} ELO)`}
                         </span>
-                        <div style={{ fontSize: '1.4rem', color: '#fff', fontWeight: 800, fontFamily: 'var(--font-rajdhani)', marginTop: '0.2rem' }}>
-                          {m.scoreA} x {m.scoreB}
+                        <div style={{ fontSize: '1.6rem', color: '#f8fafc', fontWeight: 900, fontFamily: 'var(--font-rajdhani)', marginTop: '0.3rem', letterSpacing: '2px' }}>
+                          {m.scoreA} <span style={{ color: '#64748b', fontSize: '1rem' }}>×</span> {m.scoreB}
                         </div>
                       </div>
                     </div>
