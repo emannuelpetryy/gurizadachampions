@@ -6,6 +6,7 @@ import Link from 'next/link';
 interface ServerPlayerStats {
   steamid?: string;
   name: string;
+  serverName?: string;
   rating?: number;
   elo?: number;
   matches?: number;
@@ -52,9 +53,11 @@ export default function PlayerStatsSection({
           const data = await res.json();
           const cleanSlug = playerName.toLowerCase().replace(/[^a-z0-9]/g, '');
           
+          let foundStats = null;
+          
           if (data.eloMap) {
             // Buscar por nome exato do slug ou por apelidos mapeados (ex: VVS Perry => manu)
-            let foundStats = data.eloMap[cleanSlug] || null;
+            foundStats = data.eloMap[cleanSlug] || null;
 
             if (!foundStats) {
               // Tentar encontrar por apelido alternativo contido na chave ou nome
