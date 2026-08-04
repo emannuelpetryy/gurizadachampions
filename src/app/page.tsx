@@ -131,7 +131,7 @@ export default function Home() {
         {/* MAP POOL STATS & ÚLTIMOS JOGOS */}
         <MapPoolStats />
         
-        {/* ÚLTIMOS JOGOS (CARDS ESTILO HLTV COM IMAGENS DE MAPA) */}
+        {/* ÚLTIMAS PARTIDAS FINALIZADAS (GRID FIXO SEM WRAP DE PLACAR) */}
         <div className="glass-card" style={{ marginBottom: '3rem' }}>
           <h3 className="card-title">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
@@ -146,25 +146,32 @@ export default function Home() {
               
               return (
                 <Link href={`/partida/${match.id}`} key={match.id} style={{ textDecoration: 'none' }}>
-                  <div className="match-card-hltv" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
+                  <div className="match-card-hltv" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: '0.8rem', cursor: 'pointer', padding: '1.2rem' }}>
                     
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '1rem', zIndex: 1 }}>
-                      <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={40} borderRadius="10px" />
-                      <strong style={{ fontSize: '1.1rem', fontFamily: 'var(--font-rajdhani)', color: match.scoreA > match.scoreB ? 'var(--cyan)' : '#e2e8f0', fontWeight: 800 }}>{teamA.name}</strong>
+                    {/* Time A */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', minWidth: 0, zIndex: 1 }}>
+                      <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={38} borderRadius="8px" />
+                      <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', color: match.scoreA > match.scoreB ? 'var(--cyan)' : '#e2e8f0', fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {teamA.name}
+                      </strong>
                     </div>
                     
-                    <div style={{ padding: '0 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '120px', zIndex: 1 }}>
-                      <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#ffffff', fontFamily: 'var(--font-rajdhani)', letterSpacing: '2px', textShadow: '0 0 15px rgba(0,240,255,0.4)' }}>
-                        {match.scoreA} <span style={{ color: '#64748b', fontSize: '1.1rem', margin: '0 0.2rem' }}>×</span> {match.scoreB}
+                    {/* Placar Central Fixado */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1, minWidth: '95px' }}>
+                      <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff', fontFamily: 'var(--font-rajdhani)', letterSpacing: '2px', textShadow: '0 0 15px rgba(0,240,255,0.4)', whiteSpace: 'nowrap' }}>
+                        {match.scoreA} <span style={{ color: '#64748b', fontSize: '1rem', margin: '0 0.15rem' }}>×</span> {match.scoreB}
                       </span>
-                      <span style={{ fontSize: '0.7rem', background: 'rgba(0, 240, 255, 0.15)', border: '1px solid var(--cyan)', color: 'var(--cyan)', padding: '0.15rem 0.6rem', borderRadius: '10px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 800, marginTop: '0.2rem' }}>
+                      <span style={{ fontSize: '0.65rem', background: 'rgba(0, 240, 255, 0.15)', border: '1px solid var(--cyan)', color: 'var(--cyan)', padding: '0.12rem 0.55rem', borderRadius: '10px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 800, marginTop: '0.15rem', whiteSpace: 'nowrap' }}>
                         🗺️ {mapName}
                       </span>
                     </div>
 
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '1rem', zIndex: 1 }}>
-                      <strong style={{ fontSize: '1.1rem', fontFamily: 'var(--font-rajdhani)', textAlign: 'right', color: match.scoreB > match.scoreA ? 'var(--cyan)' : '#e2e8f0', fontWeight: 800 }}>{teamB.name}</strong>
-                      <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={40} borderRadius="10px" />
+                    {/* Time B */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.8rem', minWidth: 0, zIndex: 1 }}>
+                      <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', textAlign: 'right', color: match.scoreB > match.scoreA ? 'var(--cyan)' : '#e2e8f0', fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {teamB.name}
+                      </strong>
+                      <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={38} borderRadius="8px" />
                     </div>
 
                   </div>
@@ -278,14 +285,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Seção Premiações */}
+      {/* Seção Premiações - TODAS AS 3 POSIÇÕES */}
       <section className="container" style={{ padding: '0 1.5rem 4rem' }}>
         <h3 className="hero-title" style={{ fontSize: '2.2rem', marginBottom: '1.5rem', textShadow: 'none', textAlign: 'left' }}>PREMIAÇÕES DA TEMPORADA</h3>
         <div className="glass-card" style={{ padding: '3rem 2rem' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '2rem' }}>
             
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
-              <span style={{ background: '#C0C0C0', color: '#000', fontWeight: 'bold', padding: '0.3rem 1.5rem', borderRadius: '20px', fontSize: '0.9rem' }}>2º Colocado</span>
+            {/* 1º Lugar */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', background: 'rgba(255,215,0,0.06)', padding: '2rem', borderRadius: '16px', border: '1px solid rgba(255,215,0,0.3)' }}>
+              <span style={{ background: '#FFD700', color: '#030712', fontWeight: 900, padding: '0.4rem 1.6rem', borderRadius: '20px', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>🥇 1º Colocado (Campeão)</span>
+              <div style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '80px', height: '80px', background: 'rgba(255, 215, 0, 0.25)', filter: 'blur(20px)', borderRadius: '50%' }}></div>
+                <svg width="70" height="70" viewBox="0 0 24 24" fill="#FFD700" stroke="#B8860B" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 10px rgba(255,215,0,0.4))' }}>
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                  <path d="M4 22h16"></path>
+                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                  <text x="12" y="7" textAnchor="middle" fill="#000" fontSize="4" fontWeight="bold" stroke="none">1</text>
+                </svg>
+              </div>
+              <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>R$ <strong style={{ color: '#ffd700', fontSize: '1.8rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900 }}>250,00</strong></span>
+            </div>
+
+            {/* 2º Lugar */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', background: 'rgba(192,192,192,0.06)', padding: '2rem', borderRadius: '16px', border: '1px solid rgba(192,192,192,0.3)' }}>
+              <span style={{ background: '#C0C0C0', color: '#030712', fontWeight: 900, padding: '0.4rem 1.6rem', borderRadius: '20px', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>🥈 2º Colocado</span>
               <div style={{ position: 'relative' }}>
                 <svg width="60" height="60" viewBox="0 0 24 24" fill="#C0C0C0" stroke="#808080" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))' }}>
                   <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
@@ -297,11 +323,12 @@ export default function Home() {
                   <text x="12" y="7" textAnchor="middle" fill="#000" fontSize="4" fontWeight="bold" stroke="none">2</text>
                 </svg>
               </div>
-              <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>R$ <strong style={{ color: '#fff', fontSize: '1.5rem', fontFamily: 'var(--font-rajdhani)' }}>100,00</strong></span>
+              <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>R$ <strong style={{ color: '#fff', fontSize: '1.6rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900 }}>100,00</strong></span>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
-              <span style={{ background: '#CD7F32', color: '#000', fontWeight: 'bold', padding: '0.3rem 1.5rem', borderRadius: '20px', fontSize: '0.9rem' }}>3º Colocado</span>
+            {/* 3º Lugar */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', background: 'rgba(205,127,50,0.06)', padding: '2rem', borderRadius: '16px', border: '1px solid rgba(205,127,50,0.3)' }}>
+              <span style={{ background: '#CD7F32', color: '#030712', fontWeight: 900, padding: '0.4rem 1.6rem', borderRadius: '20px', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>🥉 3º Colocado</span>
               <div style={{ position: 'relative' }}>
                 <svg width="60" height="60" viewBox="0 0 24 24" fill="#CD7F32" stroke="#8B4513" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))' }}>
                   <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
@@ -313,7 +340,7 @@ export default function Home() {
                   <text x="12" y="7" textAnchor="middle" fill="#000" fontSize="4" fontWeight="bold" stroke="none">3</text>
                 </svg>
               </div>
-              <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>R$ <strong style={{ color: '#fff', fontSize: '1.5rem', fontFamily: 'var(--font-rajdhani)' }}>50,00</strong></span>
+              <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>R$ <strong style={{ color: '#fff', fontSize: '1.6rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900 }}>50,00</strong></span>
             </div>
 
           </div>
