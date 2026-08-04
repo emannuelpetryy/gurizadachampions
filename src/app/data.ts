@@ -22,7 +22,40 @@ export const matches = [
   { id: 8, teamA: '5cones', teamB: 'desacreditados', scoreA: 5, scoreB: 13, status: 'Encerrado', date: 'seg., 03/08/2026 02:11', group: 'A' },
 ];
 
-export const upcomingMatches: any[] = [];
+export const upcomingMatches: any[] = [
+  {
+    id: 'up-1',
+    group: 'GRUPO B - RODADA 3',
+    teamA: 'maconhaco',
+    teamB: 'gilsons',
+    date: '2026-08-04T20:30:00-03:00',
+    dateDisplay: 'Terça-Feira (04/08) às 20:30 / 20:45',
+  },
+  {
+    id: 'up-2',
+    group: 'GRUPO A - RODADA 3',
+    teamA: 'jalin',
+    teamB: '5cones',
+    date: '2026-08-04T22:00:00-03:00',
+    dateDisplay: 'Terça-Feira (04/08) às 22:00',
+  },
+  {
+    id: 'up-3',
+    group: 'GRUPO A - RODADA 3',
+    teamA: 'desacreditados',
+    teamB: 'venvanse',
+    date: '2026-08-05T21:00:00-03:00',
+    dateDisplay: 'A definir',
+  },
+  {
+    id: 'up-4',
+    group: 'GRUPO B - RODADA 3',
+    teamA: 'whitelemon',
+    teamB: 'assentamento',
+    date: '2026-08-05T21:00:00-03:00',
+    dateDisplay: 'A definir',
+  },
+];
 
 export const matchDetails: Record<string, any> = {
   '1': {
