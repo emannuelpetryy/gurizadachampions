@@ -204,6 +204,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: 'Payload recebido' }, { status: 200 });
     }
 
+    // ==========================================
+    // NOVA ARQUITETURA: APENAS DADOS DE PARTIDAS
+    // ==========================================
+    const scoreA = getProp(body, 'scoreA', 'ScoreA', 'score_a', 'score_ct', 'ScoreCT');
+    const scoreB = getProp(body, 'scoreB', 'ScoreB', 'score_b', 'score_t', 'ScoreT');
+    
+    if (scoreA === undefined || scoreB === undefined) {
+      // Se não for um payload de final de partida (MatchStats), ignoramos.
+      // Isso impede que o KentoRankme ou outros plugins sobrescrevam e baguncem os dados com estatísticas de Deathmatch/Warmup.
+      return NextResponse.json({ success: true, message: 'Ignorando estatísticas acumulativas. Aceitando apenas finais de partida.' }, { status: 200 });
+    }
+
     const aliasMap = await getAliasMap(supabaseUrl, supabaseKey);
 
     // Buscar mapa ELO atual do Supabase
@@ -256,11 +268,18 @@ export async function POST(request: Request) {
          }
       }
 
-      const kills = rawKills !== undefined ? Number(rawKills) : (existing.kills || 0);
-      const deaths = rawDeaths !== undefined ? Number(rawDeaths) : (existing.deaths || 0);
-      const assists = rawAssists !== undefined ? Number(rawAssists) : (existing.assists || 0);
-      const damage = rawDamage !== undefined ? Number(rawDamage) : (existing.damage || 0);
-      const mvps = rawMvps !== undefined ? Number(rawMvps) : (existing.mvps || 0);
+      // Acumular estatísticas da partida com o total histórico do site
+      const matchKills = rawKills !== undefined ? Number(rawKills) : 0;
+      const matchDeaths = rawDeaths !== undefined ? Number(rawDeaths) : 0;
+      const matchAssists = rawAssists !== undefined ? Number(rawAssists) : 0;
+      const matchDamage = rawDamage !== undefined ? Number(rawDamage) : 0;
+      const matchMvps = rawMvps !== undefined ? Number(rawMvps) : 0;
+
+      const kills = (existing.kills || 0) + matchKills;
+      const deaths = (existing.deaths || 0) + matchDeaths;
+      const assists = (existing.assists || 0) + matchAssists;
+      const damage = (existing.damage || 0) + matchDamage;
+      const mvps = (existing.mvps || 0) + matchMvps;
 
       // ======================================================
       // CÁLCULO DE ELO - Estilo FaceIT / GamersClub
@@ -331,11 +350,9 @@ export async function POST(request: Request) {
     });
 
     // 6. Se o payload inclui scoreA/scoreB, salvar histórico de partida automaticamente (slot 98)
-    const scoreA = getProp(body, 'scoreA', 'ScoreA', 'score_a', 'score_ct', 'ScoreCT');
-    const scoreB = getProp(body, 'scoreB', 'ScoreB', 'score_b', 'score_t', 'ScoreT');
     const matchMap = getProp(body, 'mapName', 'MapName', 'map', 'Map') || 'Não informado';
-    const payloadTeamA = getProp(body, 'teamA', 'TeamA', 'team_a');
-    const payloadTeamB = getProp(body, 'teamB', 'TeamB', 'team_b');
+    const payloadTeamA = getProp(body, 'teamA', 'TeamA', 'team_a') || [];
+    const payloadTeamB = getProp(body, 'teamB', 'TeamB', 'team_b') || [];
 
     if (scoreA !== undefined && scoreB !== undefined) {
       const sA = Number(scoreA);
@@ -345,6 +362,30 @@ export async function POST(request: Request) {
       // ELO ganho/perdido baseado na dominância do placar
       let eloGain = diff >= 9 ? 25 : diff >= 5 ? 22 : diff >= 2 ? 18 : 15;
       let eloLoss = diff >= 9 ? 22 : diff >= 5 ? 18 : diff >= 2 ? 15 : 12;
+
+      // Montar times com o Scoreboard embutido
+      const enrichTeam = (team: any[]) => team.map(tp => {
+        const pName = tp.player_name || tp.name;
+        // Buscar os stats que esse jogador enviou NESTE payload (MatchStats)
+        const matchData = incomingPlayers.find((ip: any) => {
+           const ipName = getProp(ip, 'name', 'Name', 'PlayerName', 'player_name', 'nick', 'Nick');
+           const ipSteam = getProp(ip, 'steamid', 'SteamID', 'SteamId', 'steam_id');
+           return ipName === pName || (tp.steamid && tp.steamid === ipSteam);
+        }) || {};
+        
+        return {
+           player_name: pName,
+           player_slug: resolvePlayerSlug(pName, tp.steamid || '', aliasMap),
+           kills: matchData.kills !== undefined ? Number(matchData.kills) : 0,
+           deaths: matchData.deaths !== undefined ? Number(matchData.deaths) : 0,
+           assists: matchData.assists !== undefined ? Number(matchData.assists) : 0,
+           damage: matchData.damage !== undefined ? Number(matchData.damage) : 0,
+           mvps: matchData.mvps !== undefined ? Number(matchData.mvps) : 0,
+        };
+      });
+
+      const teamAScoreboard = enrichTeam(payloadTeamA);
+      const teamBScoreboard = enrichTeam(payloadTeamB);
 
       const histQueryUrl = `${supabaseUrl}/rest/v1/match_lobby?select=*&slot_id=eq.98`;
       const histRes = await fetch(histQueryUrl, {
@@ -362,8 +403,8 @@ export async function POST(request: Request) {
         scoreA: sA,
         scoreB: sB,
         mapName: matchMap,
-        teamA: payloadTeamA || [],
-        teamB: payloadTeamB || [],
+        teamA: teamAScoreboard,
+        teamB: teamBScoreboard,
         eloGain,
         eloLoss,
         date: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }),
