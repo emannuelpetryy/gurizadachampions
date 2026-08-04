@@ -487,65 +487,8 @@ export default function LobbyPage() {
                     </div>
                   );
                 })}
-                {/* REGISTRO DO PLACAR DA PARTIDA */}
-                <div style={{ marginTop: '2rem', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,215,0,0.3)', borderRadius: '16px', padding: '1.2rem', textAlign: 'center' }}>
-                  <h4 style={{ fontSize: '1.1rem', color: '#ffd700', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, margin: '0 0 1rem 0' }}>
-                    🏆 REGISTRAR RESULTADO DA PARTIDA AMISTOSA
-                  </h4>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', width: '100%' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.8rem', flexWrap: 'wrap', width: '100%' }}>
-                      
-                      {/* LADO AZUL */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span style={{ color: 'var(--cyan)', fontWeight: 800, fontSize: '0.85rem' }}>LADO AZUL:</span>
-                        <input
-                          type="number"
-                          value={scoreAInput}
-                          onChange={e => setScoreAInput(e.target.value)}
-                          style={{ width: '55px', background: 'rgba(10,15,30,0.95)', border: '1px solid var(--cyan)', padding: '0.4rem 0.2rem', borderRadius: '8px', color: '#fff', fontSize: '1.1rem', textAlign: 'center', fontWeight: 800 }}
-                        />
-                      </div>
-
-                      <span style={{ fontSize: '1.2rem', color: '#ffd700', fontWeight: 900 }}>X</span>
-
-                      {/* LADO VERMELHO */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span style={{ color: 'var(--accent-red)', fontWeight: 800, fontSize: '0.85rem' }}>LADO VERMELHO:</span>
-                        <input
-                          type="number"
-                          value={scoreBInput}
-                          onChange={e => setScoreBInput(e.target.value)}
-                          style={{ width: '55px', background: 'rgba(10,15,30,0.95)', border: '1px solid var(--accent-red)', padding: '0.4rem 0.2rem', borderRadius: '8px', color: '#fff', fontSize: '1.1rem', textAlign: 'center', fontWeight: 800 }}
-                        />
-                      </div>
-
-                    </div>
-
-                    <button
-                      onClick={handleSaveMatchScore}
-                      disabled={savingScore}
-                      style={{
-                        background: 'linear-gradient(135deg, #ffd700, #ffaa00)',
-                        color: '#080d1a',
-                        border: 'none',
-                        padding: '0.6rem 1.6rem',
-                        borderRadius: '12px',
-                        fontWeight: 800,
-                        fontSize: '0.9rem',
-                        cursor: 'pointer',
-                        boxShadow: '0 0 15px rgba(255,215,0,0.4)',
-                        width: '100%',
-                        maxWidth: '240px',
-                      }}
-                    >
-                      {savingScore ? 'SALVANDO...' : '💾 SALVAR PLACAR'}
-                    </button>
-                  </div>
-                </div>
-
               </div>
             </div>
-
           </div>
         )}
 

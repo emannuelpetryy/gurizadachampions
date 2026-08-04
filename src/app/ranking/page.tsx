@@ -204,7 +204,7 @@ export default function Ranking() {
               RANKING DE ELO <span className="text-gold">DA GURIZADA</span>
             </h1>
             <p className="hero-subtitle" style={{ textAlign: 'center', marginBottom: '3rem' }}>
-              Pontuação individual acumulada nas partidas amistosas do Lobby (+25 ELO vitória / -15 ELO derrota)
+              Pontuação individual acumulada nas partidas amistosas do Lobby. ELO dinâmico: base 1000 +20/vit. -15/der. + bônus K/D, ADR e MVPs de Rodada
             </p>
 
             {loadingElo ? (

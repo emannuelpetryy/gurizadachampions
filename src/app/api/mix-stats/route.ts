@@ -245,18 +245,36 @@ export async function POST(request: Request) {
       const damage = rawDamage !== undefined ? Number(rawDamage) : (existing.damage || 0);
       const mvps = rawMvps !== undefined ? Number(rawMvps) : (existing.mvps || 0);
 
-      // Calcular ELO / Rating Dinâmico baseado em performance individual (Estilo FaceIT / GamersClub)
+      // ======================================================
+      // CÁLCULO DE ELO - Estilo FaceIT / GamersClub
+      // Base: 1000 ELO inicial
+      // +20 por vitória, -15 por derrota (range 15-25 baseado em dominância)
+      // Bônus individual: K/D ratio, ADR (dano por round), MVPs
+      // ======================================================
       let computedRating = rawRating !== undefined ? Number(rawRating) : null;
 
       if (computedRating === null) {
-        const kdRatio = kills / Math.max(1, deaths);
-        const avgDmg = matches > 0 ? (damage / (matches * 20)) : 0;
-        const baseScore = 1000 + (wins * 20) - (losses * 15);
-        const kdBonus = Math.round((kdRatio - 1.0) * 40);
-        const adrBonus = Math.round((avgDmg - 75) * 0.5);
-        const mvpBonus = mvps * 2;
+        // Base ELO = 1000 + ganhos por vitórias - perdas por derrotas
+        // Vitórias valem 20 ELO, derrotas tiram 15 ELO
+        const baseElo = 1000 + (wins * 20) - (losses * 15);
 
-        computedRating = Math.max(100, Math.round(baseScore + kdBonus + adrBonus + mvpBonus));
+        // Bônus por K/D ratio (FaceIT style)
+        // K/D 1.5 = +20, K/D 1.0 = 0, K/D 0.5 = -20
+        const kdRatio = deaths > 0 ? kills / deaths : kills;
+        const kdBonus = Math.round((kdRatio - 1.0) * 40);
+
+        // Bônus por ADR (Dano por Round médio)
+        // ADR calculado como damage total / (matches * 22 rounds médios)
+        const totalRounds = matches * 22;
+        const avgDmgPerRound = totalRounds > 0 ? damage / totalRounds : 0;
+        // ADR 80 = +5, ADR 100 = +15, ADR 60 = -5
+        const adrBonus = Math.round((avgDmgPerRound - 70) * 0.4);
+
+        // Bônus por MVPs (Estrelas de Rodada)
+        // 1 MVP = +3 ELO
+        const mvpBonus = mvps * 3;
+
+        computedRating = Math.max(100, Math.round(baseElo + kdBonus + adrBonus + mvpBonus));
       }
 
       currentEloMap[s] = {
@@ -294,6 +312,62 @@ export async function POST(request: Request) {
         joined_at: new Date().toISOString(),
       }),
     });
+
+    // 6. Se o payload inclui scoreA/scoreB, salvar histórico de partida automaticamente (slot 98)
+    const scoreA = getProp(body, 'scoreA', 'ScoreA', 'score_a', 'score_ct', 'ScoreCT');
+    const scoreB = getProp(body, 'scoreB', 'ScoreB', 'score_b', 'score_t', 'ScoreT');
+    const matchMap = getProp(body, 'mapName', 'MapName', 'map', 'Map') || 'Não informado';
+    const payloadTeamA = getProp(body, 'teamA', 'TeamA', 'team_a');
+    const payloadTeamB = getProp(body, 'teamB', 'TeamB', 'team_b');
+
+    if (scoreA !== undefined && scoreB !== undefined) {
+      const sA = Number(scoreA);
+      const sB = Number(scoreB);
+      const diff = Math.abs(sA - sB);
+
+      // ELO ganho/perdido baseado na dominância do placar
+      let eloGain = diff >= 9 ? 25 : diff >= 5 ? 22 : diff >= 2 ? 18 : 15;
+      let eloLoss = diff >= 9 ? 22 : diff >= 5 ? 18 : diff >= 2 ? 15 : 12;
+
+      const histQueryUrl = `${supabaseUrl}/rest/v1/match_lobby?select=*&slot_id=eq.98`;
+      const histRes = await fetch(histQueryUrl, {
+        headers: { Authorization: `Bearer ${supabaseKey}`, apikey: supabaseKey },
+        cache: 'no-store',
+      });
+      const histData = histRes.ok ? await histRes.json() : [];
+      let currentHistory: any[] = [];
+      if (histData.length > 0) {
+        try { currentHistory = JSON.parse(histData[0].player_name); } catch (e) {}
+      }
+
+      const newMatchRecord = {
+        id: Date.now().toString(),
+        scoreA: sA,
+        scoreB: sB,
+        mapName: matchMap,
+        teamA: payloadTeamA || [],
+        teamB: payloadTeamB || [],
+        eloGain,
+        eloLoss,
+        date: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }),
+      };
+
+      const updatedHistory = [newMatchRecord, ...currentHistory];
+      await fetch(upsertUrl, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${supabaseKey}`,
+          apikey: supabaseKey,
+          'Content-Type': 'application/json',
+          Prefer: 'resolution=merge-duplicates',
+        },
+        body: JSON.stringify({
+          slot_id: 98,
+          player_name: JSON.stringify(updatedHistory),
+          joined_at: new Date().toISOString(),
+        }),
+      });
+    }
 
     return NextResponse.json({ success: true, count: incomingPlayers.length }, { status: 200 });
   } catch (e: any) {
