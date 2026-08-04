@@ -68,7 +68,8 @@ export default function Home() {
                 {upcomingMatches.map((match) => {
                   const teamA = getTeam(match.teamA);
                   const teamB = getTeam(match.teamB);
-                  re                      <div key={match.id} style={{ background: 'linear-gradient(135deg, rgba(11,20,38,0.9) 0%, rgba(6,12,24,0.95) 100%)', padding: '1.6rem', borderRadius: '16px', border: '1px solid rgba(0,240,255,0.25)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: '1.2rem', alignItems: 'center', transition: 'all 0.3s ease' }}>
+                  return (
+                    <div key={match.id} style={{ background: 'linear-gradient(135deg, rgba(11,20,38,0.9) 0%, rgba(6,12,24,0.95) 100%)', padding: '1.6rem', borderRadius: '16px', border: '1px solid rgba(0,240,255,0.25)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: '1.2rem', alignItems: 'center', transition: 'all 0.3s ease' }}>
                       <span style={{ fontSize: '0.75rem', color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 800 }}>{match.group}</span>
                       
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', gap: '1rem' }}>
