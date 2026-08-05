@@ -48,18 +48,18 @@ export const matchDetails: Record<string, any> = {
     map: 'Inferno', roundsA: 0, roundsB: 1, teamARounds: 7, teamBRounds: 13,
     vodUrl: 'https://www.twitch.tv/videos/2827426394',
     teamA_stats: [
-      { name: 'Dash', kills: 15, deaths: 2, assists: 15 },
-      { name: 'Gilli', kills: 15, deaths: 8, assists: 17 },
-      { name: 'Duzz', kills: 7, deaths: 3, assists: 7 },
-      { name: 'Peteka', kills: 12, deaths: 6, assists: 20 },
-      { name: 'Camargo', kills: 10, deaths: 2, assists: 16 },
+      { name: 'Dash', kills: 15, deaths: 15, assists: 2 },
+      { name: 'Gilli', kills: 15, deaths: 17, assists: 8 },
+      { name: 'Duzz', kills: 7, deaths: 14, assists: 3 },
+      { name: 'Peteka', kills: 12, deaths: 20, assists: 6 },
+      { name: 'Camargo', kills: 10, deaths: 16, assists: 2 },
     ],
     teamB_stats: [
-      { name: 'Sorps - Leluia', kills: 13, deaths: 6, assists: 10 },
-      { name: 'Tufa', kills: 22, deaths: 8, assists: 10 },
-      { name: 'Gio', kills: 13, deaths: 5, assists: 13 },
-      { name: 'GalaXY', kills: 13, deaths: 9, assists: 14 },
-      { name: 'Distress - Pedro', kills: 20, deaths: 5, assists: 12 },
+      { name: 'Sorps - Leluia', kills: 13, deaths: 10, assists: 6 },
+      { name: 'Tufa', kills: 22, deaths: 10, assists: 8 },
+      { name: 'Gio', kills: 13, deaths: 13, assists: 5 },
+      { name: 'GalaXY', kills: 13, deaths: 14, assists: 9 },
+      { name: 'Distress - Pedro', kills: 20, deaths: 12, assists: 5 },
     ]
   },
   '2': {
@@ -87,7 +87,7 @@ export const matchDetails: Record<string, any> = {
       { name: 'ChapaChaplin', kills: 15, deaths: 20, assists: 8 },
       { name: 'Bagua', kills: 21, deaths: 21, assists: 6 },
       { name: 'Pedro Giraldi', kills: 16, deaths: 20, assists: 6 },
-      { name: 'De', kills: 14, deaths: 24, assists: 8 },
+      { name: 'Deeez1n', kills: 14, deaths: 24, assists: 8 },
       { name: 'Becker', kills: 28, deaths: 22, assists: 9 },
     ],
     teamB_stats: [
@@ -102,8 +102,8 @@ export const matchDetails: Record<string, any> = {
     map: 'Anúbis', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 10,
     vodUrl: 'https://www.twitch.tv/videos/2830666292',
     teamA_stats: [
-      { name: 'Gusta', kills: 33, deaths: 17, assists: 4 },
-      { name: 'Majaster', kills: 19, deaths: 18, assists: 8 },
+      { name: 'Acyd', kills: 33, deaths: 17, assists: 4 },
+      { name: 'Gusta', kills: 19, deaths: 18, assists: 8 },
       { name: 'Lucas', kills: 15, deaths: 18, assists: 7 },
       { name: 'EasyMoneyrasta', kills: 10, deaths: 17, assists: 6 },
       { name: 'LaColombia', kills: 7, deaths: 18, assists: 6 },
@@ -120,11 +120,11 @@ export const matchDetails: Record<string, any> = {
     map: 'Dust II', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 6,
     vodUrl: 'https://www.twitch.tv/beckeryeshua',
     teamA_stats: [
-      { name: 'Alemão', kills: 14, deaths: 10, assists: 6 },
-      { name: 'SimboladaPAZ', kills: 9, deaths: 11, assists: 5 },
-      { name: 'Manko', kills: 27, deaths: 11, assists: 7 },
-      { name: 'PombaLoka', kills: 13, deaths: 11, assists: 6 },
-      { name: 'Felpy', kills: 24, deaths: 12, assists: 6 },
+      { name: 'Alemão', kills: 14, deaths: 6, assists: 11 },
+      { name: 'SimboladaPAZ', kills: 9, deaths: 5, assists: 11 },
+      { name: 'Manko', kills: 27, deaths: 7, assists: 12 },
+      { name: 'PombaLoka', kills: 13, deaths: 6, assists: 11 },
+      { name: 'Felpy', kills: 24, deaths: 6, assists: 12 },
     ],
     teamB_stats: [
       { name: 'Joseph Lakes', kills: 8, deaths: 18, assists: 2 },
@@ -176,14 +176,14 @@ export const matchDetails: Record<string, any> = {
       { name: 'ChapaChaplin', kills: 11, deaths: 16, assists: 6 },
       { name: 'Pedro Giraldi', kills: 12, deaths: 15, assists: 2 },
       { name: 'Bagua', kills: 5, deaths: 17, assists: 6 },
-      { name: 'De', kills: 8, deaths: 18, assists: 4 },
+      { name: 'Deeez1n', kills: 8, deaths: 18, assists: 4 },
     ],
     teamB_stats: [
       { name: 'Distress - Pedro', kills: 25, deaths: 9, assists: 3 },
       { name: 'Tufa', kills: 22, deaths: 14, assists: 7 },
-      { name: 'Gio', kills: 13, deaths: 4, assists: 13 },
+      { name: 'Gio', kills: 13, deaths: 13, assists: 4 },
       { name: 'GalaXY', kills: 6, deaths: 15, assists: 9 },
-      { name: 'Sorps - Leluia', kills: 14, deaths: 5, assists: 7 },
+      { name: 'Sorps - Leluia', kills: 14, deaths: 7, assists: 5 },
     ]
   },
   '9': {
@@ -207,8 +207,8 @@ export const matchDetails: Record<string, any> = {
   '10': {
     map: 'Anúbis', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 6,
     teamA_stats: [
-      { name: 'Becker', kills: 28, deaths: 7, assists: 11 },
-      { name: 'ChapaChaplin', kills: 18, deaths: 9, assists: 15 },
+      { name: 'Becker', kills: 28, deaths: 11, assists: 7 },
+      { name: 'ChapaChaplin', kills: 18, deaths: 15, assists: 9 },
       { name: 'Bagua', kills: 12, deaths: 15, assists: 11 },
       { name: 'Pedro Giraldi', kills: 12, deaths: 14, assists: 4 },
       { name: 'Demoleison', kills: 8, deaths: 12, assists: 4 },
@@ -216,8 +216,8 @@ export const matchDetails: Record<string, any> = {
     teamB_stats: [
       { name: 'Gilli', kills: 19, deaths: 16, assists: 4 },
       { name: 'Duzz', kills: 14, deaths: 13, assists: 6 },
-      { name: 'Dash', kills: 13, deaths: 16, assists: 5 },
-      { name: 'Camargo', kills: 11, deaths: 18, assists: 3 },
+      { name: 'Dash', kills: 11, deaths: 18, assists: 3 },
+      { name: 'Camargo', kills: 13, deaths: 16, assists: 5 },
       { name: 'Peteka', kills: 8, deaths: 16, assists: 8 },
     ]
   }
@@ -237,6 +237,55 @@ export const groupB = [
   { teamId: 'assentamento', p: 0, pj: 2, v: 0, d: 2, rd: -11 },
 ];
 
+const CANONICAL_ALIASES: Record<string, string> = {
+  'guasca': 'Bagua',
+  '5cns guasca': 'Bagua',
+  'zero2': 'Gilli',
+  'zero': 'Gilli',
+  'jalin | zero2': 'Gilli',
+  'knight': 'Camargo',
+  'jalin | knight': 'Camargo',
+  'majaster': 'Gusta',
+  'giraldi': 'Pedro Giraldi',
+  '5cns - giraldi': 'Pedro Giraldi',
+  'de': 'Deeez1n',
+  'deez1n': 'Deeez1n',
+  '5cns -deeez1n': 'Deeez1n',
+  'vandeco': 'Gio',
+  'ptk': 'Peteka',
+  'petekinha': 'Peteka',
+  'leluia': 'Sorps - Leluia',
+  'distress': 'Distress - Pedro',
+  'alemao_/': 'Alemão',
+  'mankinho^^': 'Manko',
+  'mankinho': 'Manko',
+  'pombaloka': 'PombaLoka',
+  'felpy': 'Felpy',
+  'samucahemp': 'Samuka',
+  'vvs samucahemp': 'Samuka',
+  'perry': 'Manu',
+  'vvs perry': 'Manu',
+  'vvs duzão': 'Duzão',
+  'lucaaas ta lá': 'Lucas',
+  'giuseppe lagos - henrique': 'Giuseppe Lagos',
+  'daddy mny': 'Daddy Money',
+};
+
+export const normalizePlayerName = (name: string): string => {
+  if (!name) return '';
+  const clean = name.trim().toLowerCase();
+  return CANONICAL_ALIASES[clean] || name.trim();
+};
+
+const PRIMARY_TEAMS: Record<string, string> = {
+  'demoleison': 'assentamento',
+  'becker': '5cones',
+  'chapachaplin': '5cones',
+  'bagua': '5cones',
+  'pedro giraldi': '5cones',
+  'deeez1n': '5cones',
+};
+
 // Re-computando a lista global de players a partir das matchDetails para ter o DB exato.
 export interface PlayerSummary {
   name: string;
@@ -253,11 +302,12 @@ const addPlayersToGlobal = (matchDetailsMap: Record<string, any>, matchId: strin
   const details = matchDetailsMap[matchId];
   if (details) {
     const processPlayer = (p: any, teamId: string) => {
-      const key = p.name.toLowerCase();
+      const canonicalName = normalizePlayerName(p.name);
+      const key = canonicalName.toLowerCase();
       if (!rawPlayersMap[key]) {
         rawPlayersMap[key] = {
-          name: p.name,
-          teamId,
+          name: canonicalName,
+          teamId: PRIMARY_TEAMS[key] || teamId,
           kills: 0,
           deaths: 0,
           assists: 0,
@@ -268,7 +318,9 @@ const addPlayersToGlobal = (matchDetailsMap: Record<string, any>, matchId: strin
       rawPlayersMap[key].deaths += p.deaths;
       rawPlayersMap[key].assists += p.assists;
       rawPlayersMap[key].matches += 1;
-      rawPlayersMap[key].teamId = teamId;
+      if (!PRIMARY_TEAMS[key]) {
+        rawPlayersMap[key].teamId = teamId;
+      }
     };
 
     details.teamA_stats.forEach((p: any) => processPlayer(p, teamAId));
@@ -333,7 +385,7 @@ export const tiers = {
   D: [
     { name: 'Galaxy', lvl: 7 },
     { name: 'Camargo', lvl: 7 },
-    { name: 'De', lvl: 6 },
+    { name: 'Deeez1n', lvl: 6 },
     { name: 'Marcelo - Bitz', lvl: 6 },
     { name: 'Baronelis', lvl: 6 },
     { name: 'Dark', lvl: 5 },

@@ -1,4 +1,4 @@
-import { players, getTeam, matches, matchDetails, tiers } from '../../data';
+import { players, getTeam, matches, matchDetails, tiers, normalizePlayerName } from '../../data';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PlayerChart from './PlayerChart';
@@ -8,14 +8,20 @@ import PlayerStatsSection from './PlayerStatsSection';
 
 export default async function JogadorPage({ params }: { params: Promise<{ name: string }> }) {
   const resolvedParams = await params;
-  const decodedName = decodeURIComponent(resolvedParams.name);
+  const rawDecodedName = decodeURIComponent(resolvedParams.name);
+  const canonicalName = normalizePlayerName(rawDecodedName);
   
-  // Buscar os dados agregados (total) do jogador
-  const player = players.find(p => p.name.toLowerCase() === decodedName.toLowerCase());
+  // Buscar os dados agregados (total) do jogador usando o nome canônico ou nome bruto
+  const player = players.find(p => 
+    p.name.toLowerCase() === canonicalName.toLowerCase() || 
+    p.name.toLowerCase() === rawDecodedName.toLowerCase()
+  );
   
   if (!player) {
     notFound();
   }
+
+  const targetName = player.name;
   
   const team = getTeam(player.teamId);
   const kdRaw = player.kills / (player.deaths || 1);
@@ -33,7 +39,12 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
   let playerLvlVal: number | undefined = undefined;
 
   for (const [tierName, tierPlayers] of Object.entries(tiers)) {
-    const found = tierPlayers.find(tp => tp.name.toLowerCase().includes(decodedName.toLowerCase()) || decodedName.toLowerCase().includes(tp.name.toLowerCase()));
+    const found = tierPlayers.find(tp => 
+      tp.name.toLowerCase() === targetName.toLowerCase() ||
+      normalizePlayerName(tp.name).toLowerCase() === targetName.toLowerCase() ||
+      tp.name.toLowerCase().includes(targetName.toLowerCase()) || 
+      targetName.toLowerCase().includes(tp.name.toLowerCase())
+    );
     if (found) {
       playerTier = `Tier ${tierName}`;
       tierLvl = `(Lvl ${found.lvl})`;
@@ -42,14 +53,14 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
     }
   }
 
-  // Buscar histórico de partidas deste jogador
+  // Buscar histórico de partidas deste jogador usando o nome canônico
   const playerMatches = matches.map(m => {
     const details = matchDetails[m.id.toString()];
     if (!details) return null;
     
     // Verifica se o jogador está na teamA ou teamB
-    const inTeamA = details.teamA_stats.find((p: any) => p.name.toLowerCase() === decodedName.toLowerCase());
-    const inTeamB = details.teamB_stats.find((p: any) => p.name.toLowerCase() === decodedName.toLowerCase());
+    const inTeamA = details.teamA_stats.find((p: any) => normalizePlayerName(p.name).toLowerCase() === targetName.toLowerCase());
+    const inTeamB = details.teamB_stats.find((p: any) => normalizePlayerName(p.name).toLowerCase() === targetName.toLowerCase());
     
     if (inTeamA || inTeamB) {
       const stats = inTeamA || inTeamB;
@@ -113,7 +124,7 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
 
                   Object.values(matchDetails).forEach((det: any) => {
                     const allStats = [...det.teamA_stats, ...det.teamB_stats];
-                    const pStat = allStats.find((s: any) => s.name.toLowerCase() === decodedName.toLowerCase());
+                    const pStat = allStats.find((s: any) => normalizePlayerName(s.name).toLowerCase() === targetName.toLowerCase());
                     if (pStat) {
                       const pKd = pStat.kills / (pStat.deaths || 1);
                       if (pKd >= 2.0) hasHardCarry = true;
@@ -136,10 +147,10 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
                         }
                       });
 
-                      if (mvpPlayer && (mvpPlayer as string).toLowerCase() === decodedName.toLowerCase()) {
+                      if (mvpPlayer && normalizePlayerName(mvpPlayer as string).toLowerCase() === targetName.toLowerCase()) {
                         mvpCount++;
                       }
-                      if (worstPlayer && (worstPlayer as string).toLowerCase() === decodedName.toLowerCase()) {
+                      if (worstPlayer && normalizePlayerName(worstPlayer as string).toLowerCase() === targetName.toLowerCase()) {
                         hasDifficilCarregar = true;
                       }
                     }
@@ -150,7 +161,7 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
 
                   let isSwapped = false;
                   for (const tierPlayers of Object.values(tiers)) {
-                    const found = tierPlayers.find(tp => (tp.name.toLowerCase().includes(decodedName.toLowerCase()) || decodedName.toLowerCase().includes(tp.name.toLowerCase())) && (tp as any).swap);
+                    const found = tierPlayers.find(tp => (tp.name.toLowerCase() === targetName.toLowerCase() || normalizePlayerName(tp.name).toLowerCase() === targetName.toLowerCase()) && (tp as any).swap);
                     if (found) {
                       isSwapped = true;
                       break;
