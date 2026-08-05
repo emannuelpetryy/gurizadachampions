@@ -162,11 +162,11 @@ export const matchDetails: Record<string, any> = {
   '7': {
     map: 'Nuke', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 9,
     teamA_stats: [
-      { name: 'ZERO2', kills: 29, deaths: 15, assists: 4 },
+      { name: 'Gilli', kills: 29, deaths: 15, assists: 4 },
       { name: 'Dash', kills: 25, deaths: 14, assists: 2 },
       { name: 'Duzz', kills: 13, deaths: 13, assists: 7 },
       { name: 'Peteka', kills: 13, deaths: 16, assists: 7 },
-      { name: 'Knight', kills: 7, deaths: 17, assists: 5 },
+      { name: 'Camargo', kills: 7, deaths: 17, assists: 5 },
     ],
     teamB_stats: [
       { name: 'Pacal', kills: 31, deaths: 18, assists: 8 },

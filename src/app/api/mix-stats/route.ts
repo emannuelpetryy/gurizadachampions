@@ -11,8 +11,9 @@ const DEFAULT_ALIASES: Record<string, string> = {
   'manuel': 'manu',
   'desacreditados_distress': 'distress_pedro',
   'distress': 'distress_pedro',
-  'jalin_zero2': 'zero2',
-  'zero2': 'zero2',
+  'jalin_zero2': 'gilli',
+  'zero2': 'gilli',
+  'zero': 'gilli',
   'ptk': 'peteka',
   'desacreditados_leluia': 'sorps_leluia',
   'leluia': 'sorps_leluia',
@@ -23,7 +24,8 @@ const DEFAULT_ALIASES: Record<string, string> = {
   'vvs_baronelis': 'baronelis',
   'vvs_duz_o': 'duzao',
   'jalin_duzz': 'duzz',
-  'jalin_k_t': 'knight',
+  'jalin_k_t': 'camargo',
+  'knight': 'camargo',
 };
 
 async function getAliasMap(supabaseUrl: string, supabaseKey: string): Promise<Record<string, string>> {
