@@ -182,7 +182,7 @@ export const matchDetails: Record<string, any> = {
       { name: 'Becker', kills: 20, deaths: 14, assists: 3 },
       { name: 'ChapaChaplin', kills: 11, deaths: 16, assists: 6 },
       { name: 'Giraldi', kills: 12, deaths: 15, assists: 2 },
-      { name: 'GUASCA', kills: 5, deaths: 17, assists: 6 },
+      { name: 'Bagua', kills: 5, deaths: 17, assists: 6 },
       { name: 'Deeez1n', kills: 8, deaths: 18, assists: 4 },
     ],
     teamB_stats: [
