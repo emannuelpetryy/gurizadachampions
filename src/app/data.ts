@@ -120,11 +120,11 @@ export const matchDetails: Record<string, any> = {
     map: 'Dust II', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 6,
     vodUrl: 'https://www.twitch.tv/beckeryeshua',
     teamA_stats: [
-      { name: 'Alemão', kills: 14, deaths: 6, assists: 11 },
-      { name: 'SimboladaPAZ', kills: 9, deaths: 5, assists: 11 },
-      { name: 'Manko', kills: 27, deaths: 7, assists: 12 },
-      { name: 'PombaLoka', kills: 13, deaths: 6, assists: 11 },
-      { name: 'Felpy', kills: 24, deaths: 6, assists: 12 },
+      { name: 'Alemão', kills: 14, deaths: 11, assists: 6 },
+      { name: 'SimboladaPAZ', kills: 9, deaths: 11, assists: 5 },
+      { name: 'Manko', kills: 27, deaths: 12, assists: 7 },
+      { name: 'PombaLoka', kills: 13, deaths: 11, assists: 6 },
+      { name: 'Felpy', kills: 24, deaths: 12, assists: 6 },
     ],
     teamB_stats: [
       { name: 'Joseph Lakes', kills: 8, deaths: 18, assists: 2 },
@@ -193,7 +193,7 @@ export const matchDetails: Record<string, any> = {
       { name: 'Manko', kills: 24, deaths: 12, assists: 5 },
       { name: 'PombaLoka', kills: 14, deaths: 14, assists: 6 },
       { name: 'Felpy', kills: 17, deaths: 13, assists: 11 },
-      { name: 'Alemão', kills: 12, deaths: 11, assists: 5 },
+      { name: 'Alemão', kills: 12, deaths: 12, assists: 5 },
       { name: 'Gilson Tedesko', kills: 13, deaths: 12, assists: 2 },
     ],
     teamB_stats: [
