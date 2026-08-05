@@ -21,17 +21,10 @@ export const matches = [
   { id: 7, teamA: 'jalin', teamB: 'venvanse', scoreA: 13, scoreB: 9, status: 'Encerrado', date: 'dom., 02/08/2026 23:50', group: 'A' },
   { id: 8, teamA: '5cones', teamB: 'desacreditados', scoreA: 5, scoreB: 13, status: 'Encerrado', date: 'seg., 03/08/2026 02:11', group: 'A' },
   { id: 9, teamA: 'gilsons', teamB: 'maconhaco', scoreA: 13, scoreB: 8, status: 'Encerrado', date: 'ter., 04/08/2026 20:30', group: 'B' },
+  { id: 10, teamA: '5cones', teamB: 'jalin', scoreA: 13, scoreB: 6, status: 'Encerrado', date: 'ter., 04/08/2026 22:00', group: 'A' },
 ];
 
 export const upcomingMatches: any[] = [
-  {
-    id: 'up-2',
-    group: 'GRUPO A - RODADA 3',
-    teamA: 'jalin',
-    teamB: '5cones',
-    date: '2026-08-04T22:00:00-03:00',
-    dateDisplay: 'Terça-Feira (04/08) às 22:00',
-  },
   {
     id: 'up-3',
     group: 'GRUPO A - RODADA 3',
@@ -210,14 +203,31 @@ export const matchDetails: Record<string, any> = {
       { name: 'EasyMoneyrasta', kills: 9, deaths: 17, assists: 4 },
       { name: 'LaColombia', kills: 1, deaths: 18, assists: 4 },
     ]
+  },
+  '10': {
+    map: 'Anúbis', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 6,
+    teamA_stats: [
+      { name: 'Becker', kills: 28, deaths: 7, assists: 11 },
+      { name: 'ChapaChaplin', kills: 18, deaths: 9, assists: 15 },
+      { name: 'Bagua', kills: 12, deaths: 15, assists: 11 },
+      { name: 'Pedro Giraldi', kills: 12, deaths: 14, assists: 4 },
+      { name: 'Demoleison', kills: 8, deaths: 12, assists: 4 },
+    ],
+    teamB_stats: [
+      { name: 'Gilli', kills: 19, deaths: 16, assists: 4 },
+      { name: 'Duzz', kills: 14, deaths: 13, assists: 6 },
+      { name: 'Dash', kills: 13, deaths: 16, assists: 5 },
+      { name: 'Camargo', kills: 11, deaths: 18, assists: 3 },
+      { name: 'Peteka', kills: 8, deaths: 16, assists: 8 },
+    ]
   }
 };
 
 export const groupA = [
   { teamId: 'desacreditados', p: 2, pj: 2, v: 2, d: 0, rd: 14 },
-  { teamId: 'jalin', p: 1, pj: 2, v: 1, d: 1, rd: -2 },
   { teamId: 'venvanse', p: 1, pj: 2, v: 1, d: 1, rd: 0 },
-  { teamId: '5cones', p: 0, pj: 2, v: 0, d: 2, rd: -12 },
+  { teamId: 'jalin', p: 1, pj: 3, v: 1, d: 2, rd: -9 },
+  { teamId: '5cones', p: 1, pj: 3, v: 1, d: 2, rd: -5 },
 ];
 
 export const groupB = [
@@ -275,6 +285,7 @@ addPlayersToGlobal(matchDetails, '6', 'maconhaco', 'assentamento');
 addPlayersToGlobal(matchDetails, '7', 'jalin', 'venvanse');
 addPlayersToGlobal(matchDetails, '8', '5cones', 'desacreditados');
 addPlayersToGlobal(matchDetails, '9', 'gilsons', 'maconhaco');
+addPlayersToGlobal(matchDetails, '10', '5cones', 'jalin');
 
 export const players: Array<PlayerSummary> = Object.values(rawPlayersMap);
 
