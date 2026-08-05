@@ -181,14 +181,14 @@ export const matchDetails: Record<string, any> = {
     teamA_stats: [
       { name: 'Becker', kills: 20, deaths: 14, assists: 3 },
       { name: 'ChapaChaplin', kills: 11, deaths: 16, assists: 6 },
-      { name: 'Giraldi', kills: 12, deaths: 15, assists: 2 },
+      { name: 'Pedro Giraldi', kills: 12, deaths: 15, assists: 2 },
       { name: 'Bagua', kills: 5, deaths: 17, assists: 6 },
-      { name: 'Deeez1n', kills: 8, deaths: 18, assists: 4 },
+      { name: 'De', kills: 8, deaths: 18, assists: 4 },
     ],
     teamB_stats: [
       { name: 'Distress - Pedro', kills: 25, deaths: 9, assists: 3 },
       { name: 'Tufa', kills: 22, deaths: 14, assists: 7 },
-      { name: 'Vandeco', kills: 13, deaths: 13, assists: 0 },
+      { name: 'Gio', kills: 13, deaths: 13, assists: 0 },
       { name: 'GalaXY', kills: 6, deaths: 15, assists: 0 },
       { name: 'Sorps - Leluia', kills: 14, deaths: 7, assists: 5 },
     ]
@@ -206,7 +206,7 @@ export const matchDetails: Record<string, any> = {
     teamB_stats: [
       { name: 'Acyd', kills: 21, deaths: 13, assists: 4 },
       { name: 'Lucas', kills: 16, deaths: 16, assists: 2 },
-      { name: 'Majaster', kills: 13, deaths: 17, assists: 4 },
+      { name: 'Gusta', kills: 13, deaths: 17, assists: 4 },
       { name: 'EasyMoneyrasta', kills: 9, deaths: 17, assists: 4 },
       { name: 'LaColombia', kills: 1, deaths: 18, assists: 4 },
     ]
