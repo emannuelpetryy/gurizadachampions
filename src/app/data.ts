@@ -330,3 +330,14 @@ export const tiers = {
     { name: 'Gilson Tedesko', lvl: 3 }
   ]
 };
+
+export const getPlayerTier = (name: string): string => {
+  if (!name) return '';
+  const clean = name.trim().toLowerCase();
+  for (const [tier, list] of Object.entries(tiers)) {
+    if (list.some(p => p.name.trim().toLowerCase() === clean)) {
+      return tier;
+    }
+  }
+  return '';
+};

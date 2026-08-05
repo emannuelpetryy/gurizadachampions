@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { groupA, groupB, getTeam, players } from '../data';
+import { groupA, groupB, getTeam, players, getPlayerTier } from '../data';
 import Link from 'next/link';
 import PlayerAvatar from '../jogador/[name]/PlayerAvatar';
 import TeamLogo from '../components/TeamLogo';
@@ -164,13 +164,31 @@ export default function Ranking() {
                       const team = getTeam(player.teamId);
                       const kd = (player.kills / (player.deaths || 1)).toFixed(2);
                       const kda = ((player.kills + player.assists) / (player.deaths || 1)).toFixed(2);
+                      const playerTier = getPlayerTier(player.name);
                       return (
                         <tr key={player.name} className={`rank-${index + 1}`}>
                           <td style={{ textAlign: 'center' }}><span className="rank-number" style={{ fontSize: index < 3 ? '1.5rem' : '1.2rem' }}>#{index + 1}</span></td>
                           <td>
                             <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '1rem' }} className="match-card-hover">
                               <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor="rgba(255,255,255,0.1)" size={40} />
-                              <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
+                              <strong style={{ fontSize: '1.1rem', color: '#fff', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                                {player.name}
+                                {playerTier && (
+                                  <span style={{
+                                    fontSize: '0.62rem',
+                                    fontWeight: 800,
+                                    padding: '0.1rem 0.4rem',
+                                    borderRadius: '6px',
+                                    background: playerTier === 'S' ? 'rgba(255, 215, 0, 0.15)' : playerTier === 'A' ? 'rgba(0, 240, 255, 0.15)' : playerTier === 'B' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255, 255, 255, 0.08)',
+                                    color: playerTier === 'S' ? '#ffd700' : playerTier === 'A' ? '#00f0ff' : playerTier === 'B' ? '#10b981' : '#94a3b8',
+                                    border: `1px solid ${playerTier === 'S' ? '#ffd70050' : playerTier === 'A' ? '#00f0ff50' : playerTier === 'B' ? '#10b98150' : '#ffffff20'}`,
+                                    letterSpacing: '0.5px',
+                                    lineHeight: 1,
+                                  }}>
+                                    TIER {playerTier}
+                                  </span>
+                                )}
+                              </strong>
                             </Link>
                           </td>
                           <td>
@@ -227,6 +245,7 @@ export default function Ranking() {
                     const winrate = totalMatches > 0 ? ((player.wins / totalMatches) * 100).toFixed(1) : '0.0';
                     const matchedP = players.find(p => p.name.toLowerCase() === player.name.toLowerCase());
                     const team = matchedP ? getTeam(matchedP.teamId) : { name: 'Convidado' };
+                    const playerTier = getPlayerTier(player.name);
                     
                     const ratingLevel = player.elo >= 1500 ? 10 : player.elo >= 1350 ? 9 : player.elo >= 1200 ? 8 : player.elo >= 1100 ? 6 : player.elo >= 1000 ? 4 : 2;
                     const badgeColor = player.elo >= 1400 ? '#ffd700' : player.elo >= 1200 ? '#00f0ff' : '#a4b0be';
@@ -242,9 +261,26 @@ export default function Ranking() {
                           </Link>
                           <div>
                             <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: '#fff' }}>
-                              <strong style={{ fontSize: '1.15rem', display: 'block' }}>{player.name}</strong>
+                              <strong style={{ fontSize: '1.15rem', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                                {player.name}
+                                {playerTier && (
+                                  <span style={{
+                                    fontSize: '0.62rem',
+                                    fontWeight: 800,
+                                    padding: '0.1rem 0.4rem',
+                                    borderRadius: '6px',
+                                    background: playerTier === 'S' ? 'rgba(255, 215, 0, 0.15)' : playerTier === 'A' ? 'rgba(0, 240, 255, 0.15)' : playerTier === 'B' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255, 255, 255, 0.08)',
+                                    color: playerTier === 'S' ? '#ffd700' : playerTier === 'A' ? '#00f0ff' : playerTier === 'B' ? '#10b981' : '#94a3b8',
+                                    border: `1px solid ${playerTier === 'S' ? '#ffd70050' : playerTier === 'A' ? '#00f0ff50' : playerTier === 'B' ? '#10b98150' : '#ffffff20'}`,
+                                    letterSpacing: '0.5px',
+                                    lineHeight: 1,
+                                  }}>
+                                    TIER {playerTier}
+                                  </span>
+                                )}
+                              </strong>
                             </Link>
-                            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{player.wins || 0}V - {player.losses || 0}D ({winrate}% WR)</span>
+                            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block' }}>{player.wins || 0}V - {player.losses || 0}D ({winrate}% WR)</span>
                           </div>
                         </div>
 

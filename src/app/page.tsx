@@ -1,4 +1,4 @@
-import { getTeam, matches, matchDetails, players, teams, upcomingMatches } from './data';
+import { getTeam, matches, matchDetails, players, teams, upcomingMatches, getPlayerTier } from './data';
 import Link from 'next/link';
 import PlayerAvatar from './jogador/[name]/PlayerAvatar';
 import Comments from '../components/Comments';
@@ -224,6 +224,8 @@ export default function Home() {
                 badgeText = '#ff3366';
               }
               
+              const playerTier = getPlayerTier(player.name);
+
               return (
                 <li key={player.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'linear-gradient(135deg, rgba(15, 25, 48, 0.6) 0%, rgba(7, 14, 28, 0.75) 100%)', padding: '1rem 1.2rem', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.06)', borderLeft: index === 0 ? '4px solid #FFD700' : index === 1 ? '4px solid #C0C0C0' : index === 2 ? '4px solid #CD7F32' : '4px solid transparent', transition: 'all 0.25s ease' }}>
                   
@@ -234,7 +236,24 @@ export default function Home() {
                       <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor="rgba(255,255,255,0.1)" size={40} />
                       <div>
                         <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none' }} className="match-card-hover">
-                          <p style={{ fontWeight: 800, fontSize: '1.1rem', color: '#fff', margin: 0, letterSpacing: '0.5px' }}>{player.name}</p>
+                          <p style={{ fontWeight: 800, fontSize: '1.1rem', color: '#fff', margin: 0, letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                            <span>{player.name}</span>
+                            {playerTier && (
+                              <span style={{
+                                fontSize: '0.62rem',
+                                fontWeight: 800,
+                                padding: '0.1rem 0.4rem',
+                                borderRadius: '6px',
+                                background: playerTier === 'S' ? 'rgba(255, 215, 0, 0.15)' : playerTier === 'A' ? 'rgba(0, 240, 255, 0.15)' : playerTier === 'B' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255, 255, 255, 0.08)',
+                                color: playerTier === 'S' ? '#ffd700' : playerTier === 'A' ? '#00f0ff' : playerTier === 'B' ? '#10b981' : '#94a3b8',
+                                border: `1px solid ${playerTier === 'S' ? '#ffd70050' : playerTier === 'A' ? '#00f0ff50' : playerTier === 'B' ? '#10b98150' : '#ffffff20'}`,
+                                letterSpacing: '0.5px',
+                                lineHeight: 1,
+                              }}>
+                                TIER {playerTier}
+                              </span>
+                            )}
+                          </p>
                         </Link>
                         <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: 0 }}>{team.name} • {player.matches || 1} Partidas</p>
                       </div>
