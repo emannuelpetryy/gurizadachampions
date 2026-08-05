@@ -20,17 +20,10 @@ export const matches = [
   { id: 6, teamA: 'maconhaco', teamB: 'assentamento', scoreA: 13, scoreB: 5, status: 'Encerrado', date: 'qua., 29/07/2026 21:30', group: 'B' },
   { id: 7, teamA: 'jalin', teamB: 'venvanse', scoreA: 13, scoreB: 9, status: 'Encerrado', date: 'dom., 02/08/2026 23:50', group: 'A' },
   { id: 8, teamA: '5cones', teamB: 'desacreditados', scoreA: 5, scoreB: 13, status: 'Encerrado', date: 'seg., 03/08/2026 02:11', group: 'A' },
+  { id: 9, teamA: 'gilsons', teamB: 'maconhaco', scoreA: 13, scoreB: 8, status: 'Encerrado', date: 'ter., 04/08/2026 20:30', group: 'B' },
 ];
 
 export const upcomingMatches: any[] = [
-  {
-    id: 'up-1',
-    group: 'GRUPO B - RODADA 3',
-    teamA: 'maconhaco',
-    teamB: 'gilsons',
-    date: '2026-08-04T20:30:00-03:00',
-    dateDisplay: 'Terça-Feira (04/08) às 20:30 / 20:45',
-  },
   {
     id: 'up-2',
     group: 'GRUPO A - RODADA 3',
@@ -199,6 +192,24 @@ export const matchDetails: Record<string, any> = {
       { name: 'GalaXY', kills: 6, deaths: 15, assists: 0 },
       { name: 'Sorps - Leluia', kills: 14, deaths: 7, assists: 5 },
     ]
+  },
+  '9': {
+    map: 'Inferno', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 8,
+    vodUrl: 'https://www.twitch.tv/beckeryeshua',
+    teamA_stats: [
+      { name: 'Manko', kills: 24, deaths: 12, assists: 5 },
+      { name: 'PombaLoka', kills: 14, deaths: 14, assists: 6 },
+      { name: 'Felpy', kills: 17, deaths: 13, assists: 11 },
+      { name: 'Alemão', kills: 12, deaths: 11, assists: 5 },
+      { name: 'Gilson Tedesko', kills: 13, deaths: 12, assists: 2 },
+    ],
+    teamB_stats: [
+      { name: 'Acyd', kills: 21, deaths: 13, assists: 4 },
+      { name: 'Lucas', kills: 16, deaths: 16, assists: 2 },
+      { name: 'Majaster', kills: 13, deaths: 17, assists: 4 },
+      { name: 'EasyMoneyrasta', kills: 9, deaths: 17, assists: 4 },
+      { name: 'LaColombia', kills: 1, deaths: 18, assists: 4 },
+    ]
   }
 };
 
@@ -210,8 +221,8 @@ export const groupA = [
 ];
 
 export const groupB = [
-  { teamId: 'maconhaco', p: 2, pj: 2, v: 2, d: 0, rd: 11 },
-  { teamId: 'gilsons', p: 2, pj: 2, v: 2, d: 0, rd: 10 },
+  { teamId: 'gilsons', p: 3, pj: 3, v: 3, d: 0, rd: 15 },
+  { teamId: 'maconhaco', p: 2, pj: 3, v: 2, d: 1, rd: 6 },
   { teamId: 'whitelemon', p: 0, pj: 2, v: 0, d: 2, rd: -10 },
   { teamId: 'assentamento', p: 0, pj: 2, v: 0, d: 2, rd: -11 },
 ];
@@ -263,6 +274,7 @@ addPlayersToGlobal(matchDetails, '5', 'gilsons', 'whitelemon');
 addPlayersToGlobal(matchDetails, '6', 'maconhaco', 'assentamento');
 addPlayersToGlobal(matchDetails, '7', 'jalin', 'venvanse');
 addPlayersToGlobal(matchDetails, '8', '5cones', 'desacreditados');
+addPlayersToGlobal(matchDetails, '9', 'gilsons', 'maconhaco');
 
 export const players: Array<PlayerSummary> = Object.values(rawPlayersMap);
 
