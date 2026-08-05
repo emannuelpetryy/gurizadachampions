@@ -268,7 +268,10 @@ const CANONICAL_ALIASES: Record<string, string> = {
   'vvs duzão': 'Duzão',
   'lucaaas ta lá': 'Lucas',
   'giuseppe lagos - henrique': 'Giuseppe Lagos',
+  'joseph lakes': 'Giuseppe Lagos',
+  'white lemon | joseph lakes': 'Giuseppe Lagos',
   'daddy mny': 'Daddy Money',
+  'kyousuke666': 'Daddy Money',
 };
 
 export const normalizePlayerName = (name: string): string => {

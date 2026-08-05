@@ -27,10 +27,11 @@ const DEFAULT_ALIASES: Record<string, string> = {
   'jalin_k_t': 'camargo',
   'knight': 'camargo',
   'majaster': 'gusta',
-  'giraldi': 'pedro_giraldi',
   'deeez1n': 'de',
   'deez1n': 'de',
   'vandeco': 'gio',
+  'joseph_lakes': 'giuseppe_lagos',
+  'kyousuke666': 'daddy_money',
 };
 
 async function getAliasMap(supabaseUrl: string, supabaseKey: string): Promise<Record<string, string>> {
