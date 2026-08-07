@@ -62,7 +62,7 @@ export default function SelecoesPage() {
 
   useEffect(() => {
     try {
-      const VOTE_VERSION = 'v4'; // Atualizado para zerar votos locais anteriores
+      const VOTE_VERSION = 'v5'; // Atualizado para zerar votos locais do usuario
       const storedVersion = localStorage.getItem('gc_vote_version');
 
       if (storedVersion !== VOTE_VERSION) {
@@ -80,6 +80,17 @@ export default function SelecoesPage() {
       // Ignore
     }
   }, []);
+
+  const handleResetMyVotes = () => {
+    if (confirm('Deseja resetar a sua seleção atual e zerar seus votos locais?')) {
+      setVotedStar({});
+      setVotedBagre({});
+      setDraftStar({});
+      setDraftBagre({});
+      localStorage.removeItem('gc_voted_star_players');
+      localStorage.removeItem('gc_voted_bagre_players');
+    }
+  };
 
   const fetchVotes = async () => {
     try {
@@ -461,13 +472,19 @@ export default function SelecoesPage() {
             {/* SEU TIME DOS BAGRES VOTADO (SE JÁ VOTOU) */}
             {myBagrePlayers.length > 0 && (
               <div style={{ marginBottom: '3rem', padding: '1.5rem', background: 'rgba(0, 240, 255, 0.05)', borderRadius: '18px', border: '1px solid rgba(0, 240, 255, 0.3)' }}>
-                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
                   <span style={{ fontSize: '0.75rem', background: 'var(--cyan)', color: '#080d1a', padding: '0.2rem 0.8rem', borderRadius: '12px', fontWeight: 800, textTransform: 'uppercase' }}>
                     SEU VOTO PESSOAL
                   </span>
-                  <h3 style={{ fontSize: '1.6rem', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, margin: '0.4rem 0 0 0' }}>
+                  <h3 style={{ fontSize: '1.6rem', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, margin: 0 }}>
                     🐟 SUA SELEÇÃO DOS BAGRES ({myBagrePlayers.length}/5)
                   </h3>
+                  <button
+                    onClick={handleResetMyVotes}
+                    style={{ background: 'rgba(255, 71, 87, 0.15)', border: '1px solid #ff4757', color: '#ff4757', padding: '0.35rem 0.9rem', borderRadius: '10px', fontSize: '0.85rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                  >
+                    <span>🗑️</span> Resetar Meus Votos
+                  </button>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
                   {myBagrePlayers.map((p) => {
@@ -677,15 +694,16 @@ export default function SelecoesPage() {
         {/* MODAL DE VOTAÇÃO DA PÁGINA */}
         {isModalOpen && (
           <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
-            <div style={{ background: '#0a0f1d', border: '1px solid rgba(0,240,255,0.3)', borderRadius: '20px', width: '100%', maxWidth: '750px', maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 0 50px rgba(0,240,255,0.2)' }}>
+            <div style={{ background: '#0a0f1d', border: '1px solid rgba(0,240,255,0.3)', borderRadius: '20px', width: '100%', maxWidth: '850px', maxHeight: '92vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 0 50px rgba(0,240,255,0.2)' }}>
               
-              <div style={{ padding: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.4)' }}>
+              {/* Header do Modal */}
+              <div style={{ padding: '1.2rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.4)' }}>
                 <div>
-                  <h3 style={{ fontSize: '1.6rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, color: '#fff', margin: 0 }}>
-                    🗳️ ESCALAÇÃO & VOTAÇÃO DA TORCIDA
+                  <h3 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, color: '#fff', margin: 0, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                    <span>🗳️</span> MONTE A SUA ESCALAÇÃO DE 5 JOGADORES
                   </h3>
                   <p style={{ fontSize: '0.8rem', color: 'var(--cyan)', margin: '0.2rem 0 0 0', fontWeight: 600 }}>
-                    Selecione suas escolhas abaixo. Os votos só serão computados ao clicar em "Concluir Votação"!
+                    Monte a sua linha de 5 titulares do Dream Team ou dos Bagres em tempo real!
                   </p>
                 </div>
 
@@ -694,7 +712,87 @@ export default function SelecoesPage() {
                 </button>
               </div>
 
-              <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
+              {/* Banner de Aviso de Critério de Votação (Por Tier) */}
+              <div style={{ padding: '0.8rem 1.2rem', background: 'rgba(255, 215, 0, 0.08)', borderBottom: '1px solid rgba(255, 215, 0, 0.2)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                <span style={{ fontSize: '1.3rem' }}>💡</span>
+                <p style={{ margin: 0, fontSize: '0.8rem', color: '#e2e8f0', lineHeight: 1.35 }}>
+                  <strong style={{ color: '#ffd700' }}>Critério do Campeonato:</strong> Não escolha apenas por habilidade geral bruta! Escolha quem mais se <strong style={{ color: 'var(--cyan)' }}>DESTACA E SUPERA EXPECTATIVAS</strong> dentro dos seus respectivos <strong style={{ color: '#ffd700' }}>TIERS (S, A, B, C e D)</strong>!
+                </p>
+              </div>
+
+              {/* PAINEL VISUAL DA ESCALAÇÃO DE 5 CARDS (AO VIVO) */}
+              <div style={{ background: 'rgba(5, 10, 20, 0.95)', padding: '1rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#ffd700', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span>⚔️</span> SEU LINE-UP EM CONSTRUÇÃO ({Object.values(draftStar).filter(Boolean).length}/5)
+                  </span>
+                  {Object.values(draftStar).filter(Boolean).length > 0 && (
+                    <button
+                      onClick={() => setDraftStar({})}
+                      style={{ background: 'rgba(255, 71, 87, 0.15)', border: '1px solid #ff4757', color: '#ff4757', padding: '0.2rem 0.6rem', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
+                    >
+                      Limpar Escalação
+                    </button>
+                  )}
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.6rem' }}>
+                  {ROLES_STAR.map((role, idx) => {
+                    const selectedSlug = Object.keys(draftStar).filter(s => draftStar[s])[idx];
+                    const playerObj = selectedSlug ? playersWithVotes.find(p => p.slug === selectedSlug) : null;
+                    const teamObj = playerObj ? getTeam(playerObj.teamId) : null;
+
+                    return (
+                      <div
+                        key={idx}
+                        style={{
+                          background: playerObj ? 'linear-gradient(180deg, rgba(255, 215, 0, 0.15) 0%, rgba(10, 15, 30, 0.9) 100%)' : 'rgba(255, 255, 255, 0.02)',
+                          border: playerObj ? '1.5px solid #ffd700' : '1px dashed rgba(255, 255, 255, 0.2)',
+                          borderRadius: '12px',
+                          padding: '0.5rem 0.3rem',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          position: 'relative',
+                          minHeight: '100px',
+                          justifyContent: 'center',
+                          boxShadow: playerObj ? '0 0 15px rgba(255, 215, 0, 0.2)' : 'none',
+                          transition: 'all 0.3s'
+                        }}
+                      >
+                        <span style={{ fontSize: '0.6rem', fontWeight: 800, color: playerObj ? '#ffd700' : '#64748b', textTransform: 'uppercase', marginBottom: '0.2rem', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+                          {role.rank} {role.role.split(' ')[0]}
+                        </span>
+
+                        {playerObj && teamObj ? (
+                          <>
+                            <button
+                              onClick={() => toggleDraftStar(playerObj.slug)}
+                              title="Remover da escalação"
+                              style={{ position: 'absolute', top: '3px', right: '3px', background: 'rgba(255,71,87,0.8)', border: 'none', color: '#fff', borderRadius: '50%', width: '16px', height: '16px', fontSize: '0.6rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            >
+                              ✕
+                            </button>
+                            <PlayerAvatar teamName={teamObj.name} playerName={playerObj.name} badgeColor="#ffd700" size={32} />
+                            <strong style={{ fontSize: '0.75rem', color: '#fff', marginTop: '0.2rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '75px', textAlign: 'center' }}>
+                              {playerObj.name}
+                            </strong>
+                            <span style={{ fontSize: '0.58rem', color: 'var(--cyan)', fontWeight: 700 }}>{teamObj.initials}</span>
+                          </>
+                        ) : (
+                          <div style={{ textAlign: 'center', padding: '0.2rem' }}>
+                            <span style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.2)', display: 'block' }}>+</span>
+                            <span style={{ fontSize: '0.62rem', color: '#475569', fontWeight: 600 }}>Vago</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Barra de Busca */}
+              <div style={{ padding: '0.8rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
                 <input
                   type="text"
                   placeholder="🔍 Buscar jogador por nome..."
@@ -704,7 +802,7 @@ export default function SelecoesPage() {
                 />
               </div>
 
-              <div style={{ padding: '1.5rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.8rem', flex: 1 }} className="custom-scrollbar">
+              <div style={{ padding: '1.2rem 1.5rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.8rem', flex: 1 }} className="custom-scrollbar">
                 {filteredPlayers.map((player) => {
                   const team = getTeam(player.teamId);
                   const isStarSelected = draftStar[player.slug];
