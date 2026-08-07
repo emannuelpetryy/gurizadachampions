@@ -22,17 +22,10 @@ export const matches = [
   { id: 8, teamA: '5cones', teamB: 'desacreditados', scoreA: 5, scoreB: 13, status: 'Encerrado', date: 'seg., 03/08/2026 02:11', group: 'A' },
   { id: 9, teamA: 'gilsons', teamB: 'maconhaco', scoreA: 13, scoreB: 8, status: 'Encerrado', date: 'ter., 04/08/2026 20:30', group: 'B' },
   { id: 10, teamA: '5cones', teamB: 'jalin', scoreA: 13, scoreB: 6, status: 'Encerrado', date: 'ter., 04/08/2026 22:00', group: 'A' },
+  { id: 11, teamA: 'desacreditados', teamB: 'venvanse', scoreA: 19, scoreB: 16, status: 'Encerrado', date: 'Rodada 3', group: 'A' },
 ];
 
 export const upcomingMatches: any[] = [
-  {
-    id: 'up-3',
-    group: 'GRUPO A - RODADA 3',
-    teamA: 'desacreditados',
-    teamB: 'venvanse',
-    date: '2026-08-05T21:00:00-03:00',
-    dateDisplay: 'A definir',
-  },
   {
     id: 'up-4',
     group: 'GRUPO B - RODADA 3',
@@ -48,184 +41,201 @@ export const matchDetails: Record<string, any> = {
     map: 'Inferno', roundsA: 0, roundsB: 1, teamARounds: 7, teamBRounds: 13,
     vodUrl: 'https://www.twitch.tv/videos/2827426394',
     teamA_stats: [
-      { name: 'Dash', kills: 15, deaths: 15, assists: 2 },
-      { name: 'Gilli', kills: 15, deaths: 17, assists: 8 },
-      { name: 'Duzz', kills: 7, deaths: 14, assists: 3 },
-      { name: 'Peteka', kills: 12, deaths: 20, assists: 6 },
-      { name: 'Camargo', kills: 10, deaths: 16, assists: 2 },
+      { name: 'Gilli', kills: 15, deaths: 17, assists: 8, hs: null, damage: 1860 },
+      { name: 'Dash', kills: 15, deaths: 15, assists: 2, hs: null, damage: 1480 },
+      { name: 'Peteka', kills: 12, deaths: 20, assists: 6, hs: null, damage: 1700 },
+      { name: 'Camargo', kills: 10, deaths: 16, assists: 2, hs: null, damage: 1040 },
+      { name: 'Duzz', kills: 7, deaths: 17, assists: 3, hs: null, damage: 1120 },
     ],
     teamB_stats: [
-      { name: 'Sorps - Leluia', kills: 13, deaths: 10, assists: 6 },
-      { name: 'Tufa', kills: 22, deaths: 10, assists: 8 },
-      { name: 'Gio', kills: 13, deaths: 13, assists: 5 },
-      { name: 'GalaXY', kills: 13, deaths: 14, assists: 9 },
-      { name: 'Distress - Pedro', kills: 20, deaths: 12, assists: 5 },
+      { name: 'Tufa', kills: 22, deaths: 10, assists: 8, hs: 45, damage: 2380 },
+      { name: 'Distress - Pedro', kills: 20, deaths: 12, assists: 5, hs: 60, damage: 2060 },
+      { name: 'Galaxy', kills: 13, deaths: 14, assists: 9, hs: 30, damage: 1620 },
+      { name: 'Gio', kills: 13, deaths: 13, assists: 5, hs: 46, damage: 1420 },
+      { name: 'Sorps - Leluia', kills: 13, deaths: 10, assists: 6, hs: 46, damage: 1140 },
     ]
   },
   '2': {
     map: 'Dust II', roundsA: 19, roundsB: 22, teamARounds: 19, teamBRounds: 22,
     vodUrl: 'https://www.twitch.tv/videos/2830666292',
     teamA_stats: [
-      { name: 'Nil', kills: 39, deaths: 31, assists: 9 },
-      { name: 'Leco', kills: 48, deaths: 29, assists: 11 },
-      { name: 'Math', kills: 13, deaths: 28, assists: 14 },
-      { name: 'Cobes', kills: 27, deaths: 29, assists: 7 },
-      { name: 'Demoleison', kills: 17, deaths: 28, assists: 7 },
+      { name: 'Leco', kills: 48, deaths: 29, assists: 11, hs: 50, damage: 4554 },
+      { name: 'Nil', kills: 39, deaths: 31, assists: 9, hs: 15, damage: 4187 },
+      { name: 'Cobes', kills: 27, deaths: 29, assists: 7, hs: 59, damage: 2764 },
+      { name: 'Demoleison', kills: 17, deaths: 28, assists: 7, hs: 29, damage: 2162 },
+      { name: 'Math', kills: 13, deaths: 28, assists: 14, hs: 23, damage: 1949 },
     ],
     teamB_stats: [
-      { name: 'Gilson Tedesko', kills: 17, deaths: 33, assists: 5 },
-      { name: 'Manko', kills: 39, deaths: 34, assists: 14 },
-      { name: 'PombaLoka', kills: 26, deaths: 26, assists: 6 },
-      { name: 'Alemão', kills: 20, deaths: 31, assists: 8 },
-      { name: 'Felpy', kills: 41, deaths: 29, assists: 11 },
+      { name: 'Felpy', kills: 41, deaths: 29, assists: 11, hs: 77, damage: 4536 },
+      { name: 'Manko', kills: 39, deaths: 34, assists: 14, hs: null, damage: 4368 },
+      { name: 'PombaLoka', kills: 26, deaths: 26, assists: 6, hs: 30, damage: 2184 },
+      { name: 'Alemão', kills: 20, deaths: 31, assists: 8, hs: 10, damage: 2604 },
+      { name: 'Gilson Tedesko', kills: 17, deaths: 33, assists: 5, hs: null, damage: 2394 },
     ]
   },
   '3': {
     map: 'Ancient', roundsA: 0, roundsB: 1, teamARounds: 12, teamBRounds: 16,
     vodUrl: 'https://www.twitch.tv/videos/2827426394',
     teamA_stats: [
-      { name: 'ChapaChaplin', kills: 15, deaths: 20, assists: 8 },
-      { name: 'Bagua', kills: 21, deaths: 21, assists: 6 },
-      { name: 'Pedro Giraldi', kills: 16, deaths: 20, assists: 6 },
-      { name: 'Deeez1n', kills: 14, deaths: 24, assists: 8 },
-      { name: 'Becker', kills: 28, deaths: 22, assists: 9 },
+      { name: 'Becker', kills: 28, deaths: 22, assists: 9, hs: 28, damage: 3256 },
+      { name: 'Bagua', kills: 21, deaths: 21, assists: 6, hs: 57, damage: 2044 },
+      { name: 'ChapaChaplin', kills: 15, deaths: 20, assists: 8, hs: 33, damage: 2016 },
+      { name: 'Pedro Giraldi', kills: 16, deaths: 20, assists: 6, hs: 50, damage: 1848 },
+      { name: 'Deeez1n', kills: 14, deaths: 24, assists: 8, hs: 21, damage: 1372 },
     ],
     teamB_stats: [
-      { name: 'Pacal', kills: 39, deaths: 17, assists: 7 },
-      { name: 'Samuka', kills: 25, deaths: 18, assists: 9 },
-      { name: 'Manu', kills: 19, deaths: 18, assists: 6 },
-      { name: 'Duzão', kills: 10, deaths: 20, assists: 11 },
-      { name: 'Baronelis', kills: 13, deaths: 21, assists: 11 },
+      { name: 'Pacal', kills: 39, deaths: 17, assists: 7, hs: 46, damage: 3900 },
+      { name: 'Samuka', kills: 25, deaths: 18, assists: 9, hs: 40, damage: 2803 },
+      { name: 'Manu', kills: 19, deaths: 18, assists: 6, hs: 47, damage: 1975 },
+      { name: 'Baronelis', kills: 13, deaths: 21, assists: 11, hs: 38, damage: 1604 },
+      { name: 'Duzão', kills: 10, deaths: 20, assists: 11, hs: 30, damage: 1409 },
     ]
   },
   '4': {
     map: 'Anúbis', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 10,
     vodUrl: 'https://www.twitch.tv/videos/2830666292',
     teamA_stats: [
-      { name: 'Acyd', kills: 33, deaths: 17, assists: 4 },
-      { name: 'Gusta', kills: 19, deaths: 18, assists: 8 },
-      { name: 'Lucas', kills: 15, deaths: 18, assists: 7 },
-      { name: 'EasyMoneyrasta', kills: 10, deaths: 17, assists: 6 },
-      { name: 'LaColombia', kills: 7, deaths: 18, assists: 6 },
+      { name: 'Acyd', kills: 33, deaths: 17, assists: 4, hs: 51, damage: 3219 },
+      { name: 'Gusta', kills: 19, deaths: 18, assists: 8, hs: 15, damage: 2144 },
+      { name: 'Lucas', kills: 15, deaths: 18, assists: 7, hs: 60, damage: 1746 },
+      { name: 'João Marcelo', kills: 10, deaths: 17, assists: 6, hs: 50, damage: 1446 },
+      { name: 'Natan', kills: 7, deaths: 18, assists: 6, hs: 42, damage: 765 },
     ],
     teamB_stats: [
-      { name: 'kyousuke666', kills: 20, deaths: 16, assists: 6 },
-      { name: 'oliveira7f', kills: 22, deaths: 16, assists: 7 },
-      { name: 'Giuseppe Lagos', kills: 21, deaths: 18, assists: 5 },
-      { name: 'Hallow', kills: 14, deaths: 19, assists: 6 },
-      { name: 'b1tplz', kills: 11, deaths: 19, assists: 4 },
+      { name: 'Daddy Money', kills: 20, deaths: 16, assists: 6, hs: 30, damage: 2469 },
+      { name: 'Fernandinho - Peida Leite', kills: 22, deaths: 16, assists: 7, hs: 40, damage: 2215 },
+      { name: 'Giuseppe Lagos', kills: 21, deaths: 18, assists: 5, hs: 52, damage: 2046 },
+      { name: 'Hallow', kills: 14, deaths: 19, assists: 6, hs: 50, damage: 1497 },
+      { name: 'Marcelo - Bitz', kills: 11, deaths: 19, assists: 4, hs: 63, damage: 1048 },
     ]
   },
   '5': {
     map: 'Dust II', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 6,
     vodUrl: 'https://www.twitch.tv/beckeryeshua',
     teamA_stats: [
-      { name: 'Alemão', kills: 14, deaths: 11, assists: 6 },
-      { name: 'SimboladaPAZ', kills: 9, deaths: 11, assists: 5 },
-      { name: 'Manko', kills: 27, deaths: 12, assists: 7 },
-      { name: 'PombaLoka', kills: 13, deaths: 11, assists: 6 },
-      { name: 'Felpy', kills: 24, deaths: 12, assists: 6 },
+      { name: 'Manko', kills: 27, deaths: 12, assists: 7, hs: 37, damage: 2698 },
+      { name: 'Felpy', kills: 24, deaths: 12, assists: 6, hs: 68, damage: 2470 },
+      { name: 'Alemão', kills: 14, deaths: 11, assists: 6, hs: 57, damage: 1292 },
+      { name: 'PombaLoka', kills: 13, deaths: 11, assists: 6, hs: 38, damage: 1406 },
+      { name: 'SimboladaPAZ', kills: 9, deaths: 11, assists: 5, hs: 33, damage: 1007 },
     ],
     teamB_stats: [
-      { name: 'Joseph Lakes', kills: 8, deaths: 18, assists: 2 },
-      { name: 'b1tplz', kills: 2, deaths: 19, assists: 6 },
-      { name: 'Hallow', kills: 16, deaths: 17, assists: 4 },
-      { name: 'Daddy Money', kills: 17, deaths: 18, assists: 2 },
-      { name: 'oliveira7f', kills: 8, deaths: 15, assists: 5 },
+      { name: 'Daddy Money', kills: 17, deaths: 18, assists: 2, hs: null, damage: 1653 },
+      { name: 'Hallow', kills: 16, deaths: 17, assists: 4, hs: null, damage: 1767 },
+      { name: 'Giuseppe Lagos', kills: 8, deaths: 18, assists: 2, hs: null, damage: 988 },
+      { name: 'Fernandinho - Peida Leite', kills: 8, deaths: 15, assists: 5, hs: null, damage: 1159 },
+      { name: 'Marcelo - Bitz', kills: 2, deaths: 19, assists: 6, hs: null, damage: 399 },
     ]
   },
   '6': {
     map: 'Mirage', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 5,
     vodUrl: 'https://www.twitch.tv/beckeryeshua',
     teamA_stats: [
-      { name: 'Acyd', kills: 23, deaths: 6, assists: 2 },
-      { name: 'Gusta', kills: 14, deaths: 13, assists: 5 },
-      { name: 'LaColombia', kills: 14, deaths: 7, assists: 3 },
-      { name: 'Lucas', kills: 12, deaths: 11, assists: 2 },
-      { name: 'EasyMoneyrasta', kills: 9, deaths: 11, assists: 2 },
+      { name: 'Acyd', kills: 23, deaths: 6, assists: 2, hs: 39, damage: 2292 },
+      { name: 'Gusta', kills: 14, deaths: 13, assists: 5, hs: 71, damage: 1808 },
+      { name: 'Natan', kills: 14, deaths: 7, assists: 3, hs: 50, damage: 1399 },
+      { name: 'Lucas', kills: 12, deaths: 11, assists: 2, hs: 58, damage: 1325 },
+      { name: 'João Marcelo', kills: 9, deaths: 11, assists: 2, hs: 33, damage: 924 },
     ],
     teamB_stats: [
-      { name: 'Leco', kills: 17, deaths: 14, assists: 4 },
-      { name: 'Math', kills: 10, deaths: 11, assists: 4 },
-      { name: 'Cobes', kills: 9, deaths: 15, assists: 2 },
-      { name: 'Nil', kills: 8, deaths: 17, assists: 2 },
-      { name: 'Demoleison', kills: 3, deaths: 15, assists: 2 },
+      { name: 'Leco', kills: 17, deaths: 14, assists: 4, hs: 35, damage: 1916 },
+      { name: 'Math', kills: 10, deaths: 11, assists: 4, hs: 40, damage: 1118 },
+      { name: 'Cobes', kills: 9, deaths: 16, assists: 2, hs: 22, damage: 1076 },
+      { name: 'Nil', kills: 8, deaths: 17, assists: 2, hs: 75, damage: 998 },
+      { name: 'Demoleison', kills: 3, deaths: 15, assists: 2, hs: 33, damage: 828 },
     ]
   },
   '7': {
     map: 'Nuke', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 9,
     teamA_stats: [
-      { name: 'Gilli', kills: 29, deaths: 15, assists: 4 },
-      { name: 'Dash', kills: 25, deaths: 14, assists: 2 },
-      { name: 'Duzz', kills: 13, deaths: 13, assists: 7 },
-      { name: 'Peteka', kills: 13, deaths: 16, assists: 7 },
-      { name: 'Camargo', kills: 7, deaths: 17, assists: 5 },
+      { name: 'Gilli', kills: 29, deaths: 15, assists: 4, hs: null, damage: 2400 },
+      { name: 'Dash', kills: 25, deaths: 14, assists: 2, hs: null, damage: 2100 },
+      { name: 'Duzz', kills: 13, deaths: 13, assists: 7, hs: null, damage: 1400 },
+      { name: 'Peteka', kills: 13, deaths: 16, assists: 7, hs: null, damage: 1300 },
+      { name: 'Camargo', kills: 7, deaths: 17, assists: 5, hs: null, damage: 900 },
     ],
     teamB_stats: [
-      { name: 'Pacal', kills: 31, deaths: 18, assists: 8 },
-      { name: 'Samuka', kills: 15, deaths: 18, assists: 5 },
-      { name: 'Manu', kills: 14, deaths: 15, assists: 7 },
-      { name: 'Baronelis', kills: 9, deaths: 18, assists: 7 },
-      { name: 'Duzão', kills: 5, deaths: 18, assists: 6 },
+      { name: 'Pacal', kills: 31, deaths: 18, assists: 8, hs: null, damage: 2600 },
+      { name: 'Samuka', kills: 15, deaths: 18, assists: 5, hs: null, damage: 1600 },
+      { name: 'Manu', kills: 14, deaths: 15, assists: 7, hs: null, damage: 1500 },
+      { name: 'Baronelis', kills: 9, deaths: 18, assists: 7, hs: null, damage: 1100 },
+      { name: 'Duzão', kills: 5, deaths: 18, assists: 6, hs: null, damage: 700 },
     ]
   },
   '8': {
     map: 'Vertigo', roundsA: 0, roundsB: 1, teamARounds: 5, teamBRounds: 13,
     teamA_stats: [
-      { name: 'Becker', kills: 20, deaths: 14, assists: 3 },
-      { name: 'ChapaChaplin', kills: 11, deaths: 16, assists: 6 },
-      { name: 'Pedro Giraldi', kills: 12, deaths: 15, assists: 2 },
-      { name: 'Bagua', kills: 5, deaths: 17, assists: 6 },
-      { name: 'Deeez1n', kills: 8, deaths: 18, assists: 4 },
+      { name: 'Becker', kills: 20, deaths: 14, assists: 3, hs: 35, damage: 1734 },
+      { name: 'Pedro Giraldi', kills: 12, deaths: 15, assists: 2, hs: 50, damage: 1143 },
+      { name: 'ChapaChaplin', kills: 11, deaths: 16, assists: 6, hs: 45, damage: 1335 },
+      { name: 'Deeez1n', kills: 8, deaths: 18, assists: 4, hs: 75, damage: 984 },
+      { name: 'Bagua', kills: 5, deaths: 17, assists: 6, hs: 80, damage: 1043 },
     ],
     teamB_stats: [
-      { name: 'Distress - Pedro', kills: 25, deaths: 9, assists: 3 },
-      { name: 'Tufa', kills: 22, deaths: 14, assists: 7 },
-      { name: 'Gio', kills: 13, deaths: 13, assists: 4 },
-      { name: 'GalaXY', kills: 6, deaths: 15, assists: 9 },
-      { name: 'Sorps - Leluia', kills: 14, deaths: 7, assists: 5 },
+      { name: 'Distress - Pedro', kills: 25, deaths: 9, assists: 3, hs: 36, damage: 2150 },
+      { name: 'Tufa', kills: 22, deaths: 14, assists: 7, hs: 54, damage: 2131 },
+      { name: 'Sorps - Leluia', kills: 14, deaths: 7, assists: 5, hs: 42, damage: 1184 },
+      { name: 'Gio', kills: 13, deaths: 13, assists: 4, hs: 46, damage: 1542 },
+      { name: 'Galaxy', kills: 6, deaths: 15, assists: 9, hs: 16, damage: 1345 },
     ]
   },
   '9': {
     map: 'Inferno', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 8,
     vodUrl: 'https://www.twitch.tv/beckeryeshua',
     teamA_stats: [
-      { name: 'Manko', kills: 24, deaths: 12, assists: 5 },
-      { name: 'PombaLoka', kills: 14, deaths: 14, assists: 6 },
-      { name: 'Felpy', kills: 17, deaths: 13, assists: 11 },
-      { name: 'Alemão', kills: 12, deaths: 12, assists: 5 },
-      { name: 'Gilson Tedesko', kills: 13, deaths: 12, assists: 2 },
+      { name: 'Manko', kills: 24, deaths: 12, assists: 5, hs: 54, damage: 2349 },
+      { name: 'PombaLoka', kills: 14, deaths: 14, assists: 6, hs: 35, damage: 1967 },
+      { name: 'Felpy', kills: 17, deaths: 13, assists: 11, hs: 29, damage: 1741 },
+      { name: 'Alemão', kills: 12, deaths: 12, assists: 5, hs: 33, damage: 1358 },
+      { name: 'Gilson Tedesko', kills: 13, deaths: 12, assists: 2, hs: 46, damage: 1274 },
     ],
     teamB_stats: [
-      { name: 'Acyd', kills: 21, deaths: 13, assists: 4 },
-      { name: 'Lucas', kills: 16, deaths: 16, assists: 2 },
-      { name: 'Gusta', kills: 13, deaths: 17, assists: 4 },
-      { name: 'EasyMoneyrasta', kills: 9, deaths: 17, assists: 4 },
-      { name: 'LaColombia', kills: 1, deaths: 18, assists: 4 },
+      { name: 'Acyd', kills: 21, deaths: 13, assists: 4, hs: 57, damage: 2197 },
+      { name: 'Lucas', kills: 16, deaths: 16, assists: 2, hs: 43, damage: 1820 },
+      { name: 'Gusta', kills: 13, deaths: 17, assists: 4, hs: 76, damage: null },
+      { name: 'João Marcelo', kills: 9, deaths: 17, assists: 4, hs: 44, damage: null },
+      { name: 'Natan', kills: 1, deaths: 18, assists: 4, hs: 100, damage: null },
     ]
   },
   '10': {
     map: 'Anúbis', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 6,
     teamA_stats: [
-      { name: 'Becker', kills: 28, deaths: 11, assists: 7 },
-      { name: 'ChapaChaplin', kills: 18, deaths: 15, assists: 9 },
-      { name: 'Bagua', kills: 12, deaths: 15, assists: 11 },
-      { name: 'Pedro Giraldi', kills: 12, deaths: 14, assists: 4 },
-      { name: 'Demoleison', kills: 8, deaths: 12, assists: 4 },
+      { name: 'Becker', kills: 28, deaths: 11, assists: 7, hs: 46, damage: 2607 },
+      { name: 'ChapaChaplin', kills: 18, deaths: 15, assists: 9, hs: 11, damage: 2066 },
+      { name: 'Bagua', kills: 12, deaths: 15, assists: 11, hs: 50, damage: 1709 },
+      { name: 'Pedro Giraldi', kills: 12, deaths: 14, assists: 4, hs: 50, damage: 1073 },
+      { name: 'Demoleison', kills: 8, deaths: 12, assists: 4, hs: 12, damage: 975 },
     ],
     teamB_stats: [
-      { name: 'Gilli', kills: 19, deaths: 16, assists: 4 },
-      { name: 'Duzz', kills: 14, deaths: 13, assists: 6 },
-      { name: 'Dash', kills: 11, deaths: 18, assists: 3 },
-      { name: 'Camargo', kills: 13, deaths: 16, assists: 5 },
-      { name: 'Peteka', kills: 8, deaths: 16, assists: 8 },
+      { name: 'Gilli', kills: 19, deaths: 16, assists: 4, hs: 52, damage: 2233 },
+      { name: 'Duzz', kills: 14, deaths: 13, assists: 6, hs: 57, damage: 1906 },
+      { name: 'Dash', kills: 11, deaths: 18, assists: 3, hs: 45, damage: 1377 },
+      { name: 'Camargo', kills: 13, deaths: 16, assists: 5, hs: 38, damage: null },
+      { name: 'Peteka', kills: 8, deaths: 16, assists: 8, hs: 37, damage: null },
+    ]
+  },
+  '11': {
+    map: 'Cache', roundsA: 1, roundsB: 0, teamARounds: 19, teamBRounds: 16,
+    teamA_stats: [
+      { name: 'Distress - Pedro', kills: 32, deaths: 26, assists: 5, hs: 28, damage: 3185 },
+      { name: 'Tufa', kills: 27, deaths: 28, assists: 8, hs: 59, damage: 2884 },
+      { name: 'Sorps - Leluia', kills: 23, deaths: 23, assists: 12, hs: 56, damage: 2898 },
+      { name: 'Gio', kills: 21, deaths: 23, assists: 4, hs: 57, damage: 2183 },
+      { name: 'Galaxy', kills: 20, deaths: 24, assists: 10, hs: 23, damage: 2551 },
+    ],
+    teamB_stats: [
+      { name: 'Pacal', kills: 38, deaths: 23, assists: 6, hs: 31, damage: 3688 },
+      { name: 'Samuka', kills: 32, deaths: 23, assists: 9, hs: 53, damage: 3421 },
+      { name: 'Manu', kills: 21, deaths: 26, assists: 7, hs: 33, damage: 2332 },
+      { name: 'Baronelis', kills: 17, deaths: 28, assists: 6, hs: 52, damage: 1782 },
+      { name: 'Duzão', kills: 15, deaths: 25, assists: 11, hs: 40, damage: 1915 },
     ]
   }
 };
 
 export const groupA = [
-  { teamId: 'desacreditados', p: 2, pj: 2, v: 2, d: 0, rd: 14 },
-  { teamId: 'venvanse', p: 1, pj: 2, v: 1, d: 1, rd: 0 },
+  { teamId: 'desacreditados', p: 3, pj: 3, v: 3, d: 0, rd: 17 },
+  { teamId: 'venvanse', p: 1, pj: 3, v: 1, d: 2, rd: -3 },
   { teamId: '5cones', p: 1, pj: 3, v: 1, d: 2, rd: -5 },
   { teamId: 'jalin', p: 1, pj: 3, v: 1, d: 2, rd: -9 },
 ];
@@ -240,11 +250,14 @@ export const groupB = [
 const CANONICAL_ALIASES: Record<string, string> = {
   'guasca': 'Bagua',
   '5cns guasca': 'Bagua',
+  'lsnbxjq ulzouqodفوي': 'Bagua',
   'zero2': 'Gilli',
   'zero': 'Gilli',
   'jalin | zero2': 'Gilli',
   'knight': 'Camargo',
+  'knight水🥷🏻': 'Camargo',
   'jalin | knight': 'Camargo',
+  'jalin | knight水🥷🏻': 'Camargo',
   'majaster': 'Gusta',
   'giraldi': 'Pedro Giraldi',
   '5cns - giraldi': 'Pedro Giraldi',
@@ -257,6 +270,7 @@ const CANONICAL_ALIASES: Record<string, string> = {
   'leluia': 'Sorps - Leluia',
   'distress': 'Distress - Pedro',
   'alemao_/': 'Alemão',
+  'alemao__/': 'Alemão',
   'mankinho^^': 'Manko',
   'mankinho': 'Manko',
   'pombaloka': 'PombaLoka',
@@ -267,11 +281,24 @@ const CANONICAL_ALIASES: Record<string, string> = {
   'vvs perry': 'Manu',
   'vvs duzão': 'Duzão',
   'lucaaas ta lá': 'Lucas',
+  'lucaaas tá lá': 'Lucas',
   'giuseppe lagos - henrique': 'Giuseppe Lagos',
   'joseph lakes': 'Giuseppe Lagos',
   'white lemon | joseph lakes': 'Giuseppe Lagos',
   'daddy mny': 'Daddy Money',
   'kyousuke666': 'Daddy Money',
+  'easymoneyrasta': 'João Marcelo',
+  'lacolombia': 'Natan',
+  'b1tplz': 'Marcelo - Bitz',
+  'sk | oliveira7f': 'Fernandinho - Peida Leite',
+  'oliveira7f': 'Fernandinho - Peida Leite',
+  'oliveir7f': 'Fernandinho - Peida Leite',
+  'celso - mighty': 'Nil',
+  'celso - leco': 'Leco',
+  'celso - cobes': 'Cobes',
+  'celso - demoleison': 'Demoleison',
+  'celso - mathzikntc': 'Math',
+  'celso - math': 'Math',
 };
 
 export const normalizePlayerName = (name: string): string => {
@@ -289,7 +316,6 @@ const PRIMARY_TEAMS: Record<string, string> = {
   'deeez1n': '5cones',
 };
 
-// Re-computando a lista global de players a partir das matchDetails para ter o DB exato.
 export interface PlayerSummary {
   name: string;
   teamId: string;
@@ -297,6 +323,9 @@ export interface PlayerSummary {
   deaths: number;
   assists: number;
   matches: number;
+  hsSum: number;
+  hsCount: number;
+  avgHs: number;
 }
 
 const rawPlayersMap: Record<string, PlayerSummary> = {};
@@ -315,12 +344,20 @@ const addPlayersToGlobal = (matchDetailsMap: Record<string, any>, matchId: strin
           deaths: 0,
           assists: 0,
           matches: 0,
+          hsSum: 0,
+          hsCount: 0,
+          avgHs: 0,
         };
       }
       rawPlayersMap[key].kills += p.kills;
       rawPlayersMap[key].deaths += p.deaths;
       rawPlayersMap[key].assists += p.assists;
       rawPlayersMap[key].matches += 1;
+      if (typeof p.hs === 'number' && !isNaN(p.hs)) {
+        rawPlayersMap[key].hsSum += p.hs;
+        rawPlayersMap[key].hsCount += 1;
+        rawPlayersMap[key].avgHs = Math.round(rawPlayersMap[key].hsSum / rawPlayersMap[key].hsCount);
+      }
       if (!PRIMARY_TEAMS[key]) {
         rawPlayersMap[key].teamId = teamId;
       }
@@ -341,6 +378,7 @@ addPlayersToGlobal(matchDetails, '7', 'jalin', 'venvanse');
 addPlayersToGlobal(matchDetails, '8', '5cones', 'desacreditados');
 addPlayersToGlobal(matchDetails, '9', 'gilsons', 'maconhaco');
 addPlayersToGlobal(matchDetails, '10', '5cones', 'jalin');
+addPlayersToGlobal(matchDetails, '11', 'desacreditados', 'venvanse');
 
 export const players: Array<PlayerSummary> = Object.values(rawPlayersMap);
 

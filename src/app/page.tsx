@@ -255,7 +255,7 @@ export default function Home() {
                             )}
                           </p>
                         </Link>
-                        <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: 0 }}>{team.name} • {player.matches || 1} Partidas</p>
+                        <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: 0 }}>{team.name} • {player.matches || 1} Partidas{player.avgHs ? ` • 🎯 ${player.avgHs}% HS` : ''}</p>
                       </div>
                     </div>
                   </div>

@@ -157,6 +157,7 @@ export default function Ranking() {
                       <th style={{ textAlign: 'center' }}>ASSISTS</th>
                       <th style={{ textAlign: 'center', color: 'var(--gold)' }}>K/D</th>
                       <th style={{ textAlign: 'center', color: 'var(--cyan)' }}>KDA</th>
+                      <th style={{ textAlign: 'center', color: '#10b981' }}>% HS</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -205,6 +206,7 @@ export default function Ranking() {
                           <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{player.assists}</td>
                           <td style={{ textAlign: 'center', color: 'var(--gold)', fontWeight: 'bold', fontSize: '1.2rem' }}>{kd}</td>
                           <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '1.2rem' }}>{kda}</td>
+                          <td style={{ textAlign: 'center', color: '#10b981', fontWeight: 'bold' }}>{player.avgHs ? `${player.avgHs}%` : '-'}</td>
                         </tr>
                       );
                     })}

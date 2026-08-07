@@ -103,6 +103,16 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
             </div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
               <strong>K/D/A:</strong> {player.kills}/{player.deaths}/{player.assists}
+              {player.hs !== undefined && player.hs !== null && (
+                <span style={{ marginLeft: '0.8rem', color: 'var(--cyan)' }}>
+                  🎯 <strong>{player.hs}%</strong> HS
+                </span>
+              )}
+              {player.damage && (
+                <span style={{ marginLeft: '0.8rem', color: '#94a3b8' }}>
+                  💥 {player.damage} Dano
+                </span>
+              )}
             </div>
           </div>
           <div style={{ textAlign: 'right' }}>
