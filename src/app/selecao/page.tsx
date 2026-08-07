@@ -7,19 +7,19 @@ import PlayerAvatar from '../jogador/[name]/PlayerAvatar';
 import Link from 'next/link';
 
 const ROLES_STAR = [
-  { rank: '#1', title: '👑 MVP & CAPITÃO', role: 'IGL / HARD CARRY' },
-  { rank: '#2', title: '🎯 SNIPER ELITE', role: 'AWPER PRINCIPAL' },
-  { rank: '#3', title: '🔥 ENTRY FRAGGER', role: 'ABRIDOR DE BOMB' },
-  { rank: '#4', title: '⚡ LURKER / RIFLER', role: 'CORTA-LUZ & FLANK' },
-  { rank: '#5', title: '🛡️ ANCHOR DE RESPEITO', role: 'BOMBSITE ANCHOR' },
+  { rank: '#1', title: '👑 MVP DA TORCIDA', role: 'TOP 1 ELEITO' },
+  { rank: '#2', title: '🌟 DESTAQUE DA LIGA', role: 'TOP 2 ELEITO' },
+  { rank: '#3', title: '🌟 DESTAQUE DA LIGA', role: 'TOP 3 ELEITO' },
+  { rank: '#4', title: '🌟 DESTAQUE DA LIGA', role: 'TOP 4 ELEITO' },
+  { rank: '#5', title: '🌟 DESTAQUE DA LIGA', role: 'TOP 5 ELEITO' },
 ];
 
 const ROLES_BAGRE = [
-  { rank: '#1', title: '🐟 REI DOS BAGRES', role: 'LÍDER DA MOCHILA' },
-  { rank: '#2', title: '🎣 ISCA DE BOMB', role: 'PRIMEIRO A DORMIR' },
-  { rank: '#3', title: '🧱 PAREDE DE FUMAÇA', role: 'CEGO DE SMOKE' },
-  { rank: '#4', title: '⚡ FLASH NA CARA', role: 'TAMPA A TELA' },
-  { rank: '#5', title: '🎒 CARREGADO COM ORGULHO', role: 'PESO MORTO' },
+  { rank: '#1', title: '🐟 REI DOS BAGRES', role: 'BAGRE #1' },
+  { rank: '#2', title: '🎣 SELEÇÃO DOS BAGRES', role: 'BAGRE #2' },
+  { rank: '#3', title: '🧱 SELEÇÃO DOS BAGRES', role: 'BAGRE #3' },
+  { rank: '#4', title: '⚡ SELEÇÃO DOS BAGRES', role: 'BAGRE #4' },
+  { rank: '#5', title: '🎒 SELEÇÃO DOS BAGRES', role: 'BAGRE #5' },
 ];
 
 function cleanSlug(name: string) {
@@ -760,8 +760,8 @@ export default function SelecoesPage() {
                           transition: 'all 0.3s'
                         }}
                       >
-                        <span style={{ fontSize: '0.6rem', fontWeight: 800, color: playerObj ? '#ffd700' : '#64748b', textTransform: 'uppercase', marginBottom: '0.2rem', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
-                          {role.rank} {role.role.split(' ')[0]}
+                        <span style={{ fontSize: '0.65rem', fontWeight: 800, color: playerObj ? '#ffd700' : '#64748b', textTransform: 'uppercase', marginBottom: '0.2rem', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+                          JOGADOR #{idx + 1}
                         </span>
 
                         {playerObj && teamObj ? (
