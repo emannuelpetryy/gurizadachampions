@@ -108,6 +108,11 @@ export default function SelecoesPage() {
 
   const toggleDraftStar = (slug: string) => {
     if (votedStar[slug]) return;
+    const currentCount = Object.values(draftStar).filter(Boolean).length;
+    if (!draftStar[slug] && currentCount >= 5) {
+      alert('⚠️ Limite Atingido: Você só pode escolher no máximo 5 jogadores para o Dream Team!');
+      return;
+    }
     setDraftStar(prev => ({
       ...prev,
       [slug]: !prev[slug]
@@ -116,6 +121,11 @@ export default function SelecoesPage() {
 
   const toggleDraftBagre = (slug: string) => {
     if (votedBagre[slug]) return;
+    const currentCount = Object.values(draftBagre).filter(Boolean).length;
+    if (!draftBagre[slug] && currentCount >= 5) {
+      alert('⚠️ Limite Atingido: Você só pode escolher no máximo 5 jogadores para o Time dos Bagres!');
+      return;
+    }
     setDraftBagre(prev => ({
       ...prev,
       [slug]: !prev[slug]
@@ -297,9 +307,38 @@ export default function SelecoesPage() {
         {/* --- ABA 1: DREAM TEAM DA TORCIDA (5 CARDS EM 1 LINHA SEM CORTES) --- */}
         {activeTab === 'stars' && (
           <div className="glass-card" style={{ padding: '2.5rem 1.5rem', border: '2px solid rgba(255, 215, 0, 0.4)', background: 'linear-gradient(180deg, rgba(255, 215, 0, 0.1) 0%, rgba(5, 10, 20, 0.9) 100%)', boxShadow: '0 0 50px rgba(255,215,0,0.15)' }}>
+            
+            {/* SEU DREAM TEAM VOTADO (SE JÁ VOTOU) */}
+            {myStarPlayers.length > 0 && (
+              <div style={{ marginBottom: '3rem', padding: '1.5rem', background: 'rgba(255, 215, 0, 0.05)', borderRadius: '18px', border: '1px solid rgba(255, 215, 0, 0.3)' }}>
+                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                  <span style={{ fontSize: '0.75rem', background: '#ffd700', color: '#080d1a', padding: '0.2rem 0.8rem', borderRadius: '12px', fontWeight: 800, textTransform: 'uppercase' }}>
+                    SEU VOTO PESSOAL
+                  </span>
+                  <h3 style={{ fontSize: '1.6rem', color: '#ffd700', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, margin: '0.4rem 0 0 0' }}>
+                    ⭐ SEU DREAM TEAM SELECIONADO ({myStarPlayers.length}/5)
+                  </h3>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+                  {myStarPlayers.map((p) => {
+                    const team = getTeam(p.teamId);
+                    return (
+                      <div key={p.name} style={{ background: 'rgba(0,0,0,0.6)', padding: '1rem', borderRadius: '14px', border: '1px solid #ffd700', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                        <PlayerAvatar teamName={team.name} playerName={p.name} badgeColor="#ffd700" size={44} />
+                        <div>
+                          <strong style={{ color: '#fff', fontSize: '1rem', display: 'block' }}>{p.name}</strong>
+                          <span style={{ color: '#ffd700', fontSize: '0.75rem', fontWeight: 700 }}>{team.name}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
               <h2 style={{ fontSize: '2.2rem', color: '#ffd700', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, margin: 0, letterSpacing: '1px' }}>
-                🏆 5 ACE DE OURO DA LIGA (DREAM TEAM)
+                🏆 5 ACE DE OURO DA LIGA (DREAM TEAM DA COMUNIDADE)
               </h2>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.4rem' }}>
                 Os 5 jogadores mais votados pela comunidade • Passe o mouse nas badges para ver as conquistas
@@ -418,9 +457,38 @@ export default function SelecoesPage() {
         {/* --- ABA 2: TIME DOS BAGRES (5 CARDS EM 1 LINHA SEM CORTES) --- */}
         {activeTab === 'bagres' && (
           <div className="glass-card" style={{ padding: '2.5rem 1.5rem', border: '2px solid rgba(0, 240, 255, 0.4)', background: 'linear-gradient(180deg, rgba(0, 240, 255, 0.1) 0%, rgba(5, 10, 20, 0.9) 100%)', boxShadow: '0 0 50px rgba(0,240,255,0.15)' }}>
+            
+            {/* SEU TIME DOS BAGRES VOTADO (SE JÁ VOTOU) */}
+            {myBagrePlayers.length > 0 && (
+              <div style={{ marginBottom: '3rem', padding: '1.5rem', background: 'rgba(0, 240, 255, 0.05)', borderRadius: '18px', border: '1px solid rgba(0, 240, 255, 0.3)' }}>
+                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                  <span style={{ fontSize: '0.75rem', background: 'var(--cyan)', color: '#080d1a', padding: '0.2rem 0.8rem', borderRadius: '12px', fontWeight: 800, textTransform: 'uppercase' }}>
+                    SEU VOTO PESSOAL
+                  </span>
+                  <h3 style={{ fontSize: '1.6rem', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, margin: '0.4rem 0 0 0' }}>
+                    🐟 SUA SELEÇÃO DOS BAGRES ({myBagrePlayers.length}/5)
+                  </h3>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+                  {myBagrePlayers.map((p) => {
+                    const team = getTeam(p.teamId);
+                    return (
+                      <div key={p.name} style={{ background: 'rgba(0,0,0,0.6)', padding: '1rem', borderRadius: '14px', border: '1px solid var(--cyan)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                        <PlayerAvatar teamName={team.name} playerName={p.name} badgeColor="var(--cyan)" size={44} />
+                        <div>
+                          <strong style={{ color: '#fff', fontSize: '1rem', display: 'block' }}>{p.name}</strong>
+                          <span style={{ color: 'var(--cyan)', fontSize: '0.75rem', fontWeight: 700 }}>{team.name}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
               <h2 style={{ fontSize: '2.2rem', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, margin: 0, letterSpacing: '1px' }}>
-                🐟 TIME DOS BAGRES DO CAMPEONATO
+                🐟 TIME DOS BAGRES DO CAMPEONATO (COMUNIDADE)
               </h2>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.4rem' }}>
                 Os 5 Bagres mais votados da comunidade • Passe o mouse nas badges para ver as conquistas
