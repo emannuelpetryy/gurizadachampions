@@ -111,9 +111,12 @@ export default function SelecoesPage() {
     fetchVotes();
   }, []);
 
+  const [modalCategory, setModalCategory] = useState<'star' | 'bagre'>('star');
+
   const openModal = () => {
     setDraftStar({ ...votedStar });
     setDraftBagre({ ...votedBagre });
+    setModalCategory(activeTab === 'bagres' ? 'bagre' : 'star');
     setIsModalOpen(true);
   };
 
@@ -124,6 +127,7 @@ export default function SelecoesPage() {
       alert('⚠️ Limite Atingido: Você só pode escolher no máximo 5 jogadores para o Dream Team!');
       return;
     }
+    setModalCategory('star');
     setDraftStar(prev => ({
       ...prev,
       [slug]: !prev[slug]
@@ -137,6 +141,7 @@ export default function SelecoesPage() {
       alert('⚠️ Limite Atingido: Você só pode escolher no máximo 5 jogadores para o Time dos Bagres!');
       return;
     }
+    setModalCategory('bagre');
     setDraftBagre(prev => ({
       ...prev,
       [slug]: !prev[slug]
@@ -720,25 +725,83 @@ export default function SelecoesPage() {
                 </p>
               </div>
 
-              {/* PAINEL VISUAL DA ESCALAÇÃO DE 5 CARDS (AO VIVO) */}
+              {/* PAINEL VISUAL DA ESCALAÇÃO DE 5 CARDS (DREAM TEAM vs BAGRES) */}
               <div style={{ background: 'rgba(5, 10, 20, 0.95)', padding: '1rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#ffd700', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <span>⚔️</span> SEU LINE-UP EM CONSTRUÇÃO ({Object.values(draftStar).filter(Boolean).length}/5)
-                  </span>
-                  {Object.values(draftStar).filter(Boolean).length > 0 && (
+                {/* Seletor de Categoria no Modal */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem', flexWrap: 'wrap', gap: '0.6rem' }}>
+                  <div style={{ display: 'flex', gap: '0.6rem' }}>
+                    <button
+                      onClick={() => setModalCategory('star')}
+                      style={{
+                        background: modalCategory === 'star' ? 'linear-gradient(135deg, #ffd700, #ffaa00)' : 'rgba(255, 215, 0, 0.1)',
+                        color: modalCategory === 'star' ? '#080d1a' : '#ffd700',
+                        border: '1px solid #ffd700',
+                        padding: '0.35rem 0.9rem',
+                        borderRadius: '10px',
+                        fontWeight: 800,
+                        fontSize: '0.75rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        boxShadow: modalCategory === 'star' ? '0 0 15px rgba(255,215,0,0.4)' : 'none',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      <span>🌟</span> DREAM TEAM ({Object.values(draftStar).filter(Boolean).length}/5)
+                    </button>
+
+                    <button
+                      onClick={() => setModalCategory('bagre')}
+                      style={{
+                        background: modalCategory === 'bagre' ? 'linear-gradient(135deg, #00f0ff, #0099ff)' : 'rgba(0, 240, 255, 0.1)',
+                        color: modalCategory === 'bagre' ? '#080d1a' : 'var(--cyan)',
+                        border: '1px solid var(--cyan)',
+                        padding: '0.35rem 0.9rem',
+                        borderRadius: '10px',
+                        fontWeight: 800,
+                        fontSize: '0.75rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        boxShadow: modalCategory === 'bagre' ? '0 0 15px rgba(0,240,255,0.4)' : 'none',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      <span>🐟</span> TIME DOS BAGRES ({Object.values(draftBagre).filter(Boolean).length}/5)
+                    </button>
+                  </div>
+
+                  {modalCategory === 'star' && Object.values(draftStar).filter(Boolean).length > 0 && (
                     <button
                       onClick={() => setDraftStar({})}
                       style={{ background: 'rgba(255, 71, 87, 0.15)', border: '1px solid #ff4757', color: '#ff4757', padding: '0.2rem 0.6rem', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
                     >
-                      Limpar Escalação
+                      Limpar Dream Team
+                    </button>
+                  )}
+                  {modalCategory === 'bagre' && Object.values(draftBagre).filter(Boolean).length > 0 && (
+                    <button
+                      onClick={() => setDraftBagre({})}
+                      style={{ background: 'rgba(255, 71, 87, 0.15)', border: '1px solid #ff4757', color: '#ff4757', padding: '0.2rem 0.6rem', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
+                    >
+                      Limpar Bagres
                     </button>
                   )}
                 </div>
 
+                {/* Grid dos 5 Slots conforme modalCategory */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.6rem' }}>
-                  {ROLES_STAR.map((role, idx) => {
-                    const selectedSlug = Object.keys(draftStar).filter(s => draftStar[s])[idx];
+                  {[0, 1, 2, 3, 4].map((idx) => {
+                    const activeDraftMap = modalCategory === 'star' ? draftStar : draftBagre;
+                    const activeBorderColor = modalCategory === 'star' ? '#ffd700' : 'var(--cyan)';
+                    const activeBadgeColor = modalCategory === 'star' ? '#ffd700' : 'var(--cyan)';
+                    const activeBgGrad = modalCategory === 'star'
+                      ? 'linear-gradient(180deg, rgba(255, 215, 0, 0.15) 0%, rgba(10, 15, 30, 0.9) 100%)'
+                      : 'linear-gradient(180deg, rgba(0, 240, 255, 0.15) 0%, rgba(10, 15, 30, 0.9) 100%)';
+
+                    const selectedSlug = Object.keys(activeDraftMap).filter(s => activeDraftMap[s])[idx];
                     const playerObj = selectedSlug ? playersWithVotes.find(p => p.slug === selectedSlug) : null;
                     const teamObj = playerObj ? getTeam(playerObj.teamId) : null;
 
@@ -746,8 +809,8 @@ export default function SelecoesPage() {
                       <div
                         key={idx}
                         style={{
-                          background: playerObj ? 'linear-gradient(180deg, rgba(255, 215, 0, 0.15) 0%, rgba(10, 15, 30, 0.9) 100%)' : 'rgba(255, 255, 255, 0.02)',
-                          border: playerObj ? '1.5px solid #ffd700' : '1px dashed rgba(255, 255, 255, 0.2)',
+                          background: playerObj ? activeBgGrad : 'rgba(255, 255, 255, 0.02)',
+                          border: playerObj ? `1.5px solid ${activeBorderColor}` : '1px dashed rgba(255, 255, 255, 0.2)',
                           borderRadius: '12px',
                           padding: '0.5rem 0.3rem',
                           display: 'flex',
@@ -756,28 +819,28 @@ export default function SelecoesPage() {
                           position: 'relative',
                           minHeight: '100px',
                           justifyContent: 'center',
-                          boxShadow: playerObj ? '0 0 15px rgba(255, 215, 0, 0.2)' : 'none',
+                          boxShadow: playerObj ? `0 0 15px ${modalCategory === 'star' ? 'rgba(255, 215, 0, 0.2)' : 'rgba(0, 240, 255, 0.2)'}` : 'none',
                           transition: 'all 0.3s'
                         }}
                       >
-                        <span style={{ fontSize: '0.65rem', fontWeight: 800, color: playerObj ? '#ffd700' : '#64748b', textTransform: 'uppercase', marginBottom: '0.2rem', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
-                          JOGADOR #{idx + 1}
+                        <span style={{ fontSize: '0.65rem', fontWeight: 800, color: playerObj ? activeBorderColor : '#64748b', textTransform: 'uppercase', marginBottom: '0.2rem', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+                          {modalCategory === 'star' ? `JOGADOR #${idx + 1}` : `BAGRE #${idx + 1}`}
                         </span>
 
                         {playerObj && teamObj ? (
                           <>
                             <button
-                              onClick={() => toggleDraftStar(playerObj.slug)}
+                              onClick={() => modalCategory === 'star' ? toggleDraftStar(playerObj.slug) : toggleDraftBagre(playerObj.slug)}
                               title="Remover da escalação"
                               style={{ position: 'absolute', top: '3px', right: '3px', background: 'rgba(255,71,87,0.8)', border: 'none', color: '#fff', borderRadius: '50%', width: '16px', height: '16px', fontSize: '0.6rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                             >
                               ✕
                             </button>
-                            <PlayerAvatar teamName={teamObj.name} playerName={playerObj.name} badgeColor="#ffd700" size={32} />
+                            <PlayerAvatar teamName={teamObj.name} playerName={playerObj.name} badgeColor={activeBadgeColor} size={32} />
                             <strong style={{ fontSize: '0.75rem', color: '#fff', marginTop: '0.2rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '75px', textAlign: 'center' }}>
                               {playerObj.name}
                             </strong>
-                            <span style={{ fontSize: '0.58rem', color: 'var(--cyan)', fontWeight: 700 }}>{teamObj.initials}</span>
+                            <span style={{ fontSize: '0.58rem', color: activeBorderColor, fontWeight: 700 }}>{teamObj.initials}</span>
                           </>
                         ) : (
                           <div style={{ textAlign: 'center', padding: '0.2rem' }}>
