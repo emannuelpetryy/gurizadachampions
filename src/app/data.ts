@@ -377,6 +377,9 @@ export interface PlayerSummary {
   hsSum: number;
   hsCount: number;
   avgHs: number;
+  damageTotal: number;
+  damageMatchesCount: number;
+  avgDamage: number;
 }
 
 const rawPlayersMap: Record<string, PlayerSummary> = {};
@@ -398,6 +401,9 @@ const addPlayersToGlobal = (matchDetailsMap: Record<string, any>, matchId: strin
           hsSum: 0,
           hsCount: 0,
           avgHs: 0,
+          damageTotal: 0,
+          damageMatchesCount: 0,
+          avgDamage: 0,
         };
       }
       rawPlayersMap[key].kills += p.kills;
@@ -408,6 +414,11 @@ const addPlayersToGlobal = (matchDetailsMap: Record<string, any>, matchId: strin
         rawPlayersMap[key].hsSum += p.hs;
         rawPlayersMap[key].hsCount += 1;
         rawPlayersMap[key].avgHs = Math.round(rawPlayersMap[key].hsSum / rawPlayersMap[key].hsCount);
+      }
+      if (typeof p.damage === 'number' && !isNaN(p.damage)) {
+        rawPlayersMap[key].damageTotal += p.damage;
+        rawPlayersMap[key].damageMatchesCount += 1;
+        rawPlayersMap[key].avgDamage = Math.round(rawPlayersMap[key].damageTotal / rawPlayersMap[key].damageMatchesCount);
       }
       if (!PRIMARY_TEAMS[key]) {
         rawPlayersMap[key].teamId = teamId;

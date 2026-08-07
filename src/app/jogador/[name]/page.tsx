@@ -115,6 +115,8 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
               champAssists={player.assists}
               champKd={kd}
               champAvgHs={player.avgHs}
+              champDamageTotal={player.damageTotal}
+              champAvgDamage={player.avgDamage}
               badgeColor={badgeColor}
               badgesComponent={
                 (() => {

@@ -26,6 +26,8 @@ export default function PlayerStatsSection({
   champAssists,
   champKd,
   champAvgHs,
+  champDamageTotal,
+  champAvgDamage,
   badgeColor,
   badgesComponent,
   chartComponent,
@@ -37,6 +39,8 @@ export default function PlayerStatsSection({
   champAssists: number;
   champKd: string;
   champAvgHs?: number;
+  champDamageTotal?: number;
+  champAvgDamage?: number;
   badgeColor: string;
   badgesComponent: React.ReactNode;
   chartComponent: React.ReactNode;
@@ -200,6 +204,19 @@ export default function PlayerStatsSection({
               <div style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))', border: '1px solid rgba(16,185,129,0.35)', padding: '1.6rem', borderRadius: '14px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.4rem', boxShadow: '0 4px 20px rgba(16,185,129,0.12)' }}>
                 <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase' }}>% HS MÉDIA</span>
                 <span style={{ color: '#10b981', fontSize: '2.8rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, lineHeight: 1, textShadow: '0 0 20px rgba(16,185,129,0.5)' }}>{champAvgHs}%</span>
+              </div>
+            )}
+            {champDamageTotal !== undefined && champDamageTotal > 0 && (
+              <div style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))', border: '1px solid rgba(245,158,11,0.35)', padding: '1.6rem', borderRadius: '14px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.4rem', boxShadow: '0 4px 20px rgba(245,158,11,0.12)' }}>
+                <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase' }}>DANO TOTAL</span>
+                <span style={{ color: '#f59e0b', fontSize: '2.8rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, lineHeight: 1, textShadow: '0 0 20px rgba(245,158,11,0.5)' }}>
+                  {champDamageTotal.toLocaleString('pt-BR')}
+                </span>
+                {champAvgDamage !== undefined && champAvgDamage > 0 && (
+                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>
+                    Média: {champAvgDamage.toLocaleString('pt-BR')} / jogo
+                  </span>
+                )}
               </div>
             )}
           </div>
