@@ -8,6 +8,7 @@ import MatchPrediction from './components/MatchPrediction';
 import MapPoolStats from './components/MapPoolStats';
 import CommunitySelection from './components/CommunitySelection';
 import TwitchLiveStream from './components/TwitchLiveStream';
+import PlayoffBracket from './components/PlayoffBracket';
 
 export default function Home() {
   // Ordenar jogadores pelo K/D ratio (principal)
@@ -302,6 +303,11 @@ export default function Home() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Seção Mata-Mata / Playoff Bracket */}
+      <section className="container" style={{ padding: '2rem 1.5rem 4rem' }}>
+        <PlayoffBracket />
       </section>
 
       {/* Seção Premiações - TODAS AS 3 POSIÇÕES */}

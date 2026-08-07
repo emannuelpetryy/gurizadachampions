@@ -6,8 +6,10 @@ import Link from 'next/link';
 import PlayerAvatar from '../jogador/[name]/PlayerAvatar';
 import TeamLogo from '../components/TeamLogo';
 
+import PlayoffBracket from '../components/PlayoffBracket';
+
 export default function Ranking() {
-  const [activeTab, setActiveTab] = useState<'championship' | 'elo_rating'>('championship');
+  const [activeTab, setActiveTab] = useState<'championship' | 'playoffs' | 'elo_rating'>('championship');
   const [eloMap, setEloMap] = useState<Record<string, any>>({});
   const [loadingElo, setLoadingElo] = useState(true);
 
@@ -105,6 +107,25 @@ export default function Ranking() {
           </button>
 
           <button
+            onClick={() => setActiveTab('playoffs')}
+            style={{
+              background: activeTab === 'playoffs' ? 'linear-gradient(135deg, #ff007f, #7928ca)' : 'rgba(255,255,255,0.05)',
+              color: '#fff',
+              border: activeTab === 'playoffs' ? 'none' : '1px solid rgba(255,255,255,0.15)',
+              padding: '0.9rem 2rem',
+              borderRadius: '20px',
+              fontWeight: 800,
+              fontSize: '1rem',
+              fontFamily: 'var(--font-rajdhani)',
+              cursor: 'pointer',
+              boxShadow: activeTab === 'playoffs' ? '0 0 25px rgba(255,0,127,0.4)' : 'none',
+              transition: 'all 0.3s',
+            }}
+          >
+            ⚔️ MATA-MATA (PLAYOFFS)
+          </button>
+
+          <button
             onClick={() => setActiveTab('elo_rating')}
             style={{
               background: activeTab === 'elo_rating' ? 'linear-gradient(135deg, #ffd700, #ffaa00)' : 'rgba(255,255,255,0.05)',
@@ -123,6 +144,13 @@ export default function Ranking() {
             ⚡ RANKING DE ELO DA GURIZADA (AMISTOSOS 5V5)
           </button>
         </div>
+
+        {/* TAB PLAYOFFS (MATA-MATA) */}
+        {activeTab === 'playoffs' && (
+          <div style={{ marginTop: '1rem' }}>
+            <PlayoffBracket />
+          </div>
+        )}
 
         {/* TAB 1: CLASSIFICAÇÃO DO CAMPEONATO */}
         {activeTab === 'championship' && (
@@ -213,6 +241,10 @@ export default function Ranking() {
                   </tbody>
                 </table>
               </div>
+            </div>
+
+            <div style={{ marginTop: '4rem' }}>
+              <PlayoffBracket />
             </div>
           </>
         )}

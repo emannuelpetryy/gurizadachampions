@@ -31,9 +31,60 @@ export const upcomingMatches: any[] = [
     group: 'GRUPO B - RODADA 3',
     teamA: 'whitelemon',
     teamB: 'assentamento',
-    date: '2026-08-05T21:00:00-03:00',
-    dateDisplay: 'A definir',
+    date: '2026-08-08T14:30:00-03:00',
+    dateDisplay: 'Sábado (08/08) às 14:30',
   },
+];
+
+export const playoffMatches = [
+  {
+    id: 'semi-1',
+    stage: 'SEMIFINAL 1',
+    teamAId: 'desacreditados',
+    teamBId: 'maconhaco',
+    labelA: '1º do Grupo A',
+    labelB: '2º do Grupo B',
+    scoreA: null,
+    scoreB: null,
+    status: 'Agendado',
+    dateDisplay: 'Data a definir',
+  },
+  {
+    id: 'semi-2',
+    stage: 'SEMIFINAL 2',
+    teamAId: 'gilsons',
+    teamBId: 'venvanse',
+    labelA: '1º do Grupo B',
+    labelB: '2º do Grupo A',
+    scoreA: null,
+    scoreB: null,
+    status: 'Agendado',
+    dateDisplay: 'Data a definir',
+  },
+  {
+    id: 'final',
+    stage: 'GRANDE FINAL',
+    teamAId: null,
+    teamBId: null,
+    labelA: 'Vencedor Semi 1',
+    labelB: 'Vencedor Semi 2',
+    scoreA: null,
+    scoreB: null,
+    status: 'Aguardando Semifinais',
+    dateDisplay: 'Data a definir',
+  },
+  {
+    id: 'third_place',
+    stage: 'DISPUTA DE 3º LUGAR',
+    teamAId: null,
+    teamBId: null,
+    labelA: 'Perdedor Semi 1',
+    labelB: 'Perdedor Semi 2',
+    scoreA: null,
+    scoreB: null,
+    status: 'Aguardando Semifinais',
+    dateDisplay: 'Data a definir',
+  }
 ];
 
 export const matchDetails: Record<string, any> = {
@@ -148,18 +199,18 @@ export const matchDetails: Record<string, any> = {
   '7': {
     map: 'Nuke', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 9,
     teamA_stats: [
-      { name: 'Gilli', kills: 29, deaths: 15, assists: 4, hs: null, damage: 2400 },
-      { name: 'Dash', kills: 25, deaths: 14, assists: 2, hs: null, damage: 2100 },
-      { name: 'Duzz', kills: 13, deaths: 13, assists: 7, hs: null, damage: 1400 },
-      { name: 'Peteka', kills: 13, deaths: 16, assists: 7, hs: null, damage: 1300 },
-      { name: 'Camargo', kills: 7, deaths: 17, assists: 5, hs: null, damage: 900 },
+      { name: 'Gilli', kills: 29, deaths: 15, assists: 4, hs: 62, damage: 2738 },
+      { name: 'Dash', kills: 25, deaths: 14, assists: 2, hs: 48, damage: 2177 },
+      { name: 'Duzz', kills: 13, deaths: 13, assists: 7, hs: 57, damage: 1723 },
+      { name: 'Peteka', kills: 13, deaths: 16, assists: 7, hs: 69, damage: 1355 },
+      { name: 'Camargo', kills: 7, deaths: 17, assists: 5, hs: 56, damage: 1122 },
     ],
     teamB_stats: [
-      { name: 'Pacal', kills: 31, deaths: 18, assists: 8, hs: null, damage: 2600 },
-      { name: 'Samuka', kills: 15, deaths: 18, assists: 5, hs: null, damage: 1600 },
-      { name: 'Manu', kills: 14, deaths: 15, assists: 7, hs: null, damage: 1500 },
-      { name: 'Baronelis', kills: 9, deaths: 18, assists: 7, hs: null, damage: 1100 },
-      { name: 'Duzão', kills: 5, deaths: 18, assists: 6, hs: null, damage: 700 },
+      { name: 'Pacal', kills: 31, deaths: 18, assists: 8, hs: 58, damage: 3101 },
+      { name: 'Manu', kills: 14, deaths: 15, assists: 7, hs: 42, damage: 1680 },
+      { name: 'Samuka', kills: 15, deaths: 18, assists: 5, hs: 46, damage: 1354 },
+      { name: 'Baronelis', kills: 9, deaths: 18, assists: 7, hs: 0, damage: 1310 },
+      { name: 'Duzão', kills: 5, deaths: 18, assists: 6, hs: 40, damage: 801 },
     ]
   },
   '8': {
