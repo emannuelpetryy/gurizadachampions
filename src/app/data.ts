@@ -379,7 +379,9 @@ export interface PlayerSummary {
   avgHs: number;
   damageTotal: number;
   damageMatchesCount: number;
+  roundsPlayedForDamage: number;
   avgDamage: number;
+  adr: number;
 }
 
 const rawPlayersMap: Record<string, PlayerSummary> = {};
@@ -387,6 +389,7 @@ const rawPlayersMap: Record<string, PlayerSummary> = {};
 const addPlayersToGlobal = (matchDetailsMap: Record<string, any>, matchId: string, teamAId: string, teamBId: string) => {
   const details = matchDetailsMap[matchId];
   if (details) {
+    const matchRounds = (details.teamARounds || 0) + (details.teamBRounds || 0);
     const processPlayer = (p: any, teamId: string) => {
       const canonicalName = normalizePlayerName(p.name);
       const key = canonicalName.toLowerCase();
@@ -403,7 +406,9 @@ const addPlayersToGlobal = (matchDetailsMap: Record<string, any>, matchId: strin
           avgHs: 0,
           damageTotal: 0,
           damageMatchesCount: 0,
+          roundsPlayedForDamage: 0,
           avgDamage: 0,
+          adr: 0,
         };
       }
       rawPlayersMap[key].kills += p.kills;
@@ -418,7 +423,11 @@ const addPlayersToGlobal = (matchDetailsMap: Record<string, any>, matchId: strin
       if (typeof p.damage === 'number' && !isNaN(p.damage)) {
         rawPlayersMap[key].damageTotal += p.damage;
         rawPlayersMap[key].damageMatchesCount += 1;
+        rawPlayersMap[key].roundsPlayedForDamage += matchRounds;
         rawPlayersMap[key].avgDamage = Math.round(rawPlayersMap[key].damageTotal / rawPlayersMap[key].damageMatchesCount);
+        rawPlayersMap[key].adr = rawPlayersMap[key].roundsPlayedForDamage > 0
+          ? Number((rawPlayersMap[key].damageTotal / rawPlayersMap[key].roundsPlayedForDamage).toFixed(1))
+          : 0;
       }
       if (!PRIMARY_TEAMS[key]) {
         rawPlayersMap[key].teamId = teamId;

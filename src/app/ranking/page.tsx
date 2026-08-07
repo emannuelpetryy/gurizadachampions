@@ -187,6 +187,7 @@ export default function Ranking() {
                       <th style={{ textAlign: 'center', color: 'var(--cyan)' }}>KDA</th>
                       <th style={{ textAlign: 'center', color: '#10b981' }}>% HS</th>
                       <th style={{ textAlign: 'center', color: '#f59e0b' }}>DANO</th>
+                      <th style={{ textAlign: 'center', color: '#ec4899' }}>ADR</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -237,6 +238,7 @@ export default function Ranking() {
                           <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '1.2rem' }}>{kda}</td>
                           <td style={{ textAlign: 'center', color: '#10b981', fontWeight: 'bold' }}>{player.avgHs ? `${player.avgHs}%` : '-'}</td>
                           <td style={{ textAlign: 'center', color: '#f59e0b', fontWeight: 'bold' }}>{player.damageTotal ? player.damageTotal.toLocaleString('pt-BR') : '-'}</td>
+                          <td style={{ textAlign: 'center', color: '#ec4899', fontWeight: 'bold' }}>{player.adr ? player.adr.toFixed(1) : '-'}</td>
                         </tr>
                       );
                     })}
