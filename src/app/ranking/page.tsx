@@ -240,7 +240,7 @@ export default function Ranking() {
                 </table>
               </div>
               <p style={{ textAlign: 'center', margin: '1rem 0 0', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                HS, dano e ADR ficam fora do ranking geral enquanto não houver dados completos de todas as partidas.
+                K/D e KDA são acumulados do campeonato (kills e assistências totais ÷ mortes totais), como nos rankings de CS. Não é a média dos ratios de cada mapa. HS, dano e ADR ficam fora do ranking geral enquanto não houver dados completos de todas as partidas.
               </p>
             </div>
 
