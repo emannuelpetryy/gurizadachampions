@@ -185,9 +185,6 @@ export default function Ranking() {
                       <th style={{ textAlign: 'center' }}>ASSISTS</th>
                       <th style={{ textAlign: 'center', color: 'var(--gold)' }}>K/D</th>
                       <th style={{ textAlign: 'center', color: 'var(--cyan)' }}>KDA</th>
-                      <th style={{ textAlign: 'center', color: '#10b981' }}>% HS</th>
-                      <th style={{ textAlign: 'center', color: '#f59e0b' }}>DANO</th>
-                      <th style={{ textAlign: 'center', color: '#94a3b8', fontSize: '0.8rem', letterSpacing: '1px' }}>ADR</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -236,19 +233,15 @@ export default function Ranking() {
                           <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{player.assists}</td>
                           <td style={{ textAlign: 'center', color: 'var(--gold)', fontWeight: 'bold', fontSize: '1.2rem' }}>{kd}</td>
                           <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '1.2rem' }}>{kda}</td>
-                          <td style={{ textAlign: 'center', color: '#10b981', fontWeight: 'bold' }}>{player.avgHs ? `${player.avgHs}%` : '-'}</td>
-                          <td style={{ textAlign: 'center', color: '#f59e0b', fontWeight: 'bold' }}>{player.damageTotal ? player.damageTotal.toLocaleString('pt-BR') : '-'}</td>
-                          <td style={{ textAlign: 'center' }}>
-                            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#ec4899', background: 'rgba(236, 72, 153, 0.12)', padding: '0.15rem 0.5rem', borderRadius: '6px', border: '1px solid rgba(236, 72, 153, 0.25)' }}>
-                              {player.adr ? player.adr.toFixed(1) : '-'}
-                            </span>
-                          </td>
                         </tr>
                       );
                     })}
                   </tbody>
                 </table>
               </div>
+              <p style={{ textAlign: 'center', margin: '1rem 0 0', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                HS, dano e ADR ficam fora do ranking geral enquanto não houver dados completos de todas as partidas.
+              </p>
             </div>
 
             <div style={{ marginTop: '4rem' }}>

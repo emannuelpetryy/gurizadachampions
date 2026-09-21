@@ -161,7 +161,9 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
               </div>
               
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.5rem' }}>GRUPO {match.group}</span>
+                 <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.5rem' }}>
+                   {match.group === 'Playoffs' ? 'PLAYOFFS' : `GRUPO ${match.group}`}
+                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', background: 'rgba(0,0,0,0.6)', padding: '0.8rem 2rem', borderRadius: '16px', border: '1px solid rgba(0,240,255,0.3)', boxShadow: '0 0 20px rgba(0,240,255,0.15)' }}>
                   <span style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', lineHeight: 1 }}>{match.scoreA}</span>
                   <span style={{ fontSize: '1.8rem', color: '#fff', fontWeight: 'bold' }}>x</span>
@@ -184,6 +186,12 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
         </div>
+
+        {details.statsNote && (
+          <div className="glass-card" style={{ marginBottom: '2rem', padding: '1rem 1.4rem', border: '1px solid rgba(255, 193, 7, 0.35)', background: 'rgba(255, 193, 7, 0.06)', color: '#f8d477', fontSize: '0.9rem' }}>
+            ⚠️ {details.statsNote}
+          </div>
+        )}
 
         {/* MVP Card */}
         {(() => {

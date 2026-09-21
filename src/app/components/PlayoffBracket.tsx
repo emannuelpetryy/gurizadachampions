@@ -10,12 +10,22 @@ interface MatchVoteData {
   b: number;
 }
 
+const getOfficialWinner = (matchId: string): string | null => {
+  const match = playoffMatches.find(item => item.id === matchId);
+  if (!match || match.status !== 'Encerrado' || match.scoreA === null || match.scoreB === null) return null;
+  if (match.scoreA === match.scoreB) return null;
+  return match.scoreA > match.scoreB ? match.teamAId : match.teamBId;
+};
+
 export default function PlayoffBracket() {
   // Estado da Simulação Pessoal
   const [semi1Winner, setSemi1Winner] = useState<string | null>(null);
   const [semi2Winner, setSemi2Winner] = useState<string | null>(null);
   const [finalWinner, setFinalWinner] = useState<string | null>(null);
   const [thirdWinner, setThirdWinner] = useState<string | null>(null);
+
+  const officialSemi1Winner = getOfficialWinner('semi-1');
+  const officialSemi2Winner = getOfficialWinner('semi-2');
 
   // Votos da Comunidade (API)
   const [communityVotes, setCommunityVotes] = useState<Record<string, MatchVoteData>>({
@@ -83,6 +93,8 @@ export default function PlayoffBracket() {
 
   // Votar / Palpitar em uma partida
   const handlePickTeam = async (matchId: string, teamChoice: 'a' | 'b', teamId: string) => {
+    if ((matchId === 'semi-1' && officialSemi1Winner) || (matchId === 'semi-2' && officialSemi2Winner)) return;
+
     let nextS1 = semi1Winner;
     let nextS2 = semi2Winner;
     let nextFin = finalWinner;
@@ -91,12 +103,12 @@ export default function PlayoffBracket() {
     if (matchId === 'semi-1') {
       nextS1 = teamId;
       // Se trocou o vencedor da semi1 e ele era o campeao final, limpa o finalWinner
-      if (finalWinner && finalWinner !== teamId && finalWinner !== semi2Winner) {
+      if (finalWinner && finalWinner !== teamId && finalWinner !== (officialSemi2Winner || semi2Winner)) {
         nextFin = null;
       }
     } else if (matchId === 'semi-2') {
       nextS2 = teamId;
-      if (finalWinner && finalWinner !== teamId && finalWinner !== semi1Winner) {
+      if (finalWinner && finalWinner !== teamId && finalWinner !== (officialSemi1Winner || semi1Winner)) {
         nextFin = null;
       }
     } else if (matchId === 'final') {
@@ -143,16 +155,18 @@ export default function PlayoffBracket() {
   // Equipes da Semi 1
   const semi1TeamA = getTeam('desacreditados');
   const semi1TeamB = getTeam('maconhaco');
-  const semi1LoserId = semi1Winner === 'desacreditados' ? 'maconhaco' : semi1Winner === 'maconhaco' ? 'desacreditados' : null;
+  const selectedSemi1Winner = officialSemi1Winner || semi1Winner;
+  const semi1LoserId = selectedSemi1Winner === 'desacreditados' ? 'maconhaco' : selectedSemi1Winner === 'maconhaco' ? 'desacreditados' : null;
 
   // Equipes da Semi 2
   const semi2TeamA = getTeam('gilsons');
   const semi2TeamB = getTeam('venvanse');
-  const semi2LoserId = semi2Winner === 'gilsons' ? 'venvanse' : semi2Winner === 'venvanse' ? 'gilsons' : null;
+  const selectedSemi2Winner = officialSemi2Winner || semi2Winner;
+  const semi2LoserId = selectedSemi2Winner === 'gilsons' ? 'venvanse' : selectedSemi2Winner === 'venvanse' ? 'gilsons' : null;
 
   // Equipes da Grande Final
-  const finalTeamA = semi1Winner ? getTeam(semi1Winner) : null;
-  const finalTeamB = semi2Winner ? getTeam(semi2Winner) : null;
+  const finalTeamA = selectedSemi1Winner ? getTeam(selectedSemi1Winner) : null;
+  const finalTeamB = selectedSemi2Winner ? getTeam(selectedSemi2Winner) : null;
 
   // Equipes do 3º Lugar
   const thirdTeamA = semi1LoserId ? getTeam(semi1LoserId) : null;
@@ -172,6 +186,9 @@ export default function PlayoffBracket() {
   ) => {
     const votesData = communityVotes[matchId] || { a: 0, b: 0 };
     const totalVotes = votesData.a + votesData.b;
+    const officialMatch = playoffMatches.find(match => match.id === matchId);
+    const isOfficial = officialMatch?.status === 'Encerrado';
+    const displayedWinnerId = isOfficial ? getOfficialWinner(matchId) : selectedWinnerId;
 
     const pctA = totalVotes > 0 ? Math.round((votesData.a / totalVotes) * 100) : 50;
     const pctB = totalVotes > 0 ? Math.round((votesData.b / totalVotes) * 100) : 50;
@@ -234,23 +251,25 @@ export default function PlayoffBracket() {
               border: '1px solid rgba(255, 255, 255, 0.1)',
             }}
           >
-            Data a definir
+            {isOfficial && officialMatch?.scoreA !== null && officialMatch?.scoreB !== null
+              ? `FINALIZADA · ${officialMatch.scoreA} × ${officialMatch.scoreB}`
+              : 'Data a definir'}
           </span>
         </div>
 
         {/* TIME A */}
         <div
-          onClick={() => teamAObj && handlePickTeam(matchId, 'a', teamAObj.id)}
+          onClick={() => teamAObj && !isOfficial && handlePickTeam(matchId, 'a', teamAObj.id)}
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '0.7rem 0.9rem',
             borderRadius: '12px',
-            background: selectedWinnerId === teamAObj?.id ? (isFinal ? 'rgba(255, 215, 0, 0.2)' : 'rgba(0, 240, 255, 0.2)') : 'rgba(255, 255, 255, 0.03)',
+            background: displayedWinnerId === teamAObj?.id ? (isFinal ? 'rgba(255, 215, 0, 0.2)' : 'rgba(0, 240, 255, 0.2)') : 'rgba(255, 255, 255, 0.03)',
             marginBottom: '0.6rem',
-            border: selectedWinnerId === teamAObj?.id ? `2px solid ${isFinal ? '#ffd700' : 'var(--cyan)'}` : '1px solid rgba(255, 255, 255, 0.08)',
-            cursor: teamAObj ? 'pointer' : 'default',
+            border: displayedWinnerId === teamAObj?.id ? `2px solid ${isFinal ? '#ffd700' : 'var(--cyan)'}` : '1px solid rgba(255, 255, 255, 0.08)',
+            cursor: teamAObj && !isOfficial ? 'pointer' : 'default',
             transition: 'all 0.2s',
             position: 'relative',
           }}
@@ -261,7 +280,7 @@ export default function PlayoffBracket() {
                 <TeamLogo logo={teamAObj.logo} name={teamAObj.name} initials={teamAObj.initials} size={34} borderRadius="6px" />
                 <div>
                   <strong style={{ fontSize: '0.95rem', color: '#fff', display: 'block' }}>{teamAObj.name}</strong>
-                  <span style={{ fontSize: '0.68rem', color: selectedWinnerId === teamAObj.id ? (isFinal ? '#ffd700' : 'var(--cyan)') : '#94a3b8' }}>
+                  <span style={{ fontSize: '0.68rem', color: displayedWinnerId === teamAObj.id ? (isFinal ? '#ffd700' : 'var(--cyan)') : '#94a3b8' }}>
                     {labelA}
                   </span>
                 </div>
@@ -273,13 +292,13 @@ export default function PlayoffBracket() {
 
           {teamAObj && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.2rem' }}>
-              {selectedWinnerId === teamAObj.id ? (
+              {displayedWinnerId === teamAObj.id ? (
                 <span style={{ fontSize: '0.7rem', fontWeight: 800, background: isFinal ? '#ffd700' : 'var(--cyan)', color: '#080d1a', padding: '0.15rem 0.5rem', borderRadius: '8px', textTransform: 'uppercase' }}>
-                  {isFinal ? '👑 CAMPEÃO ✅' : 'VENCEDOR ✅'}
+                  {isOfficial ? 'VENCEDOR OFICIAL' : isFinal ? '👑 CAMPEÃO ✅' : 'VENCEDOR ✅'}
                 </span>
               ) : (
                 <span style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700 }}>
-                  VOTAR ➔
+                  {isOfficial ? 'DERROTADO' : 'VOTAR ➔'}
                 </span>
               )}
               {totalVotes > 0 && (
@@ -303,16 +322,16 @@ export default function PlayoffBracket() {
 
         {/* TIME B */}
         <div
-          onClick={() => teamBObj && handlePickTeam(matchId, 'b', teamBObj.id)}
+          onClick={() => teamBObj && !isOfficial && handlePickTeam(matchId, 'b', teamBObj.id)}
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '0.7rem 0.9rem',
             borderRadius: '12px',
-            background: selectedWinnerId === teamBObj?.id ? (isFinal ? 'rgba(255, 215, 0, 0.2)' : 'rgba(0, 240, 255, 0.2)') : 'rgba(255, 255, 255, 0.03)',
-            border: selectedWinnerId === teamBObj?.id ? `2px solid ${isFinal ? '#ffd700' : 'var(--cyan)'}` : '1px solid rgba(255, 255, 255, 0.08)',
-            cursor: teamBObj ? 'pointer' : 'default',
+            background: displayedWinnerId === teamBObj?.id ? (isFinal ? 'rgba(255, 215, 0, 0.2)' : 'rgba(0, 240, 255, 0.2)') : 'rgba(255, 255, 255, 0.03)',
+            border: displayedWinnerId === teamBObj?.id ? `2px solid ${isFinal ? '#ffd700' : 'var(--cyan)'}` : '1px solid rgba(255, 255, 255, 0.08)',
+            cursor: teamBObj && !isOfficial ? 'pointer' : 'default',
             transition: 'all 0.2s',
             position: 'relative',
           }}
@@ -323,7 +342,7 @@ export default function PlayoffBracket() {
                 <TeamLogo logo={teamBObj.logo} name={teamBObj.name} initials={teamBObj.initials} size={34} borderRadius="6px" />
                 <div>
                   <strong style={{ fontSize: '0.95rem', color: '#fff', display: 'block' }}>{teamBObj.name}</strong>
-                  <span style={{ fontSize: '0.68rem', color: selectedWinnerId === teamBObj.id ? (isFinal ? '#ffd700' : 'var(--cyan)') : '#94a3b8' }}>
+                  <span style={{ fontSize: '0.68rem', color: displayedWinnerId === teamBObj.id ? (isFinal ? '#ffd700' : 'var(--cyan)') : '#94a3b8' }}>
                     {labelB}
                   </span>
                 </div>
@@ -335,13 +354,13 @@ export default function PlayoffBracket() {
 
           {teamBObj && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.2rem' }}>
-              {selectedWinnerId === teamBObj.id ? (
+              {displayedWinnerId === teamBObj.id ? (
                 <span style={{ fontSize: '0.7rem', fontWeight: 800, background: isFinal ? '#ffd700' : 'var(--cyan)', color: '#080d1a', padding: '0.15rem 0.5rem', borderRadius: '8px', textTransform: 'uppercase' }}>
-                  {isFinal ? '👑 CAMPEÃO ✅' : 'VENCEDOR ✅'}
+                  {isOfficial ? 'VENCEDOR OFICIAL' : isFinal ? '👑 CAMPEÃO ✅' : 'VENCEDOR ✅'}
                 </span>
               ) : (
                 <span style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700 }}>
-                  VOTAR ➔
+                  {isOfficial ? 'DERROTADO' : 'VOTAR ➔'}
                 </span>
               )}
               {totalVotes > 0 && (
@@ -370,7 +389,9 @@ export default function PlayoffBracket() {
           FAÇA SEUS <span className="text-cyan">PALPITES</span> & MONTE AS CHAVES
         </h2>
         <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginTop: '0.4rem', maxWidth: '700px', margin: '0.4rem auto 0 auto' }}>
-          Clique nos times vencedores de cada semifinal para simular quem avança para a Grande Final e votar no seu campeão!
+          {officialSemi1Winner && officialSemi2Winner
+            ? 'Semifinais encerradas. Confira os vencedores oficiais e faça seus palpites para a Grande Final e o 3º lugar.'
+            : 'Clique nos times vencedores de cada semifinal para simular quem avança para a Grande Final e votar no seu campeão!'}
         </p>
 
         {(semi1Winner || semi2Winner || finalWinner || thirdWinner) && (
@@ -412,8 +433,8 @@ export default function PlayoffBracket() {
           <div style={{ textAlign: 'center', fontSize: '0.85rem', fontWeight: 800, color: 'var(--cyan)', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.2rem' }}>
             🔥 SEMIFINAIS (MD3)
           </div>
-          {renderInteractiveMatchCard('semi-1', 'SEMIFINAL 1', semi1TeamA, semi1TeamB, '1º do Grupo A', '2º do Grupo B', semi1Winner)}
-          {renderInteractiveMatchCard('semi-2', 'SEMIFINAL 2', semi2TeamA, semi2TeamB, '1º do Grupo B', '2º do Grupo A', semi2Winner)}
+          {renderInteractiveMatchCard('semi-1', 'SEMIFINAL 1', semi1TeamA, semi1TeamB, '1º do Grupo A', '2º do Grupo B', selectedSemi1Winner)}
+          {renderInteractiveMatchCard('semi-2', 'SEMIFINAL 2', semi2TeamA, semi2TeamB, '1º do Grupo B', '2º do Grupo A', selectedSemi2Winner)}
         </div>
 
         {/* COLUNA 2: GRANDE FINAL */}
@@ -426,8 +447,8 @@ export default function PlayoffBracket() {
             '🏆 GRANDE FINAL',
             finalTeamA,
             finalTeamB,
-            semi1Winner ? `Vencedor Semi 1 (${getTeam(semi1Winner).initials})` : 'Vencedor Semi 1',
-            semi2Winner ? `Vencedor Semi 2 (${getTeam(semi2Winner).initials})` : 'Vencedor Semi 2',
+            selectedSemi1Winner ? `Vencedor Semi 1 (${getTeam(selectedSemi1Winner).initials})` : 'Vencedor Semi 1',
+            selectedSemi2Winner ? `Vencedor Semi 2 (${getTeam(selectedSemi2Winner).initials})` : 'Vencedor Semi 2',
             finalWinner,
             true
           )}

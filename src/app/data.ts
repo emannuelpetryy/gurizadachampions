@@ -23,6 +23,10 @@ export const matches = [
   { id: 9, teamA: 'gilsons', teamB: 'maconhaco', scoreA: 13, scoreB: 8, status: 'Encerrado', date: 'ter., 04/08/2026 20:30', group: 'B' },
   { id: 10, teamA: '5cones', teamB: 'jalin', scoreA: 13, scoreB: 6, status: 'Encerrado', date: 'ter., 04/08/2026 22:00', group: 'A' },
   { id: 11, teamA: 'desacreditados', teamB: 'venvanse', scoreA: 19, scoreB: 16, status: 'Encerrado', date: 'Rodada 3', group: 'A' },
+  { id: 12, teamA: 'venvanse', teamB: 'gilsons', scoreA: 13, scoreB: 4, status: 'Encerrado', date: 'Semifinal 2', group: 'Playoffs' },
+  { id: 13, teamA: 'venvanse', teamB: 'gilsons', scoreA: 13, scoreB: 7, status: 'Encerrado', date: 'Semifinal 2', group: 'Playoffs' },
+  { id: 14, teamA: 'desacreditados', teamB: 'maconhaco', scoreA: 13, scoreB: 2, status: 'Encerrado', date: 'Semifinal 1', group: 'Playoffs' },
+  { id: 15, teamA: 'desacreditados', teamB: 'maconhaco', scoreA: 13, scoreB: 4, status: 'Encerrado', date: 'Semifinal 1', group: 'Playoffs' },
 ];
 
 export const upcomingMatches: any[] = [
@@ -44,9 +48,9 @@ export const playoffMatches = [
     teamBId: 'maconhaco',
     labelA: '1º do Grupo A',
     labelB: '2º do Grupo B',
-    scoreA: null,
-    scoreB: null,
-    status: 'Agendado',
+    scoreA: 2,
+    scoreB: 0,
+    status: 'Encerrado',
     dateDisplay: 'Data a definir',
   },
   {
@@ -56,9 +60,9 @@ export const playoffMatches = [
     teamBId: 'venvanse',
     labelA: '1º do Grupo B',
     labelB: '2º do Grupo A',
-    scoreA: null,
-    scoreB: null,
-    status: 'Agendado',
+    scoreA: 0,
+    scoreB: 2,
+    status: 'Encerrado',
     dateDisplay: 'Data a definir',
   },
   {
@@ -281,6 +285,76 @@ export const matchDetails: Record<string, any> = {
       { name: 'Baronelis', kills: 17, deaths: 28, assists: 6, hs: 52, damage: 1782 },
       { name: 'Duzão', kills: 15, deaths: 25, assists: 11, hs: 40, damage: 1915 },
     ]
+  },
+  '12': {
+    map: 'Ancient', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 4,
+    teamA_stats: [
+      { name: 'Samuka', kills: 15, deaths: 8, assists: 7, hs: null, damage: null },
+      { name: 'Pacal', kills: 24, deaths: 8, assists: 6, hs: null, damage: null },
+      { name: 'Baronelis', kills: 6, deaths: 10, assists: 8, hs: null, damage: null },
+      { name: 'Duzão', kills: 15, deaths: 10, assists: 4, hs: null, damage: null },
+      { name: 'Manu', kills: 16, deaths: 10, assists: 6, hs: null, damage: null },
+    ],
+    teamB_stats: [
+      { name: 'Forest', kills: 21, deaths: 15, assists: 3, hs: null, damage: null },
+      { name: 'Alemão', kills: 9, deaths: 15, assists: 1, hs: null, damage: null },
+      { name: 'ChapaChaplin', kills: 7, deaths: 16, assists: 9, hs: null, damage: null },
+      { name: 'PombaLoka', kills: 3, deaths: 15, assists: 4, hs: null, damage: null },
+      { name: 'Pínepe', kills: 6, deaths: 15, assists: 1, hs: null, damage: null },
+    ]
+  },
+  '13': {
+    map: 'Dust II', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 7,
+    teamA_stats: [
+      { name: 'Manu', kills: 19, deaths: 13, assists: 7, hs: null, damage: null },
+      { name: 'Pacal', kills: 26, deaths: 13, assists: 5, hs: null, damage: null },
+      { name: 'Samuka', kills: 16, deaths: 15, assists: 8, hs: null, damage: null },
+      { name: 'Baronelis', kills: 9, deaths: 13, assists: 9, hs: null, damage: null },
+      { name: 'Duzão', kills: 13, deaths: 12, assists: 4, hs: null, damage: null },
+    ],
+    teamB_stats: [
+      { name: 'Forest', kills: 22, deaths: 17, assists: 7, hs: null, damage: null },
+      { name: 'ChapaChaplin', kills: 9, deaths: 16, assists: 4, hs: null, damage: null },
+      { name: 'PombaLoka', kills: 16, deaths: 15, assists: 1, hs: null, damage: null },
+      { name: 'Alemão', kills: 11, deaths: 18, assists: 6, hs: null, damage: null },
+      { name: 'EasyMoney', kills: 0, deaths: 0, assists: 0, hs: null, damage: null },
+      { name: 'Pínepe', kills: 7, deaths: 18, assists: 6, hs: null, damage: null },
+    ]
+  },
+  '14': {
+    map: 'Dust II', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 2,
+    teamA_stats: [
+      { name: 'Tufa', kills: 18, deaths: 7, assists: 8, hs: null, damage: null },
+      { name: 'Sorps - Leluia', kills: 16, deaths: 7, assists: 6, hs: null, damage: null },
+      { name: 'Distress - Pedro', kills: 20, deaths: 4, assists: 4, hs: null, damage: null },
+      { name: 'Gio', kills: 10, deaths: 8, assists: 8, hs: null, damage: null },
+      { name: 'Galaxy', kills: 7, deaths: 7, assists: 9, hs: null, damage: null },
+    ],
+    teamB_stats: [
+      { name: 'Acyd', kills: 19, deaths: 13, assists: 0, hs: null, damage: null },
+      { name: 'Gusta', kills: 6, deaths: 15, assists: 2, hs: null, damage: null },
+      { name: 'Lucas', kills: 4, deaths: 15, assists: 3, hs: null, damage: null },
+      { name: 'Natan', kills: 2, deaths: 14, assists: 3, hs: null, damage: null },
+      { name: 'João Marcelo', kills: 1, deaths: 14, assists: 3, hs: null, damage: null },
+    ]
+  },
+  '15': {
+    map: 'Inferno', roundsA: 1, roundsB: 0, teamARounds: 13, teamBRounds: 4,
+    statsNote: 'Estatísticas capturadas durante a partida, com o placar em 11×4. O placar final foi 13×4.',
+    teamA_stats: [
+      { name: 'Distress - Pedro', kills: 19, deaths: 6, assists: 0, hs: null, damage: null },
+      { name: 'Sorps - Leluia', kills: 14, deaths: 6, assists: 0, hs: null, damage: null },
+      { name: 'Gio', kills: 8, deaths: 8, assists: 0, hs: null, damage: null },
+      { name: 'Galaxy', kills: 9, deaths: 12, assists: 0, hs: null, damage: null },
+      { name: 'Tufa', kills: 15, deaths: 11, assists: 0, hs: null, damage: null },
+    ],
+    teamB_stats: [
+      { name: 'Gusta', kills: 12, deaths: 15, assists: 0, hs: null, damage: null },
+      { name: 'Natan', kills: 4, deaths: 13, assists: 0, hs: null, damage: null },
+      { name: 'Acyd', kills: 16, deaths: 13, assists: 0, hs: null, damage: null },
+      { name: 'Lucas', kills: 9, deaths: 14, assists: 0, hs: null, damage: null },
+      { name: 'João Marcelo', kills: 2, deaths: 12, assists: 0, hs: null, damage: null },
+    ]
   }
 };
 
@@ -310,12 +384,14 @@ const CANONICAL_ALIASES: Record<string, string> = {
   'jalin | knight': 'Camargo',
   'jalin | knight水🥷🏻': 'Camargo',
   'majaster': 'Gusta',
+  'maconhaço | majaster': 'Gusta',
   'giraldi': 'Pedro Giraldi',
   '5cns - giraldi': 'Pedro Giraldi',
   'de': 'Deeez1n',
   'deez1n': 'Deeez1n',
   '5cns -deeez1n': 'Deeez1n',
   'vandeco': 'Gio',
+  'desacreditados vandeco': 'Gio',
   'ptk': 'Peteka',
   'petekinha': 'Peteka',
   'leluia': 'Sorps - Leluia',
@@ -325,12 +401,22 @@ const CANONICAL_ALIASES: Record<string, string> = {
   'mankinho^^': 'Manko',
   'mankinho': 'Manko',
   'pombaloka': 'PombaLoka',
+  'gilson e-sports pombaloka': 'PombaLoka',
   'felpy': 'Felpy',
   'samucahemp': 'Samuka',
   'vvs samucahemp': 'Samuka',
   'perry': 'Manu',
   'vvs perry': 'Manu',
   'vvs duzão': 'Duzão',
+  'chapachaplin': 'ChapaChaplin',
+  'maconhaço | lucaasss': 'Lucas',
+  'lucaasss': 'Lucas',
+  'maconhaço | lacolombia': 'Natan',
+  'maconhaço | easymoneyrasta': 'João Marcelo',
+  'easymoney': 'João Marcelo',
+  'desacreditados leluia': 'Sorps - Leluia',
+  'desacreditados distress': 'Distress - Pedro',
+  'desacreditados galaxyx': 'Galaxy',
   'lucaaas ta lá': 'Lucas',
   'lucaaas tá lá': 'Lucas',
   'giuseppe lagos - henrique': 'Giuseppe Lagos',
@@ -450,6 +536,10 @@ addPlayersToGlobal(matchDetails, '8', '5cones', 'desacreditados');
 addPlayersToGlobal(matchDetails, '9', 'gilsons', 'maconhaco');
 addPlayersToGlobal(matchDetails, '10', '5cones', 'jalin');
 addPlayersToGlobal(matchDetails, '11', 'desacreditados', 'venvanse');
+addPlayersToGlobal(matchDetails, '12', 'venvanse', 'gilsons');
+addPlayersToGlobal(matchDetails, '13', 'venvanse', 'gilsons');
+addPlayersToGlobal(matchDetails, '14', 'desacreditados', 'maconhaco');
+addPlayersToGlobal(matchDetails, '15', 'desacreditados', 'maconhaco');
 
 export const players: Array<PlayerSummary> = Object.values(rawPlayersMap);
 
