@@ -403,6 +403,7 @@ const CANONICAL_ALIASES: Record<string, string> = {
   'forest': 'Manko',
   'pombaloka': 'PombaLoka',
   'gilson e-sports pombaloka': 'PombaLoka',
+  'pínepe': 'Gilson Tedesko',
   'pinepe': 'Gilson Tedesko',
   'felpy': 'Felpy',
   'samucahemp': 'Samuka',
