@@ -154,41 +154,41 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   );
 
   return (
-    <main style={{ padding: '4rem 0' }}>
+    <main style={{ padding: '1.5rem 0' }}>
       <section className="container">
         
         {/* Match Header */}
-        <div className="glass-card" style={{ marginBottom: '2rem', padding: '0', overflow: 'hidden' }}>
-          <div style={{ background: 'linear-gradient(45deg, rgba(0,240,255,0.05), transparent)', padding: '3rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem' }}>
+        <div className="glass-card" style={{ marginBottom: '1.2rem', padding: '0', overflow: 'hidden' }}>
+          <div style={{ background: 'linear-gradient(45deg, rgba(0,240,255,0.05), transparent)', padding: '1.5rem 1.2rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1.5rem' }}>
               
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                <Link href={`/time/${teamA.id}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                  <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={100} borderRadius="16px" />
-                  <h2 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-rajdhani)', color: '#fff', textAlign: 'center' }}>{teamA.name}</h2>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem' }}>
+                <Link href={`/time/${teamA.id}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem' }}>
+                  <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={64} borderRadius="12px" />
+                  <h2 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-rajdhani)', color: '#fff', textAlign: 'center' }}>{teamA.name}</h2>
                 </Link>
               </div>
               
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                 <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.5rem' }}>
+                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '0.35rem' }}>
                    {match.group === 'Playoffs' ? 'PLAYOFFS' : `GRUPO ${match.group}`}
                  </span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', background: 'rgba(0,0,0,0.6)', padding: '0.8rem 2rem', borderRadius: '16px', border: '1px solid rgba(0,240,255,0.3)', boxShadow: '0 0 20px rgba(0,240,255,0.15)' }}>
-                  <span style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', lineHeight: 1 }}>{match.scoreA}</span>
-                  <span style={{ fontSize: '1.8rem', color: '#fff', fontWeight: 'bold' }}>x</span>
-                  <span style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', lineHeight: 1 }}>{match.scoreB}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem', background: 'rgba(0,0,0,0.6)', padding: '0.5rem 1.4rem', borderRadius: '14px', border: '1px solid rgba(0,240,255,0.3)', boxShadow: '0 0 16px rgba(0,240,255,0.15)' }}>
+                  <span style={{ fontSize: '2.4rem', fontWeight: '800', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', lineHeight: 1 }}>{match.scoreA}</span>
+                  <span style={{ fontSize: '1.4rem', color: '#fff', fontWeight: 'bold' }}>x</span>
+                  <span style={{ fontSize: '2.4rem', fontWeight: '800', color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', lineHeight: 1 }}>{match.scoreB}</span>
                 </div>
                 {details.map && (
-                  <span style={{ background: 'rgba(0,240,255,0.15)', border: '1px solid var(--cyan)', color: 'var(--cyan)', padding: '0.3rem 1.2rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold', marginTop: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                  <span style={{ background: 'rgba(0,240,255,0.15)', border: '1px solid var(--cyan)', color: 'var(--cyan)', padding: '0.2rem 0.9rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold', marginTop: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
                     📍 MAPA: {details.map}
                   </span>
                 )}
               </div>
 
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                <Link href={`/time/${teamB.id}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                  <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={100} borderRadius="16px" />
-                  <h2 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-rajdhani)', color: '#fff', textAlign: 'center' }}>{teamB.name}</h2>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem' }}>
+                <Link href={`/time/${teamB.id}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem' }}>
+                  <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={64} borderRadius="12px" />
+                  <h2 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-rajdhani)', color: '#fff', textAlign: 'center' }}>{teamB.name}</h2>
                 </Link>
               </div>
 

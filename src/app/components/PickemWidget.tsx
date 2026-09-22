@@ -10,11 +10,21 @@ interface PickemData {
   totalPicks: number;
 }
 
-const SCORE_OPTIONS = [
-  { id: 'ven_2_0', teamWinnerId: 'venvanse', scoreText: '2 × 0', label: 'Venvanse 2x0', desc: 'Passeio do Venvanse' },
-  { id: 'ven_2_1', teamWinnerId: 'venvanse', scoreText: '2 × 1', label: 'Venvanse 2x1', desc: 'Batalha até o 3º Mapa' },
-  { id: 'des_2_1', teamWinnerId: 'desacreditados', scoreText: '2 × 1', label: 'Desacreditados 2x1', desc: 'Vitória sofrida no Decider' },
-  { id: 'des_2_0', teamWinnerId: 'desacreditados', scoreText: '2 × 0', label: 'Desacreditados 2x0', desc: 'Soberania Desacreditada' },
+interface ScoreOption {
+  id: string;
+  teamWinnerId: 'venvanse' | 'desacreditados';
+  scoreText: string;
+  title: string;
+  desc: string;
+}
+
+const MD5_SCORE_OPTIONS: ScoreOption[] = [
+  { id: 'ven_3_0', teamWinnerId: 'venvanse', scoreText: '3 × 0', title: 'Varrida Limpa', desc: 'Domínio total do Venvanse' },
+  { id: 'ven_3_1', teamWinnerId: 'venvanse', scoreText: '3 × 1', title: 'Vitória Firme', desc: 'Decisão em 4 mapas' },
+  { id: 'ven_3_2', teamWinnerId: 'venvanse', scoreText: '3 × 2', title: 'Emoção no 5º Mapa', desc: 'Batalha até o Decider' },
+  { id: 'des_3_0', teamWinnerId: 'desacreditados', scoreText: '3 × 0', title: 'Varrida Limpa', desc: 'Soberania Desacreditada' },
+  { id: 'des_3_1', teamWinnerId: 'desacreditados', scoreText: '3 × 1', title: 'Vitória Firme', desc: 'Decisão em 4 mapas' },
+  { id: 'des_3_2', teamWinnerId: 'desacreditados', scoreText: '3 × 2', title: 'Emoção no 5º Mapa', desc: 'Batalha até o Decider' },
 ];
 
 const FINAL_PLAYERS = [
@@ -30,14 +40,24 @@ const FINAL_PLAYERS = [
   { name: 'Duzão', teamId: 'venvanse', kd: '0.63' },
 ];
 
+function migrateScoreKey(key: string | null): string | null {
+  if (!key) return null;
+  if (key === 'ven_2_0') return 'ven_3_0';
+  if (key === 'ven_2_1') return 'ven_3_1';
+  if (key === 'des_2_0') return 'des_3_0';
+  if (key === 'des_2_1') return 'des_3_1';
+  return key;
+}
+
 export default function PickemWidget() {
   const [pickemData, setPickemData] = useState<PickemData>({
-    scores: { 'ven_2_0': 4, 'ven_2_1': 6, 'des_2_1': 3, 'des_2_0': 2 },
-    mvps: { 'Pacal': 5, 'Tufa': 4 },
-    totalPicks: 15,
+    scores: { 'ven_3_0': 4, 'ven_3_1': 7, 'ven_3_2': 5, 'des_3_0': 2, 'des_3_1': 4, 'des_3_2': 3 },
+    mvps: { 'Pacal': 6, 'Tufa': 5, 'Manu': 4, 'Sorps - Leluia': 3 },
+    totalPicks: 25,
   });
 
-  const [selectedScore, setSelectedScore] = useState<string | null>(null);
+  const [selectedWinner, setSelectedWinner] = useState<'venvanse' | 'desacreditados'>('venvanse');
+  const [selectedScore, setSelectedScore] = useState<string>('ven_3_1');
   const [selectedMvp, setSelectedMvp] = useState<string>('');
   const [savedUserPick, setSavedUserPick] = useState<{ score: string | null; mvp: string } | null>(null);
   const [loading, setLoading] = useState(false);
@@ -47,14 +67,19 @@ export default function PickemWidget() {
   const teamDes = getTeam('desacreditados');
 
   useEffect(() => {
-    // 1. Carregar palpite do usuário do localStorage
+    // 1. Carregar palpite do usuário do localStorage e migrar se era MD3
     const saved = localStorage.getItem('gc_pickem_grand_final_v1');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.score) setSelectedScore(parsed.score);
+        const migratedScore = migrateScoreKey(parsed.score);
+        if (migratedScore) {
+          setSelectedScore(migratedScore);
+          if (migratedScore.startsWith('ven')) setSelectedWinner('venvanse');
+          else if (migratedScore.startsWith('des')) setSelectedWinner('desacreditados');
+        }
         if (parsed.mvp) setSelectedMvp(parsed.mvp);
-        setSavedUserPick(parsed);
+        setSavedUserPick({ score: migratedScore, mvp: parsed.mvp || '' });
       } catch (e) {}
     }
 
@@ -75,9 +100,21 @@ export default function PickemWidget() {
     fetchPickem();
   }, []);
 
+  const handleSelectWinner = (team: 'venvanse' | 'desacreditados') => {
+    setSelectedWinner(team);
+    // Preservar a margem se já havia selecionado (ex: 3x1 -> des_3_1)
+    if (selectedScore) {
+      const suffix = selectedScore.split('_').slice(1).join('_'); // '3_0', '3_1', '3_2'
+      const prefix = team === 'venvanse' ? 'ven' : 'des';
+      setSelectedScore(`${prefix}_${suffix}`);
+    } else {
+      setSelectedScore(team === 'venvanse' ? 'ven_3_1' : 'des_3_1');
+    }
+  };
+
   const handleConfirmPick = async () => {
     if (!selectedScore) {
-      alert('Selecione um placar exato para a Grande Final!');
+      alert('Selecione o placar da decisão em MD5!');
       return;
     }
 
@@ -115,202 +152,253 @@ export default function PickemWidget() {
 
   const totalScoreVotes = Object.values(pickemData.scores || {}).reduce((a, b) => a + b, 0) || 1;
 
+  // Filtrar opções de placar para o time atualmente selecionado
+  const currentTeamOptions = MD5_SCORE_OPTIONS.filter(o => o.teamWinnerId === selectedWinner);
+
+  // Encontrar o placar salvo para visualização amigável
+  const savedScoreOption = savedUserPick?.score
+    ? MD5_SCORE_OPTIONS.find(o => o.id === savedUserPick.score)
+    : null;
+
   return (
     <div
       className="glass-card"
       style={{
-        marginTop: '3rem',
-        padding: '2.2rem',
-        borderRadius: '20px',
-        border: '1px solid rgba(255, 215, 0, 0.35)',
-        background: 'linear-gradient(135deg, rgba(12, 19, 36, 0.95) 0%, rgba(6, 11, 24, 0.98) 100%)',
-        boxShadow: '0 12px 40px rgba(0,0,0,0.6), 0 0 30px rgba(255, 215, 0, 0.1)',
+        marginTop: '1.6rem',
+        padding: '1.25rem 1.4rem',
+        borderRadius: '16px',
+        border: '1px solid rgba(255, 215, 0, 0.3)',
+        background: 'linear-gradient(145deg, rgba(11, 18, 34, 0.96) 0%, rgba(6, 11, 22, 0.98) 100%)',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(255, 215, 0, 0.08)',
         position: 'relative',
         overflow: 'hidden',
       }}
     >
-      {/* Glow de fundo */}
-      <div style={{ position: 'absolute', top: '-60px', right: '-60px', width: '220px', height: '220px', background: 'rgba(255, 215, 0, 0.15)', filter: 'blur(80px)', borderRadius: '50%', pointerEvents: 'none' }}></div>
-
-      {/* Header do Widget */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.8rem' }}>
+      {/* Header Compacto */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.8rem', marginBottom: '1.2rem' }}>
         <div>
-          <span style={{
-            fontSize: '0.72rem',
-            fontWeight: 800,
-            color: '#ffd700',
-            letterSpacing: '1.5px',
-            textTransform: 'uppercase',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            background: 'rgba(255, 215, 0, 0.1)',
-            padding: '0.2rem 0.6rem',
-            borderRadius: '20px',
-            border: '1px solid rgba(255, 215, 0, 0.3)',
-            marginBottom: '0.5rem',
-          }}>
-            🎯 GAMIFICAÇÃO & DESAFIO DA COMUNIDADE
-          </span>
-          <h2 style={{ fontSize: '2.1rem', margin: 0, fontFamily: 'var(--font-rajdhani)', fontWeight: 900, color: '#fff' }}>
-            BOLÃO DA <span className="text-gold">GRANDE FINAL</span>
-          </h2>
-          <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', margin: '0.3rem 0 0 0' }}>
-            Crava o placar exato da MD3 e o MVP da finalíssima. Acerte para liderar o ranking de palpites da Gurizada!
-          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+            <span style={{
+              fontSize: '0.66rem',
+              fontWeight: 900,
+              color: '#ffd700',
+              letterSpacing: '1px',
+              textTransform: 'uppercase',
+              background: 'rgba(255, 215, 0, 0.12)',
+              padding: '0.15rem 0.55rem',
+              borderRadius: '999px',
+              border: '1px solid rgba(255, 215, 0, 0.3)',
+            }}>
+              🎯 BOLÃO OFICIAL · MD5
+            </span>
+            <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+              ({pickemData.totalPicks || 0} palpites computados)
+            </span>
+          </div>
+          <h3 style={{ fontSize: '1.45rem', margin: 0, fontFamily: 'var(--font-rajdhani)', fontWeight: 900, color: '#fff', letterSpacing: '0.5px' }}>
+            CRAVE O CAMPEÃO & PLACAR DA <span className="text-gold">GRANDE FINAL</span>
+          </h3>
         </div>
 
         {/* Badge de Pontuação */}
         <div style={{
           display: 'flex',
-          gap: '0.5rem',
+          gap: '0.45rem',
           flexWrap: 'wrap',
           background: 'rgba(255, 255, 255, 0.04)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          padding: '0.5rem 0.8rem',
-          borderRadius: '12px',
-          fontSize: '0.72rem',
-          fontWeight: 700,
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          padding: '0.35rem 0.65rem',
+          borderRadius: '10px',
+          fontSize: '0.68rem',
+          fontWeight: 800,
         }}>
           <span style={{ color: '#ffd700' }}>🏆 Campeão: +10 pts</span>
-          <span style={{ color: '#00f0ff' }}>⚡ Placar: +15 pts</span>
+          <span style={{ color: '#00f0ff' }}>⚡ Placar MD5: +15 pts</span>
           <span style={{ color: '#ec4899' }}>⭐ MVP: +10 pts</span>
         </div>
       </div>
 
-      {/* Grid de Escolha do Placar Exato */}
-      <div style={{ marginBottom: '1.8rem' }}>
-        <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.8rem' }}>
-          1. Escolha o Placar Exato da MD3:
-        </label>
+      {/* Grid de 2 Passos Simples para MD5 */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginBottom: '1.1rem' }}>
+        
+        {/* PASSO 1: ESCOLHER O CAMPEÃO */}
+        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '0.9rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)' }}>
+          <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 900, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.65rem' }}>
+            1. Quem leva o título? (Campeão)
+          </label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
+            {/* Time Venvanse */}
+            <button
+              type="button"
+              onClick={() => handleSelectWinner('venvanse')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                padding: '0.65rem 0.8rem',
+                borderRadius: '10px',
+                border: selectedWinner === 'venvanse' ? '2px solid #00f0ff' : '1px solid rgba(0,240,255,0.2)',
+                background: selectedWinner === 'venvanse' ? 'rgba(0, 240, 255, 0.16)' : 'rgba(0, 240, 255, 0.04)',
+                boxShadow: selectedWinner === 'venvanse' ? '0 0 16px rgba(0, 240, 255, 0.3)' : 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                textAlign: 'left',
+              }}
+            >
+              <TeamLogo logo={teamVen.logo} name={teamVen.name} initials={teamVen.initials} size={28} borderRadius="6px" />
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <strong style={{ display: 'block', fontSize: '0.85rem', color: '#fff', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {teamVen.name}
+                </strong>
+                <span style={{ fontSize: '0.65rem', color: 'var(--cyan)', fontWeight: 700 }}>
+                  {selectedWinner === 'venvanse' ? '✓ SELECIONADO' : 'Votar neste'}
+                </span>
+              </div>
+            </button>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '1rem' }}>
-          {SCORE_OPTIONS.map((opt) => {
-            const team = opt.teamWinnerId === 'venvanse' ? teamVen : teamDes;
-            const isSelected = selectedScore === opt.id;
-            const voteCount = pickemData.scores[opt.id] || 0;
-            const percentage = Math.round((voteCount / totalScoreVotes) * 100);
-            const teamColor = opt.teamWinnerId === 'venvanse' ? 'var(--cyan)' : '#ff3366';
+            {/* Time Desacreditados */}
+            <button
+              type="button"
+              onClick={() => handleSelectWinner('desacreditados')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                padding: '0.65rem 0.8rem',
+                borderRadius: '10px',
+                border: selectedWinner === 'desacreditados' ? '2px solid #ff3366' : '1px solid rgba(255,51,102,0.2)',
+                background: selectedWinner === 'desacreditados' ? 'rgba(255, 51, 102, 0.16)' : 'rgba(255, 51, 102, 0.04)',
+                boxShadow: selectedWinner === 'desacreditados' ? '0 0 16px rgba(255, 51, 102, 0.3)' : 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                textAlign: 'left',
+              }}
+            >
+              <TeamLogo logo={teamDes.logo} name={teamDes.name} initials={teamDes.initials} size={28} borderRadius="6px" />
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <strong style={{ display: 'block', fontSize: '0.85rem', color: '#fff', fontFamily: 'var(--font-rajdhani)', fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {teamDes.name}
+                </strong>
+                <span style={{ fontSize: '0.65rem', color: '#ff7891', fontWeight: 700 }}>
+                  {selectedWinner === 'desacreditados' ? '✓ SELECIONADO' : 'Votar neste'}
+                </span>
+              </div>
+            </button>
+          </div>
+        </div>
 
-            return (
-              <div
-                key={opt.id}
-                onClick={() => setSelectedScore(opt.id)}
-                style={{
-                  background: isSelected
-                    ? `linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(13, 20, 36, 0.95) 100%)`
-                    : 'rgba(15, 23, 42, 0.6)',
-                  border: isSelected
-                    ? '2px solid #ffd700'
-                    : '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '14px',
-                  padding: '1.2rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                  boxShadow: isSelected ? '0 0 20px rgba(255, 215, 0, 0.35)' : 'none',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.6rem',
-                  position: 'relative',
-                  transform: isSelected ? 'translateY(-2px)' : 'none',
-                }}
-              >
-                {/* Header da Opção */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                    <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={28} borderRadius="6px" />
-                    <span style={{ fontSize: '0.85rem', fontWeight: 800, color: teamColor }}>
-                      {team.name}
-                    </span>
-                  </div>
-                  {isSelected && (
-                    <span style={{ fontSize: '0.75rem', background: '#ffd700', color: '#000', padding: '0.1rem 0.5rem', borderRadius: '10px', fontWeight: 900 }}>
-                      ✓ ESCOLHIDO
-                    </span>
-                  )}
-                </div>
+        {/* PASSO 2: ESCOLHER O PLACAR DA MD5 (3x0, 3x1, 3x2) */}
+        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '0.9rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
+            <label style={{ fontSize: '0.72rem', fontWeight: 900, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px' }}>
+              2. Placar da Série MD5:
+            </label>
+            <span style={{ fontSize: '0.68rem', color: selectedWinner === 'venvanse' ? 'var(--cyan)' : '#ff7891', fontWeight: 800 }}>
+              Vitória do {selectedWinner === 'venvanse' ? 'Venvanse' : 'Desacreditados'}
+            </span>
+          </div>
 
-                {/* Placar em destaque */}
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', margin: '0.2rem 0' }}>
-                  <strong style={{ fontSize: '1.8rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, color: '#fff', letterSpacing: '1px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+            {currentTeamOptions.map((opt) => {
+              const isSelected = selectedScore === opt.id;
+              const voteCount = pickemData.scores[opt.id] || 0;
+              const pct = Math.round((voteCount / totalScoreVotes) * 100);
+              const highlightColor = selectedWinner === 'venvanse' ? 'var(--cyan)' : '#ff3366';
+
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={() => setSelectedScore(opt.id)}
+                  style={{
+                    padding: '0.55rem 0.4rem',
+                    borderRadius: '10px',
+                    border: isSelected ? '2px solid #ffd700' : '1px solid rgba(255,255,255,0.1)',
+                    background: isSelected
+                      ? 'linear-gradient(135deg, rgba(255,215,0,0.18), rgba(15,23,42,0.9))'
+                      : 'rgba(15, 23, 42, 0.7)',
+                    boxShadow: isSelected ? '0 0 14px rgba(255,215,0,0.35)' : 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '0.2rem',
+                  }}
+                >
+                  <strong style={{ fontSize: '1.25rem', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, color: '#fff', lineHeight: 1 }}>
                     {opt.scoreText}
                   </strong>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffd700' }}>
-                    {percentage}% ({voteCount} votos)
+                  <span style={{ fontSize: '0.62rem', color: '#94a3b8', fontWeight: 700 }}>
+                    {opt.title}
                   </span>
-                </div>
-
-                {/* Barra de porcentagem da comunidade */}
-                <div style={{ height: '6px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '3px', overflow: 'hidden' }}>
-                  <div style={{ width: `${percentage}%`, height: '100%', background: isSelected ? '#ffd700' : teamColor, transition: 'width 0.4s ease' }} />
-                </div>
-
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{opt.desc}</span>
-              </div>
-            );
-          })}
+                  <div style={{ width: '100%', height: '3px', background: 'rgba(255,255,255,0.08)', borderRadius: '2px', overflow: 'hidden', marginTop: '0.2rem' }}>
+                    <div style={{ width: `${pct}%`, height: '100%', background: isSelected ? '#ffd700' : highlightColor }} />
+                  </div>
+                  <span style={{ fontSize: '0.62rem', color: isSelected ? '#ffd700' : '#cbd5e1', fontWeight: 800 }}>
+                    {pct}% ({voteCount})
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
+
       </div>
 
-      {/* Seletor de MVP da Grande Final */}
-      <div style={{ marginBottom: '2rem' }}>
-        <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.6rem' }}>
-          2. Palpite de MVP da Grande Final (Opcional):
-        </label>
-
-        <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap', alignItems: 'center' }}>
+      {/* PASSO 3 & CONFIRMAÇÃO EM LINHA COMPACTA */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '0.8rem',
+        paddingTop: '0.8rem',
+        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+      }}>
+        {/* Seletor de MVP */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.72rem', fontWeight: 900, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+            ⭐ MVP:
+          </span>
           <select
             value={selectedMvp}
             onChange={(e) => setSelectedMvp(e.target.value)}
             style={{
-              background: 'rgba(15, 23, 42, 0.9)',
+              background: 'rgba(15, 23, 42, 0.95)',
               border: '1px solid rgba(0, 240, 255, 0.3)',
               color: '#fff',
-              padding: '0.75rem 1.2rem',
-              borderRadius: '12px',
-              fontSize: '0.9rem',
+              padding: '0.45rem 0.8rem',
+              borderRadius: '8px',
+              fontSize: '0.8rem',
               fontFamily: 'var(--font-rajdhani)',
               fontWeight: 700,
               cursor: 'pointer',
-              minWidth: '260px',
               outline: 'none',
+              maxWidth: '220px',
             }}
           >
-            <option value="">Selecione o craque da decisão...</option>
+            <option value="">Selecione o MVP da final...</option>
             {FINAL_PLAYERS.map((p) => {
-              const team = p.teamId === 'venvanse' ? 'Venvanse' : 'Os Desacreditados';
+              const teamName = p.teamId === 'venvanse' ? 'Venvanse' : 'Desacreditados';
               return (
                 <option key={p.name} value={p.name}>
-                  {p.name} ({team} · K/D {p.kd})
+                  {p.name} ({teamName} · K/D {p.kd})
                 </option>
               );
             })}
           </select>
 
-          {selectedMvp && (
-            <span style={{ fontSize: '0.82rem', color: '#ffd700', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
-              ⭐ Craque Escolhido: <strong>{selectedMvp}</strong>
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Botão de Enviar / Status do Palpite */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', paddingTop: '1.2rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          {savedUserPick ? (
-            <span style={{ fontSize: '0.82rem', color: '#10b981', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span className="status-pulse-dot" style={{ background: '#10b981' }}></span>
-              Seu palpite está salvo: <strong>{SCORE_OPTIONS.find(o => o.id === savedUserPick.score)?.label}</strong>
-              {savedUserPick.mvp ? ` · MVP: ${savedUserPick.mvp}` : ''}
-            </span>
-          ) : (
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              Você ainda não registrou seu palpite para a final.
+          {/* Status do palpite atual */}
+          {savedScoreOption && (
+            <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+              ✓ Salvo: {savedScoreOption.teamWinnerId === 'venvanse' ? 'Venvanse' : 'Desacreditados'} {savedScoreOption.scoreText}
+              {savedUserPick?.mvp ? ` (MVP: ${savedUserPick.mvp})` : ''}
             </span>
           )}
         </div>
 
+        {/* Botão de Confirmação */}
         <button
           onClick={handleConfirmPick}
           disabled={loading || !selectedScore}
@@ -320,22 +408,23 @@ export default function PickemWidget() {
               : 'linear-gradient(135deg, #ffd700 0%, #ff9900 100%)',
             color: '#080d1a',
             border: 'none',
-            padding: '0.85rem 2rem',
-            borderRadius: '12px',
-            fontSize: '0.95rem',
+            padding: '0.6rem 1.4rem',
+            borderRadius: '10px',
+            fontSize: '0.85rem',
             fontFamily: 'var(--font-rajdhani)',
             fontWeight: 900,
             letterSpacing: '0.5px',
             cursor: !selectedScore || loading ? 'not-allowed' : 'pointer',
-            opacity: !selectedScore ? 0.5 : 1,
-            boxShadow: justVoted ? '0 0 25px rgba(16, 185, 129, 0.6)' : '0 0 25px rgba(255, 215, 0, 0.4)',
-            transition: 'all 0.25s ease',
+            opacity: !selectedScore ? 0.6 : 1,
+            boxShadow: justVoted ? '0 0 20px rgba(16, 185, 129, 0.5)' : '0 0 18px rgba(255, 215, 0, 0.35)',
+            transition: 'all 0.2s ease',
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.5rem',
+            gap: '0.4rem',
+            whiteSpace: 'nowrap',
           }}
         >
-          {loading ? 'SALVANDO...' : justVoted ? '✅ PALPITE CONFIRMADO!' : savedUserPick ? '🔄 ATUALIZAR MEU PALPITE' : '🎯 CONFIRMAR PALPITE NO BOLÃO'}
+          {loading ? 'SALVANDO...' : justVoted ? '✅ PALPITE CONFIRMADO!' : savedUserPick ? '🔄 ATUALIZAR PALPITE' : '🎯 CONFIRMAR PALPITE'}
         </button>
       </div>
     </div>

@@ -232,11 +232,11 @@ export default function GrandFinalShowdown() {
   return (
     <section className="grand-final">
       <header className="grand-final-header">
-        <span className="grand-final-stage">👑 GRANDE FINAL · MD3</span>
+        <span className="grand-final-stage">👑 GRANDE FINAL · MD5 (MELHOR DE 5 MAPAS)</span>
         <h2 className="grand-final-title">
           VENVANSE <span className="final-vs-badge">VS</span> OS DESACREDITADOS
         </h2>
-        <p>A final está definida. Clique no seu time para votar no campeão e confira os confrontos 1v1 abaixo.</p>
+        <p>A final está definida em MD5. Clique no seu time para votar no campeão e confira os confrontos 1v1 abaixo.</p>
       </header>
 
       {/* Cards Interativos de Votação nos Times */}

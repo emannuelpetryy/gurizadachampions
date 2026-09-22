@@ -75,7 +75,7 @@ export default function Home() {
       </section>
 
       {/* Conteúdo Principal do Portal */}
-      <section className="container" style={{ padding: '4rem 1.5rem' }}>
+      <section className="container" style={{ padding: '1.5rem 1rem' }}>
         {/* GRANDE FINAL: CONFRONTO POR NÍVEL + VOTAÇÃO DA TORCIDA */}
         <GrandFinalShowdown />
 
@@ -83,7 +83,7 @@ export default function Home() {
         <PickemWidget />
 
         {/* ÚLTIMAS PARTIDAS: SEMIFINAIS DOS PLAYOFFS (O CAMINHO ATÉ A FINAL) */}
-        <section className="recent-matches-section" style={{ marginTop: '2.5rem' }}>
+        <section className="recent-matches-section" style={{ marginTop: '1.5rem' }}>
           <div className="recent-matches-heading">
             <div>
               <span className="section-eyebrow">MATA-MATA · PLAYOFFS</span>
@@ -356,11 +356,11 @@ export default function Home() {
       </section>
 
       {/* Seção Equipes Participantes */}
-      <section className="container" style={{ padding: '0 1.5rem 4rem' }}>
-        <div style={{ marginBottom: '1.5rem' }}>
+      <section className="container" style={{ padding: '0 1rem 2rem' }}>
+        <div style={{ marginBottom: '1rem' }}>
           <span className="section-eyebrow">ORGANIZAÇÕES EM DISPUTA</span>
-          <h3 className="card-title" style={{ margin: '0.2rem 0 0', fontSize: '1.75rem' }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <h3 className="card-title" style={{ margin: '0.2rem 0 0', fontSize: '1.4rem' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             EQUIPES PARTICIPANTES
           </h3>
         </div>
@@ -368,11 +368,11 @@ export default function Home() {
         <div className="teams-showcase-grid">
           {teams.map((team, idx) => (
             <Link href={`/time/${team.id}`} key={team.id} className="team-showcase-card">
-              <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={64} borderRadius="12px" />
+              <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={48} borderRadius="10px" />
               <div className="team-showcase-info">
                 <span className="team-showcase-group">GRUPO {idx < 4 ? 'A' : 'B'}</span>
-                <strong className="team-showcase-name">{team.name}</strong>
-                <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Ver escalação e confrontos →</span>
+                <strong className="team-showcase-name" style={{ fontSize: '1.05rem' }}>{team.name}</strong>
+                <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>Ver escalação →</span>
               </div>
             </Link>
           ))}
@@ -380,19 +380,19 @@ export default function Home() {
       </section>
 
       {/* Seção Mata-Mata / Playoff Bracket */}
-      <section className="container" style={{ padding: '0 1.5rem 4rem' }}>
+      <section className="container" style={{ padding: '0 1rem 2rem' }}>
         <PlayoffBracket />
       </section>
 
       {/* Seção Premiações - 3D PODIUM */}
-      <section className="container" style={{ padding: '0 1.5rem 5rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+      <section className="container" style={{ padding: '0 1rem 2.2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1.4rem' }}>
           <span className="section-eyebrow">PREMIAÇÕES OFICIAIS</span>
-          <h3 className="card-title" style={{ margin: '0.25rem 0 0', justifyContent: 'center', fontSize: '2rem' }}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+          <h3 className="card-title" style={{ margin: '0.2rem 0 0', justifyContent: 'center', fontSize: '1.6rem' }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
             PREMIAÇÃO DA TEMPORADA 1
           </h3>
-          <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginTop: '0.4rem' }}>
+          <p style={{ color: '#94a3b8', fontSize: '0.82rem', marginTop: '0.25rem' }}>
             Distribuição da premiação em dinheiro para os 3 melhores colocados do torneio
           </p>
         </div>
@@ -403,9 +403,9 @@ export default function Home() {
             <span className="prize-badge-rank" style={{ background: '#ffd700', color: '#030712' }}>
               🥇 1º Colocado (Campeão)
             </span>
-            <div style={{ position: 'relative', margin: '1.2rem 0' }}>
-              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100px', height: '100px', background: 'rgba(255, 215, 0, 0.3)', filter: 'blur(25px)', borderRadius: '50%' }}></div>
-              <svg width="78" height="78" viewBox="0 0 24 24" fill="#ffd700" stroke="#b8860b" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 6px 16px rgba(255,215,0,0.45))' }}>
+            <div style={{ position: 'relative', margin: '0.8rem 0' }}>
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '70px', height: '70px', background: 'rgba(255, 215, 0, 0.3)', filter: 'blur(20px)', borderRadius: '50%' }}></div>
+              <svg width="58" height="58" viewBox="0 0 24 24" fill="#ffd700" stroke="#b8860b" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 12px rgba(255,215,0,0.45))' }}>
                 <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
                 <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
                 <path d="M4 22h16"></path>
@@ -416,8 +416,8 @@ export default function Home() {
               </svg>
             </div>
             <div>
-              <span style={{ color: '#aebbd0', fontSize: '0.85rem', display: 'block', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 800 }}>Premiação Campeão</span>
-              <span className="prize-amount" style={{ color: '#ffd700', textShadow: '0 0 20px rgba(255,215,0,0.35)' }}>
+              <span style={{ color: '#aebbd0', fontSize: '0.75rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 800 }}>Premiação Campeão</span>
+              <span className="prize-amount" style={{ color: '#ffd700', textShadow: '0 0 18px rgba(255,215,0,0.35)' }}>
                 R$ 250,00
               </span>
             </div>
@@ -428,9 +428,9 @@ export default function Home() {
             <span className="prize-badge-rank" style={{ background: '#e2e8f0', color: '#030712' }}>
               🥈 2º Colocado (Vice)
             </span>
-            <div style={{ position: 'relative', margin: '1.2rem 0' }}>
-              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '80px', height: '80px', background: 'rgba(226, 232, 240, 0.2)', filter: 'blur(20px)', borderRadius: '50%' }}></div>
-              <svg width="68" height="68" viewBox="0 0 24 24" fill="#c0c0c0" stroke="#718096" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 12px rgba(255,255,255,0.25))' }}>
+            <div style={{ position: 'relative', margin: '0.8rem 0' }}>
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '60px', height: '60px', background: 'rgba(226, 232, 240, 0.2)', filter: 'blur(15px)', borderRadius: '50%' }}></div>
+              <svg width="50" height="50" viewBox="0 0 24 24" fill="#c0c0c0" stroke="#718096" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 10px rgba(255,255,255,0.25))' }}>
                 <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
                 <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
                 <path d="M4 22h16"></path>
@@ -441,7 +441,7 @@ export default function Home() {
               </svg>
             </div>
             <div>
-              <span style={{ color: '#aebbd0', fontSize: '0.85rem', display: 'block', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 800 }}>Premiação Vice</span>
+              <span style={{ color: '#aebbd0', fontSize: '0.75rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 800 }}>Premiação Vice</span>
               <span className="prize-amount" style={{ color: '#f8fafc' }}>
                 R$ 100,00
               </span>
@@ -453,9 +453,9 @@ export default function Home() {
             <span className="prize-badge-rank" style={{ background: '#cd7f32', color: '#030712' }}>
               🥉 3º Colocado
             </span>
-            <div style={{ position: 'relative', margin: '1.2rem 0' }}>
-              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '80px', height: '80px', background: 'rgba(205, 127, 50, 0.2)', filter: 'blur(20px)', borderRadius: '50%' }}></div>
-              <svg width="68" height="68" viewBox="0 0 24 24" fill="#cd7f32" stroke="#8b4513" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 12px rgba(205,127,50,0.3))' }}>
+            <div style={{ position: 'relative', margin: '0.8rem 0' }}>
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '60px', height: '60px', background: 'rgba(205, 127, 50, 0.2)', filter: 'blur(15px)', borderRadius: '50%' }}></div>
+              <svg width="50" height="50" viewBox="0 0 24 24" fill="#cd7f32" stroke="#8b4513" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 10px rgba(205,127,50,0.3))' }}>
                 <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
                 <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
                 <path d="M4 22h16"></path>
@@ -466,7 +466,7 @@ export default function Home() {
               </svg>
             </div>
             <div>
-              <span style={{ color: '#aebbd0', fontSize: '0.85rem', display: 'block', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 800 }}>Premiação 3º Lugar</span>
+              <span style={{ color: '#aebbd0', fontSize: '0.75rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 800 }}>Premiação 3º Lugar</span>
               <span className="prize-amount" style={{ color: '#e0a976' }}>
                 R$ 50,00
               </span>
@@ -476,7 +476,7 @@ export default function Home() {
       </section>
 
       {/* Seção Mural de Resenha (Comentários) */}
-      <section className="container" style={{ padding: '0 2rem 6rem' }}>
+      <section className="container" style={{ padding: '0 1rem 3rem' }}>
         <Comments />
       </section>
     </main>

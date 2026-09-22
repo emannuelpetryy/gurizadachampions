@@ -451,7 +451,7 @@ export default function PlayoffBracket() {
           </div>
           {renderInteractiveMatchCard(
             'final',
-            '🏆 GRANDE FINAL',
+            '🏆 GRANDE FINAL (MD5)',
             finalTeamA,
             finalTeamB,
             selectedSemi1Winner ? `Vencedor Semi 1 (${getTeam(selectedSemi1Winner).initials})` : 'Vencedor Semi 1',

@@ -14,25 +14,25 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
   const teamPlayers = players.filter(p => p.teamId === team.id);
 
   return (
-    <main style={{ padding: '4rem 0' }}>
+    <main style={{ padding: '1.5rem 0' }}>
       <section className="container">
         
         {/* Team Banner */}
-        <div className="glass-card" style={{ marginBottom: '3rem', padding: '0', overflow: 'hidden', position: 'relative' }}>
-          <div style={{ height: '200px', background: 'url(https://firebasestorage.googleapis.com/v0/b/copafacil-web.appspot.com/o/events%2F-zfhvn%2Finfo.png?alt=media&token=1&m=1784675443770)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(3px) brightness(0.3)' }}></div>
+        <div className="glass-card" style={{ marginBottom: '1.5rem', padding: '0', overflow: 'hidden', position: 'relative' }}>
+          <div style={{ height: '140px', background: 'url(https://firebasestorage.googleapis.com/v0/b/copafacil-web.appspot.com/o/events%2F-zfhvn%2Finfo.png?alt=media&token=1&m=1784675443770)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(3px) brightness(0.3)' }}></div>
           
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', gap: '2rem', padding: '2rem' }}>
-            <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={120} borderRadius="12px" />
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', gap: '1.2rem', padding: '1.2rem' }}>
+            <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={80} borderRadius="12px" />
             <div>
-              <h1 style={{ fontSize: '3rem', fontFamily: 'var(--font-rajdhani)', color: '#fff', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>{team.name}</h1>
-              <span style={{ background: 'var(--cyan)', color: '#000', padding: '0.2rem 1rem', borderRadius: '20px', fontWeight: 'bold' }}>GRUPO DA EQUIPE</span>
+              <h1 style={{ fontSize: '2rem', fontFamily: 'var(--font-rajdhani)', color: '#fff', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>{team.name}</h1>
+              <span style={{ background: 'var(--cyan)', color: '#000', padding: '0.15rem 0.75rem', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.78rem' }}>GRUPO DA EQUIPE</span>
             </div>
           </div>
         </div>
 
         {/* Players / Roster */}
-        <h2 className="hero-title" style={{ fontSize: '2.5rem', marginBottom: '2rem', textShadow: 'none' }}>JOGADORES</h2>
-        <div className="glass-card" style={{ padding: '1.5rem', marginBottom: '3rem' }}>
+        <h2 className="hero-title" style={{ fontSize: '1.5rem', marginBottom: '1rem', textShadow: 'none' }}>JOGADORES</h2>
+        <div className="glass-card" style={{ padding: '1.1rem', marginBottom: '1.5rem' }}>
           <div style={{ overflowX: 'auto' }}>
             <table className="ranking-table">
               <thead>
@@ -73,7 +73,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
         </div>
 
         {/* Matches */}
-        <h2 className="hero-title" style={{ fontSize: '2.5rem', marginBottom: '2rem', textShadow: 'none' }}>PARTIDAS</h2>
+        <h2 className="hero-title" style={{ fontSize: '1.5rem', marginBottom: '1rem', textShadow: 'none' }}>PARTIDAS</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {teamMatches.map(match => {
             const teamA = getTeam(match.teamA);

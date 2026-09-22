@@ -1,13 +1,13 @@
 export default function Sobre() {
   return (
-    <main style={{ padding: '4rem 0' }}>
+    <main style={{ padding: '1.5rem 0' }}>
       <section className="container">
-        <h1 className="hero-title" style={{ fontSize: '3rem', textAlign: 'center' }}>Regulamento Oficial</h1>
-        <p className="hero-subtitle" style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <h1 className="hero-title" style={{ fontSize: '2rem', textAlign: 'center' }}>Regulamento Oficial</h1>
+        <p className="hero-subtitle" style={{ textAlign: 'center', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
           Regras, formato e diretrizes do Gurizada Champions Cup.
         </p>
 
-        <div className="glass-card" style={{ maxWidth: '900px', margin: '0 auto' }}>
+        <div className="glass-card" style={{ maxWidth: '900px', margin: '0 auto', padding: '1.4rem' }}>
           <div className="rules-content" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             
             <section>

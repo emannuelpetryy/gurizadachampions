@@ -129,16 +129,16 @@ export default function ComparacaoPage() {
   };
 
   return (
-    <main style={{ padding: '4rem 0', minHeight: '100vh' }}>
+    <main style={{ padding: '1.5rem 0', minHeight: '100vh' }}>
       <section className="container">
         
         {/* Title */}
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1.4rem' }}>
           <span className="section-eyebrow">HEAD-TO-HEAD</span>
-          <h1 className="hero-title" style={{ fontSize: '3rem', margin: '0.2rem 0 0', textShadow: 'none' }}>
+          <h1 className="hero-title" style={{ fontSize: '2rem', margin: '0.2rem 0 0', textShadow: 'none' }}>
             COMPARAÇÃO <span style={{ color: 'var(--cyan)' }}>1V1</span>
           </h1>
-          <p style={{ color: '#94a3b8', marginTop: '0.5rem', fontSize: '0.95rem' }}>
+          <p style={{ color: '#94a3b8', marginTop: '0.35rem', fontSize: '0.88rem' }}>
             Coloque dois jogadores frente a frente e analise quem domina as estatísticas da temporada!
           </p>
         </div>

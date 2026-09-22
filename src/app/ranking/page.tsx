@@ -102,11 +102,11 @@ export default function Ranking() {
   );
 
   return (
-    <main style={{ padding: '4rem 0', minHeight: '100vh' }}>
+    <main style={{ padding: '1.5rem 0', minHeight: '100vh' }}>
       <section className="container">
         
         {/* SELETOR DE MENU SUSPENSO / TABS DE RANKING */}
-        <div className="ranking-tabs" style={{ marginBottom: '3rem' }}>
+        <div className="ranking-tabs" style={{ marginBottom: '1.4rem' }}>
           <button
             onClick={() => setActiveTab('championship')}
             className={`ranking-tab ${activeTab === 'championship' ? 'is-active' : ''}`}
@@ -139,13 +139,13 @@ export default function Ranking() {
         {/* TAB 1: CLASSIFICAÇÃO DO CAMPEONATO */}
         {activeTab === 'championship' && (
           <>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
               <SeasonSelector />
             </div>
-            <h1 className="hero-title" style={{ fontSize: '3.2rem', textAlign: 'center', textShadow: 'none' }}>
+            <h1 className="hero-title" style={{ fontSize: '2rem', textAlign: 'center', textShadow: 'none' }}>
               TABELA DE <span className="text-cyan">CLASSIFICAÇÃO</span>
             </h1>
-            <p className="hero-subtitle" style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <p className="hero-subtitle" style={{ textAlign: 'center', marginBottom: '1.4rem', fontSize: '0.9rem' }}>
               FASE DE GRUPOS - GURIZADA CHAMPIONS
             </p>
 
@@ -154,14 +154,14 @@ export default function Ranking() {
               {renderGroupTable('B', groupB)}
             </div>
 
-            <h2 className="hero-title" style={{ fontSize: '2.5rem', textAlign: 'center', marginTop: '4rem', marginBottom: '0.4rem', textShadow: 'none' }}>
+            <h2 className="hero-title" style={{ fontSize: '1.7rem', textAlign: 'center', marginTop: '2rem', marginBottom: '0.35rem', textShadow: 'none' }}>
               RANKING GERAL DE <span className="text-gold">DESEMPENHO</span>
             </h2>
-            <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '2rem' }}>
+            <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.2rem' }}>
               Classificação oficial por <strong style={{ color: 'var(--gold)' }}>K/D</strong> (2 casas decimais). Critério de desempate: melhor <strong style={{ color: 'var(--cyan)' }}>KDA</strong> acumulado e total de kills.
             </p>
             
-            <div className="glass-card" style={{ padding: '1.5rem' }}>
+            <div className="glass-card" style={{ padding: '1.1rem' }}>
               <label className="ranking-search">
                 <span aria-hidden="true">⌕</span>
                 <span className="sr-only">Buscar jogador</span>
@@ -254,7 +254,7 @@ export default function Ranking() {
               </p>
             </div>
 
-            <div style={{ marginTop: '4rem' }}>
+            <div style={{ marginTop: '2rem' }}>
               <PlayoffBracket />
             </div>
           </>
@@ -263,10 +263,10 @@ export default function Ranking() {
         {/* TAB 2: RANKING DE ELO DA GURIZADA (AMISTOSOS) */}
         {activeTab === 'elo_rating' && (
           <div>
-            <h1 className="hero-title" style={{ fontSize: '3.2rem', textAlign: 'center', textShadow: 'none' }}>
+            <h1 className="hero-title" style={{ fontSize: '2rem', textAlign: 'center', textShadow: 'none' }}>
               RANKING DE ELO <span className="text-gold">DA GURIZADA</span>
             </h1>
-            <p className="hero-subtitle" style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <p className="hero-subtitle" style={{ textAlign: 'center', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
               Pontuação individual acumulada nas partidas amistosas do Lobby. ELO dinâmico: base 1000 +20/vit. -15/der. + bônus K/D, ADR e MVPs de Rodada
             </p>
 

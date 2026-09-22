@@ -37,16 +37,16 @@ export default function Jogadores() {
   const totalFilteredPlayers = filteredData.reduce((sum, g) => sum + g.players.length, 0);
 
   return (
-    <main style={{ padding: '4rem 0', minHeight: '100vh' }}>
+    <main style={{ padding: '1.5rem 0', minHeight: '100vh' }}>
       <section className="container">
         
         {/* Header da Página */}
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <span className="section-eyebrow">ROSTER COMPLETO DA LIGA</span>
-          <h1 className="hero-title" style={{ fontSize: '3.5rem', margin: '0.2rem 0 0', textShadow: 'none' }}>
+          <h1 className="hero-title" style={{ fontSize: '2rem', margin: '0.2rem 0 0', textShadow: 'none' }}>
             TIERS DOS <span className="text-cyan">JOGADORES</span>
           </h1>
-          <p className="hero-subtitle" style={{ marginTop: '0.5rem', marginBottom: '2.5rem' }}>
+          <p className="hero-subtitle" style={{ marginTop: '0.35rem', marginBottom: '1.2rem', fontSize: '0.9rem' }}>
             Classificação oficial baseada no nível GamersClub / Gurizada Rating
           </p>
 

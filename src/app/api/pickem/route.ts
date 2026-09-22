@@ -16,26 +16,49 @@ interface PickemState {
 
 const defaultPickemState: PickemState = {
   scores: {
-    'ven_2_0': 4,
-    'ven_2_1': 6,
-    'des_2_0': 2,
-    'des_2_1': 3,
+    'ven_3_0': 4,
+    'ven_3_1': 7,
+    'ven_3_2': 5,
+    'des_3_0': 2,
+    'des_3_1': 4,
+    'des_3_2': 3,
   },
   mvps: {
-    'Pacal': 5,
-    'Tufa': 4,
-    'Manu': 3,
-    'Sorps - Leluia': 2,
-    'Distress - Pedro': 1,
+    'Pacal': 6,
+    'Tufa': 5,
+    'Manu': 4,
+    'Sorps - Leluia': 3,
+    'Distress - Pedro': 2,
   },
-  totalPicks: 15,
+  totalPicks: 25,
 };
+
+function normalizePickemState(state: PickemState): PickemState {
+  if (!state.scores) state.scores = {};
+  if (state.scores['ven_2_0']) {
+    state.scores['ven_3_0'] = (state.scores['ven_3_0'] || 0) + state.scores['ven_2_0'];
+    delete state.scores['ven_2_0'];
+  }
+  if (state.scores['ven_2_1']) {
+    state.scores['ven_3_1'] = (state.scores['ven_3_1'] || 0) + state.scores['ven_2_1'];
+    delete state.scores['ven_2_1'];
+  }
+  if (state.scores['des_2_0']) {
+    state.scores['des_3_0'] = (state.scores['des_3_0'] || 0) + state.scores['des_2_0'];
+    delete state.scores['des_2_0'];
+  }
+  if (state.scores['des_2_1']) {
+    state.scores['des_3_1'] = (state.scores['des_3_1'] || 0) + state.scores['des_2_1'];
+    delete state.scores['des_2_1'];
+  }
+  return state;
+}
 
 let localPickemFallback: PickemState = { ...defaultPickemState };
 
 async function getStoredPickem(): Promise<PickemState> {
   const { supabaseUrl, supabaseKey } = getSupabaseConfig();
-  if (!supabaseUrl || !supabaseKey) return localPickemFallback;
+  if (!supabaseUrl || !supabaseKey) return normalizePickemState(localPickemFallback);
 
   try {
     const res = await fetch(`${supabaseUrl}/rest/v1/match_lobby?select=*&slot_id=eq.${SLOT_PICKEM}`, {
@@ -45,15 +68,15 @@ async function getStoredPickem(): Promise<PickemState> {
       },
       cache: 'no-store',
     });
-    if (!res.ok) return localPickemFallback;
+    if (!res.ok) return normalizePickemState(localPickemFallback);
     const data = await res.json();
     if (Array.isArray(data) && data.length > 0 && data[0].player_name) {
-      return JSON.parse(data[0].player_name);
+      return normalizePickemState(JSON.parse(data[0].player_name));
     }
   } catch (e) {
     console.error('Erro ao ler Pickem no Supabase:', e);
   }
-  return localPickemFallback;
+  return normalizePickemState(localPickemFallback);
 }
 
 async function saveStoredPickem(state: PickemState) {

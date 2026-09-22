@@ -103,22 +103,22 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
   const radarAttributes = calculateRadarAttributes(player, recentMatchRecords);
 
   return (
-    <main style={{ padding: '4rem 0', minHeight: '100vh' }}>
+    <main style={{ padding: '1.5rem 0', minHeight: '100vh' }}>
       <section className="container">
         
         {/* Header do Jogador */}
-        <div className="glass-card" style={{ padding: '3rem 2rem', marginBottom: '3rem', position: 'relative', overflow: 'hidden' }}>
+        <div className="glass-card" style={{ padding: '1.5rem 1.2rem', marginBottom: '1.5rem', position: 'relative', overflow: 'hidden' }}>
           {/* Fundo dinâmico da cor do badge */}
-          <div style={{ position: 'absolute', top: 0, right: 0, width: '300px', height: '300px', background: badgeColor, filter: 'blur(100px)', opacity: 0.1, borderRadius: '50%', transform: 'translate(30%, -30%)' }}></div>
+          <div style={{ position: 'absolute', top: 0, right: 0, width: '250px', height: '250px', background: badgeColor, filter: 'blur(90px)', opacity: 0.1, borderRadius: '50%', transform: 'translate(30%, -30%)' }}></div>
           
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', position: 'relative', zIndex: 1 }}>
             
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexDirection: 'column' }}>
               <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor={badgeColor} editable={true} />
-              <h1 className="hero-title" style={{ fontSize: '3rem', margin: 0, textShadow: 'none' }}>{player.name}</h1>
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <h1 className="hero-title" style={{ fontSize: '2rem', margin: 0, textShadow: 'none' }}>{player.name}</h1>
+              <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                 {playerTier !== 'Não ranqueado' && (
-                  <span style={{ background: 'var(--gold)', color: '#000', padding: '0.4rem 1rem', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem' }}>
+                  <span style={{ background: 'var(--gold)', color: '#000', padding: '0.3rem 0.8rem', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.82rem' }}>
                     {playerTier} {tierLvl}
                   </span>
                 )}
@@ -255,14 +255,14 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
               }
               historyComponent={
                 <div>
-                  <h2 className="hero-title" style={{ fontSize: '2rem', marginBottom: '1.5rem', textShadow: 'none', textAlign: 'left' }}>HISTÓRICO DO CAMPEONATO</h2>
+                  <h2 className="hero-title" style={{ fontSize: '1.4rem', marginBottom: '1rem', textShadow: 'none', textAlign: 'left' }}>HISTÓRICO DO CAMPEONATO</h2>
                   
                   {playerMatches.length === 0 ? (
                     <p style={{ color: 'var(--text-muted)', textAlign: 'center' }}>Nenhuma partida registrada para este jogador no campeonato.</p>
                   ) : (
-                    <div style={{ display: 'grid', gap: '1rem' }}>
+                    <div style={{ display: 'grid', gap: '0.8rem' }}>
                       {playerMatches.map((pm, i) => (
-                        <div key={i} className="glass-card match-card-hover" style={{ padding: '1.5rem', display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: '2rem', borderLeft: `4px solid ${pm.won ? 'var(--cyan)' : 'var(--accent-red)'}` }}>
+                        <div key={i} className="glass-card match-card-hover" style={{ padding: '0.9rem 1.1rem', display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: '1.2rem', borderLeft: `4px solid ${pm.won ? 'var(--cyan)' : 'var(--accent-red)'}` }}>
                           
                           {/* Oponente */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
