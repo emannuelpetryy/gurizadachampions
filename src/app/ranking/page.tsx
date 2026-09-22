@@ -34,7 +34,7 @@ export default function Ranking() {
   }, []);
 
   const renderGroupTable = (groupName: string, groupData: any[]) => (
-    <div className="glass-card" style={{ marginBottom: '2rem', padding: '1.5rem' }}>
+    <div className="glass-card" style={{ marginBottom: '1.5rem', padding: '1rem 1.15rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem', paddingBottom: '0.8rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <h3 className="card-title" style={{ margin: 0 }}>
           <span style={{ color: 'var(--cyan)' }}>GRUPO</span> {groupName}

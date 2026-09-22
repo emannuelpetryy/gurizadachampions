@@ -8,6 +8,7 @@ import PlayoffBracket from './components/PlayoffBracket';
 import GrandFinalShowdown from './components/GrandFinalShowdown';
 import PickemWidget from './components/PickemWidget';
 import SeasonSelector from './components/SeasonSelector';
+import HomeTopFraggers from './components/HomeTopFraggers';
 import { sortRanking } from '../lib/stats';
 
 export default function Home() {
@@ -232,134 +233,15 @@ export default function Home() {
         <CommunitySelection />
 
         {/* DASHBOARD DE TOP FRAGGERS COM BARRAS DE PROGRESSO DE K/D */}
-        <div className="topfraggers-card">
-          <div className="topfraggers-header">
-            <div>
-              <span className="section-eyebrow">ESTATÍSTICAS INDIVIDUAIS</span>
-              <h3 className="card-title" style={{ margin: '0.2rem 0 0' }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-                RANKING GERAL DE DESEMPENHO (TOP FRAGGERS)
-              </h3>
-              <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                Ordenado por K/D (2 casas decimais) · Desempate oficial por melhor KDA
-              </p>
-            </div>
-            <span className="recent-matches-count">{topKD.length} JOGADORES REGISTRADOS</span>
-          </div>
-          
-          <ul className="topfraggers-list custom-scrollbar">
-            {topKD.map((player, index) => {
-              const team = getTeam(player.teamId);
-              const kdRaw = player.kills / (player.deaths || 1);
-              const kdaRaw = (player.kills + player.assists) / (player.deaths || 1);
-              const kd = kdRaw.toFixed(2);
-              const kda = kdaRaw.toFixed(2);
-
-              const progressPct = Math.min(100, Math.max(15, (kdRaw / 2.2) * 100));
-
-              let badgeBg = 'rgba(0, 240, 255, 0.12)';
-              let badgeBorder = '1px solid rgba(0, 240, 255, 0.4)';
-              let badgeText = 'var(--cyan)';
-
-              if (kdRaw >= 2.0) {
-                badgeBg = 'linear-gradient(135deg, #ffd700, #ffaa00)';
-                badgeBorder = 'none';
-                badgeText = '#030712';
-              } else if (kdRaw >= 1.5) {
-                badgeBg = 'rgba(0, 240, 255, 0.18)';
-                badgeBorder = '1px solid #00f0ff';
-                badgeText = '#00f0ff';
-              } else if (kdRaw >= 1.0) {
-                badgeBg = 'rgba(16, 185, 129, 0.18)';
-                badgeBorder = '1px solid #10b981';
-                badgeText = '#10b981';
-              } else {
-                badgeBg = 'rgba(255, 51, 102, 0.18)';
-                badgeBorder = '1px solid #ff3366';
-                badgeText = '#ff3366';
-              }
-              
-              const playerTier = getPlayerTier(player.name);
-              const podiumClass = index === 0 ? 'podium-1' : index === 1 ? 'podium-2' : index === 2 ? 'podium-3' : '';
-              const rankColorClass = index === 0 ? 'rank-gold' : index === 1 ? 'rank-silver' : index === 2 ? 'rank-bronze' : 'rank-default';
-
-              return (
-                <li key={player.name} className={`topfragger-item ${podiumClass}`}>
-                  
-                  <div className="topfragger-profile">
-                    <span className={`topfragger-rank ${rankColorClass}`}>
-                      {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
-                    </span>
-                    <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={36} borderRadius="8px" />
-                    <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor="rgba(255,255,255,0.1)" size={42} />
-                    <div>
-                      <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none' }} className="match-card-hover">
-                        <p className="topfragger-name">
-                          <span>{player.name}</span>
-                          {playerTier && (
-                            <span style={{
-                              fontSize: '0.62rem',
-                              fontWeight: 800,
-                              padding: '0.12rem 0.45rem',
-                              borderRadius: '6px',
-                              background: playerTier === 'S' ? 'rgba(255, 215, 0, 0.18)' : playerTier === 'A' ? 'rgba(0, 240, 255, 0.18)' : playerTier === 'B' ? 'rgba(16, 185, 129, 0.18)' : 'rgba(255, 255, 255, 0.08)',
-                              color: playerTier === 'S' ? '#ffd700' : playerTier === 'A' ? '#00f0ff' : playerTier === 'B' ? '#10b981' : '#94a3b8',
-                              border: `1px solid ${playerTier === 'S' ? '#ffd70060' : playerTier === 'A' ? '#00f0ff60' : playerTier === 'B' ? '#10b98160' : '#ffffff20'}`,
-                              letterSpacing: '0.5px',
-                              lineHeight: 1,
-                            }}>
-                              TIER {playerTier}
-                            </span>
-                          )}
-                        </p>
-                      </Link>
-                      <p className="topfragger-team">
-                        <span>{team.name}</span>
-                        <span>•</span>
-                        <span>{player.matches || 1} {player.matches === 1 ? 'Partida' : 'Partidas'}</span>
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="topfragger-metrics">
-                    {/* Barra de Progresso Visual de K/D */}
-                    <div className="topfragger-meter mobile-hide">
-                      <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, letterSpacing: '0.5px' }}>
-                        NÍVEL K/D ({progressPct.toFixed(0)}%)
-                      </span>
-                      <div className="kd-progress-bar-bg" style={{ width: '100px', height: '6px' }}>
-                        <div className="kd-progress-bar-fill" style={{ width: `${progressPct}%`, background: badgeText === '#030712' ? '#ffd700' : badgeText }}></div>
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.15rem' }}>
-                      <span style={{ fontSize: '0.88rem', color: '#f8fafc', fontWeight: 800, fontFamily: 'var(--font-rajdhani)', letterSpacing: '0.5px' }}>
-                        {player.kills}K / {player.deaths}D / {player.assists}A
-                      </span>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--cyan)', fontWeight: 800, letterSpacing: '0.5px' }}>
-                        KDA {kda}
-                      </span>
-                    </div>
-
-                    <div className="topfragger-badge-kd" style={{ background: badgeBg, border: badgeBorder, boxShadow: kdRaw >= 2.0 ? '0 0 20px rgba(255,215,0,0.45)' : 'none' }}>
-                      <span style={{ fontSize: '0.58rem', color: badgeText === '#030712' ? '#030712' : 'rgba(255,255,255,0.7)', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.8px' }}>K/D</span>
-                      <span style={{ fontWeight: '900', color: badgeText, fontSize: '1.3rem', fontFamily: 'var(--font-rajdhani)', lineHeight: 1.1 }}>{kd}</span>
-                    </div>
-                  </div>
-
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+        <HomeTopFraggers topKD={topKD} />
 
       </section>
 
       {/* Seção Equipes Participantes */}
-      <section className="container" style={{ padding: '0 1rem 2rem' }}>
-        <div style={{ marginBottom: '1rem' }}>
+      <section className="container" style={{ padding: '0 1rem 1.4rem' }}>
+        <div style={{ marginBottom: '0.85rem' }}>
           <span className="section-eyebrow">ORGANIZAÇÕES EM DISPUTA</span>
-          <h3 className="card-title" style={{ margin: '0.2rem 0 0', fontSize: '1.4rem' }}>
+          <h3 className="card-title" style={{ margin: '0.2rem 0 0', fontSize: '1.25rem' }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             EQUIPES PARTICIPANTES
           </h3>
@@ -368,11 +250,11 @@ export default function Home() {
         <div className="teams-showcase-grid">
           {teams.map((team, idx) => (
             <Link href={`/time/${team.id}`} key={team.id} className="team-showcase-card">
-              <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={48} borderRadius="10px" />
+              <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={40} borderRadius="8px" />
               <div className="team-showcase-info">
                 <span className="team-showcase-group">GRUPO {idx < 4 ? 'A' : 'B'}</span>
-                <strong className="team-showcase-name" style={{ fontSize: '1.05rem' }}>{team.name}</strong>
-                <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>Ver escalação →</span>
+                <strong className="team-showcase-name" style={{ fontSize: '0.94rem' }}>{team.name}</strong>
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Ver escalação →</span>
               </div>
             </Link>
           ))}
@@ -380,19 +262,19 @@ export default function Home() {
       </section>
 
       {/* Seção Mata-Mata / Playoff Bracket */}
-      <section className="container" style={{ padding: '0 1rem 2rem' }}>
+      <section className="container" style={{ padding: '0 1rem 1.4rem' }}>
         <PlayoffBracket />
       </section>
 
       {/* Seção Premiações - 3D PODIUM */}
-      <section className="container" style={{ padding: '0 1rem 2.2rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '1.4rem' }}>
+      <section className="container" style={{ padding: '0 1rem 1.5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
           <span className="section-eyebrow">PREMIAÇÕES OFICIAIS</span>
-          <h3 className="card-title" style={{ margin: '0.2rem 0 0', justifyContent: 'center', fontSize: '1.6rem' }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+          <h3 className="card-title" style={{ margin: '0.2rem 0 0', justifyContent: 'center', fontSize: '1.35rem' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
             PREMIAÇÃO DA TEMPORADA 1
           </h3>
-          <p style={{ color: '#94a3b8', fontSize: '0.82rem', marginTop: '0.25rem' }}>
+          <p style={{ color: '#94a3b8', fontSize: '0.78rem', marginTop: '0.2rem' }}>
             Distribuição da premiação em dinheiro para os 3 melhores colocados do torneio
           </p>
         </div>
@@ -403,9 +285,9 @@ export default function Home() {
             <span className="prize-badge-rank" style={{ background: '#ffd700', color: '#030712' }}>
               🥇 1º Colocado (Campeão)
             </span>
-            <div style={{ position: 'relative', margin: '0.8rem 0' }}>
-              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '70px', height: '70px', background: 'rgba(255, 215, 0, 0.3)', filter: 'blur(20px)', borderRadius: '50%' }}></div>
-              <svg width="58" height="58" viewBox="0 0 24 24" fill="#ffd700" stroke="#b8860b" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 12px rgba(255,215,0,0.45))' }}>
+            <div style={{ position: 'relative', margin: '0.5rem 0' }}>
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '52px', height: '52px', background: 'rgba(255, 215, 0, 0.3)', filter: 'blur(16px)', borderRadius: '50%' }}></div>
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="#ffd700" stroke="#b8860b" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 3px 10px rgba(255,215,0,0.45))' }}>
                 <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
                 <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
                 <path d="M4 22h16"></path>
@@ -416,7 +298,7 @@ export default function Home() {
               </svg>
             </div>
             <div>
-              <span style={{ color: '#aebbd0', fontSize: '0.75rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 800 }}>Premiação Campeão</span>
+              <span style={{ color: '#aebbd0', fontSize: '0.7rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 800 }}>Premiação Campeão</span>
               <span className="prize-amount" style={{ color: '#ffd700', textShadow: '0 0 18px rgba(255,215,0,0.35)' }}>
                 R$ 250,00
               </span>
@@ -428,9 +310,9 @@ export default function Home() {
             <span className="prize-badge-rank" style={{ background: '#e2e8f0', color: '#030712' }}>
               🥈 2º Colocado (Vice)
             </span>
-            <div style={{ position: 'relative', margin: '0.8rem 0' }}>
-              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '60px', height: '60px', background: 'rgba(226, 232, 240, 0.2)', filter: 'blur(15px)', borderRadius: '50%' }}></div>
-              <svg width="50" height="50" viewBox="0 0 24 24" fill="#c0c0c0" stroke="#718096" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 10px rgba(255,255,255,0.25))' }}>
+            <div style={{ position: 'relative', margin: '0.5rem 0' }}>
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '44px', height: '44px', background: 'rgba(226, 232, 240, 0.2)', filter: 'blur(12px)', borderRadius: '50%' }}></div>
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="#c0c0c0" stroke="#718096" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 3px 8px rgba(255,255,255,0.25))' }}>
                 <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
                 <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
                 <path d="M4 22h16"></path>
@@ -441,7 +323,7 @@ export default function Home() {
               </svg>
             </div>
             <div>
-              <span style={{ color: '#aebbd0', fontSize: '0.75rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 800 }}>Premiação Vice</span>
+              <span style={{ color: '#aebbd0', fontSize: '0.7rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 800 }}>Premiação Vice</span>
               <span className="prize-amount" style={{ color: '#f8fafc' }}>
                 R$ 100,00
               </span>
@@ -453,9 +335,9 @@ export default function Home() {
             <span className="prize-badge-rank" style={{ background: '#cd7f32', color: '#030712' }}>
               🥉 3º Colocado
             </span>
-            <div style={{ position: 'relative', margin: '0.8rem 0' }}>
-              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '60px', height: '60px', background: 'rgba(205, 127, 50, 0.2)', filter: 'blur(15px)', borderRadius: '50%' }}></div>
-              <svg width="50" height="50" viewBox="0 0 24 24" fill="#cd7f32" stroke="#8b4513" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 4px 10px rgba(205,127,50,0.3))' }}>
+            <div style={{ position: 'relative', margin: '0.5rem 0' }}>
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '44px', height: '44px', background: 'rgba(205, 127, 50, 0.2)', filter: 'blur(12px)', borderRadius: '50%' }}></div>
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="#cd7f32" stroke="#8b4513" strokeWidth="1" style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 3px 8px rgba(205,127,50,0.3))' }}>
                 <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
                 <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
                 <path d="M4 22h16"></path>
@@ -466,7 +348,7 @@ export default function Home() {
               </svg>
             </div>
             <div>
-              <span style={{ color: '#aebbd0', fontSize: '0.75rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 800 }}>Premiação 3º Lugar</span>
+              <span style={{ color: '#aebbd0', fontSize: '0.7rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 800 }}>Premiação 3º Lugar</span>
               <span className="prize-amount" style={{ color: '#e0a976' }}>
                 R$ 50,00
               </span>
@@ -476,7 +358,7 @@ export default function Home() {
       </section>
 
       {/* Seção Mural de Resenha (Comentários) */}
-      <section className="container" style={{ padding: '0 1rem 3rem' }}>
+      <section className="container" style={{ padding: '0 1rem 2rem' }}>
         <Comments />
       </section>
     </main>
