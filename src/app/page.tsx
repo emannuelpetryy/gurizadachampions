@@ -1,9 +1,8 @@
-import { getTeam, matches, matchDetails, players, teams, getPlayerTier } from './data';
+import { getTeam, matches, matchDetails, players, teams, getPlayerTier, playoffMatches } from './data';
 import Link from 'next/link';
 import PlayerAvatar from './jogador/[name]/PlayerAvatar';
 import Comments from '../components/Comments';
 import TeamLogo from './components/TeamLogo';
-import MapPoolStats from './components/MapPoolStats';
 import CommunitySelection from './components/CommunitySelection';
 import PlayoffBracket from './components/PlayoffBracket';
 import GrandFinalShowdown from './components/GrandFinalShowdown';
@@ -81,49 +80,147 @@ export default function Home() {
         {/* GRANDE FINAL: CONFRONTO POR NÍVEL + VOTAÇÃO DA TORCIDA */}
         <GrandFinalShowdown />
 
-        {/* MAP POOL STATS & ÚLTIMOS JOGOS */}
-        <MapPoolStats />
-        
-        {/* ÚLTIMAS PARTIDAS FINALIZADAS (GRID FIXO SEM WRAP DE PLACAR) */}
-        <section className="recent-matches-section">
+        {/* ÚLTIMAS PARTIDAS: SEMIFINAIS DOS PLAYOFFS (O CAMINHO ATÉ A FINAL) */}
+        <section className="recent-matches-section" style={{ marginTop: '2.5rem' }}>
           <div className="recent-matches-heading">
             <div>
-              <span className="section-eyebrow">ARQUIVO DA TEMPORADA</span>
-              <h3 className="card-title">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-            ÚLTIMAS PARTIDAS FINALIZADAS
-          </h3>
+              <span className="section-eyebrow">MATA-MATA · PLAYOFFS</span>
+              <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', margin: '0.2rem 0 0' }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                  <path d="M4 22h16"></path>
+                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                </svg>
+                ÚLTIMAS PARTIDAS · SEMIFINAIS
+              </h3>
             </div>
-            <span className="recent-matches-count">{matches.length} RESULTADOS</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+              <span className="recent-matches-count">MD3 OFICIAL</span>
+              <Link
+                href="/ranking"
+                style={{
+                  color: 'var(--cyan)',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
+                }}
+              >
+                Ver jogos da fase de grupos no Ranking ➔
+              </Link>
+            </div>
           </div>
-          <div className="recent-matches-grid">
-            {matches.map((match) => {
-              const teamA = getTeam(match.teamA);
-              const teamB = getTeam(match.teamB);
-              const detail = matchDetails[String(match.id)];
-              const mapName = detail?.map || 'Mirage';
-              
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '1.2rem', marginTop: '1.2rem' }}>
+            {playoffMatches.filter(m => m.id === 'semi-1' || m.id === 'semi-2').map((semi) => {
+              const teamA = getTeam(semi.teamAId || '');
+              const teamB = getTeam(semi.teamBId || '');
+              const aWon = (semi.scoreA || 0) > (semi.scoreB || 0);
+              const winnerTeam = aWon ? teamA : teamB;
+
               return (
-                <Link href={`/partida/${match.id}`} key={match.id} className="recent-match-card">
-                  <div className="recent-match-team recent-match-team-a">
-                      <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={38} borderRadius="8px" />
-                      <strong className={match.scoreA > match.scoreB ? 'is-winner' : ''}>
-                        {teamA.name}
-                      </strong>
+                <div
+                  key={semi.id}
+                  className="glass-card"
+                  style={{
+                    padding: '1.35rem',
+                    borderRadius: '16px',
+                    border: '1px solid rgba(0, 240, 255, 0.25)',
+                    background: 'linear-gradient(135deg, rgba(13, 20, 36, 0.9) 0%, rgba(6, 11, 24, 0.95) 100%)',
+                    boxShadow: '0 8px 30px rgba(0, 0, 0, 0.35)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                  }}
+                >
+                  {/* Header do Card da Semi */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '0.6rem' }}>
+                    <span style={{ color: 'var(--cyan)', fontWeight: 800, fontSize: '0.78rem', letterSpacing: '1px' }}>
+                      ⚔️ {semi.stage} · MD3
+                    </span>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, padding: '0.2rem 0.6rem', borderRadius: '12px', background: 'rgba(46, 213, 115, 0.15)', color: '#2ed573', border: '1px solid rgba(46, 213, 115, 0.3)' }}>
+                      FINALIZADA
+                    </span>
+                  </div>
+
+                  {/* Confronto Visual */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+                    {/* Time A */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+                      <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={44} borderRadius="8px" />
+                      <div style={{ minWidth: 0 }}>
+                        <strong style={{ color: aWon ? '#fff' : '#8fa0b8', fontSize: '1.05rem', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'var(--font-rajdhani)', fontWeight: 900 }}>
+                          {teamA.name}
+                        </strong>
+                        <span style={{ fontSize: '0.7rem', color: aWon ? 'var(--cyan)' : '#64748b', fontWeight: 700 }}>
+                          {semi.labelA}
+                        </span>
+                      </div>
                     </div>
-                    <div className="recent-match-score">
-                      <span className="recent-match-scoreline">
-                        {match.scoreA} <span>×</span> {match.scoreB}
+
+                    {/* Placar Central MD3 */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '76px' }}>
+                      <div style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        padding: '0.35rem 0.85rem',
+                        borderRadius: '10px',
+                        background: 'rgba(0, 0, 0, 0.6)',
+                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                        fontFamily: 'var(--font-rajdhani)',
+                        fontSize: '1.5rem',
+                        fontWeight: 900,
+                        letterSpacing: '2px',
+                      }}>
+                        <span style={{ color: aWon ? '#2ed573' : '#64748b' }}>{semi.scoreA}</span>
+                        <span style={{ color: '#64748b', fontSize: '1rem' }}>×</span>
+                        <span style={{ color: !aWon ? '#2ed573' : '#64748b' }}>{semi.scoreB}</span>
+                      </div>
+                      <span style={{ fontSize: '0.62rem', color: '#64748b', fontWeight: 800, marginTop: '0.25rem', letterSpacing: '0.5px' }}>
+                        MD3
                       </span>
-                      <span className={`recent-match-map map-${mapName.toLowerCase().replace(/\s+/g, '-')}`}>◈ {mapName}</span>
                     </div>
-                    <div className="recent-match-team recent-match-team-b">
-                      <strong className={match.scoreB > match.scoreA ? 'is-winner' : ''}>
-                        {teamB.name}
-                      </strong>
-                      <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={38} borderRadius="8px" />
+
+                    {/* Time B */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.75rem', flex: 1, minWidth: 0, textAlign: 'right' }}>
+                      <div style={{ minWidth: 0 }}>
+                        <strong style={{ color: !aWon ? '#fff' : '#8fa0b8', fontSize: '1.05rem', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'var(--font-rajdhani)', fontWeight: 900 }}>
+                          {teamB.name}
+                        </strong>
+                        <span style={{ fontSize: '0.7rem', color: !aWon ? 'var(--cyan)' : '#64748b', fontWeight: 700 }}>
+                          {semi.labelB}
+                        </span>
+                      </div>
+                      <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={44} borderRadius="8px" />
                     </div>
-                </Link>
+                  </div>
+
+                  {/* Rodapé do Card: Desfecho */}
+                  <div style={{
+                    marginTop: '0.2rem',
+                    padding: '0.5rem 0.8rem',
+                    borderRadius: '8px',
+                    background: 'rgba(46, 213, 115, 0.08)',
+                    border: '1px solid rgba(46, 213, 115, 0.2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    fontSize: '0.75rem',
+                  }}>
+                    <span style={{ color: '#2ed573', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                      🏆 Vencedor: {winnerTeam.name}
+                    </span>
+                    <span style={{ color: '#ffd700', fontWeight: 700, fontSize: '0.72rem' }}>
+                      Classificado para a Grande Final 👑
+                    </span>
+                  </div>
+                </div>
               );
             })}
           </div>
