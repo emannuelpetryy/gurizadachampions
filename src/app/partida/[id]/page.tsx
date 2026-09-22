@@ -1,4 +1,4 @@
-import { getTeam, matches, matchDetails } from '../../data';
+import { getTeam, matches, matchDetails, normalizePlayerName, players } from '../../data';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PlayerAvatar from '../../jogador/[name]/PlayerAvatar';
@@ -73,6 +73,8 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
     });
 
     const kprVal = totalRounds > 0 ? player.kills / totalRounds : 0;
+    const canonicalPlayerName = normalizePlayerName(player.name);
+    const isChampionshipPlayer = players.some(p => p.name.toLowerCase() === canonicalPlayerName.toLowerCase());
 
     const matchBadges = [];
     if (player.name === mvpName) matchBadges.push({ title: 'MVP', desc: 'Melhor jogador da partida (Maior K/D)', icon: '🏆', color: 'var(--gold)' });
@@ -89,9 +91,16 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem', flexWrap: 'wrap' }}>
-              <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit' }} className="match-card-hover">
-                <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
-              </Link>
+              {isChampionshipPlayer ? (
+                <Link href={`/jogador/${encodeURIComponent(canonicalPlayerName)}`} style={{ textDecoration: 'none', color: 'inherit' }} className="match-card-hover">
+                  <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
+                </Link>
+              ) : (
+                <span title="Jogador convidado nesta partida; fora do ranking do campeonato">
+                  <strong style={{ fontSize: '1.1rem', color: '#fff' }}>{player.name}</strong>
+                  <span style={{ marginLeft: '0.5rem', fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>convidado</span>
+                </span>
+              )}
               <span style={{ background: badgeColor, color: '#fff', fontSize: '0.75rem', fontWeight: 'bold', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>
                 KD {kda}
               </span>
