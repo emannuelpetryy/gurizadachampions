@@ -840,3 +840,55 @@ h1, h2, h3, h4, h5, h6 {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Broadcast premium pass: keeps the original density and effects, with cleaner depth. */
+body {
+  background-image:
+    radial-gradient(circle at 18% 4%, rgba(0, 126, 255, 0.12), transparent 29%),
+    radial-gradient(circle at 82% 16%, rgba(255, 51, 102, 0.09), transparent 26%),
+    radial-gradient(circle at 50% 70%, rgba(12, 28, 60, 0.44), transparent 62%);
+}
+
+.top-nav {
+  background: rgba(3, 7, 18, 0.9);
+  backdrop-filter: blur(18px);
+  border-bottom-color: rgba(0, 240, 255, 0.22);
+}
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.78), rgba(5, 10, 24, 0.9));
+  border-color: rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.34), inset 0 1px rgba(255, 255, 255, 0.035);
+}
+
+.glass-card::before {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.72), rgba(255, 215, 0, 0.58), transparent);
+}
+
+.match-card-hltv {
+  border-radius: 10px;
+  border-color: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(18, 31, 57, 0.95), rgba(6, 12, 28, 0.98));
+}
+
+.match-card-hltv:hover {
+  border-color: rgba(0, 240, 255, 0.55);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.38), 0 0 24px rgba(0, 240, 255, 0.11);
+}
+
+.ranking-table th {
+  background: rgba(4, 10, 23, 0.55);
+  color: #aab8d2;
+  letter-spacing: 0.08em;
+}
+
+.ranking-table tbody tr:hover td {
+  background: rgba(0, 240, 255, 0.055);
+}
+
+@media (max-width: 600px) {
+  .glass-card, .match-card-hltv { border-radius: 10px; }
+  .stats-ticker-item { min-height: 98px; }
+}
