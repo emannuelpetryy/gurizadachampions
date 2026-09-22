@@ -30,6 +30,20 @@ export default function MatchPrediction({
       .then(data => {
         if (data && typeof data.a === 'number' && typeof data.b === 'number') {
           setVotes({ a: data.a, b: data.b });
+          if (data.a === 0 && data.b === 0 && (savedUserVote === 'a' || savedUserVote === 'b')) {
+            fetch('/api/votes', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ matchId, team: savedUserVote }),
+            })
+              .then(r => r.ok ? r.json() : null)
+              .then(updated => {
+                if (updated && typeof updated.a === 'number' && typeof updated.b === 'number') {
+                  setVotes({ a: updated.a, b: updated.b });
+                }
+              })
+              .catch(() => {});
+          }
         }
       })
       .catch(() => {})

@@ -18,7 +18,24 @@ export default function DuelPrediction({ duelId, playerAName, playerBName }: { d
     fetch(`/api/duel-votes?duelId=${encodeURIComponent(duelId)}`)
       .then((response) => response.ok ? response.json() : null)
       .then((data) => {
-        if (data && typeof data.a === 'number' && typeof data.b === 'number') setVotes(data);
+        if (data && typeof data.a === 'number' && typeof data.b === 'number') {
+          setVotes(data);
+          // Se o banco estiver zerado mas o usuário tinha votado localmente, sincronizar com o Supabase
+          if (data.a === 0 && data.b === 0 && (saved === 'a' || saved === 'b')) {
+            fetch('/api/duel-votes', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ duelId, choice: saved }),
+            })
+              .then((r) => r.ok ? r.json() : null)
+              .then((updated) => {
+                if (updated && typeof updated.a === 'number' && typeof updated.b === 'number') {
+                  setVotes(updated);
+                }
+              })
+              .catch(() => {});
+          }
+        }
       })
       .catch(() => {})
       .finally(() => setLoading(false));
