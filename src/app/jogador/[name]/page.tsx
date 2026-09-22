@@ -79,7 +79,7 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
   }).filter(Boolean) as any[];
 
   return (
-    <main className="content-page athlete-page">
+    <main style={{ padding: '4rem 0', minHeight: '100vh' }}>
       <section className="container">
         
         {/* Header do Jogador */}

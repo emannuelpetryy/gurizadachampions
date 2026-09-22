@@ -225,7 +225,7 @@ export default function SelecoesPage() {
   const totalVotesCount = Object.values(votes).reduce((acc, curr) => acc + curr.star + curr.bagre, 0);
 
   return (
-    <main className="content-page selection-page">
+    <main style={{ paddingTop: '6rem', paddingBottom: '5rem', minHeight: '90vh', background: 'radial-gradient(circle at 50% 10%, rgba(255, 215, 0, 0.08) 0%, rgba(5, 10, 20, 1) 70%)' }}>
       <div className="container">
         
         {/* Banner Hero Grandioso */}

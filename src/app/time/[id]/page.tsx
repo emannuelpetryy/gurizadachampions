@@ -14,7 +14,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
   const teamPlayers = players.filter(p => p.teamId === team.id);
 
   return (
-    <main className="content-page team-page">
+    <main style={{ padding: '4rem 0' }}>
       <section className="container">
         
         {/* Team Banner */}
