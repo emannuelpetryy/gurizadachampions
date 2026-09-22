@@ -23,7 +23,7 @@ export default function PlayoffBracket() {
   const [semi2Winner, setSemi2Winner] = useState<string | null>(null);
   const [finalWinner, setFinalWinner] = useState<string | null>(null);
   const [thirdWinner, setThirdWinner] = useState<string | null>(null);
-  const [submittedVotes, setSubmittedVotes] = useState<Record<string, 'a' | 'b'>>({});
+  const [submittedVotes, setSubmittedVotes] = useState<Record<string, string>>({});
 
   const officialSemi1Winner = getOfficialWinner('semi-1');
   const officialSemi2Winner = getOfficialWinner('semi-2');
@@ -53,12 +53,12 @@ export default function PlayoffBracket() {
   }, []);
 
   useEffect(() => {
-    const saved: Record<string, 'a' | 'b'> = {};
+    const saved: Record<string, string> = {};
     const finalVote = localStorage.getItem('gc_pred_user_final');
     const thirdVote = localStorage.getItem('gc_pred_user_third_place');
-    if (finalVote === 'a' || finalVote === 'b') saved.final = finalVote;
+    if (finalVote) saved.final = finalVote;
     if (thirdVote === 'a' || thirdVote === 'b') saved.third_place = thirdVote;
-    setSubmittedVotes(saved);
+    setSubmittedVotes(saved as any);
   }, []);
 
   // Salvar palpite no localStorage
@@ -104,21 +104,17 @@ export default function PlayoffBracket() {
   // Votar / Palpitar em uma partida
   const handlePickTeam = async (matchId: string, teamChoice: 'a' | 'b', teamId: string) => {
     if (matchId !== 'final' && matchId !== 'third_place') return;
-    if (submittedVotes[matchId]) return;
+    if (submittedVotes[matchId] === teamId || submittedVotes[matchId] === teamChoice) return;
 
-    // A grande final também possui o painel de votação da home. Compartilhar
-    // esta marca evita dois votos no mesmo navegador em componentes diferentes.
+    const prevChoice = submittedVotes[matchId];
+
     if (matchId === 'final') {
-      const storedFinalVote = localStorage.getItem('gc_pred_user_final');
-      if (storedFinalVote === 'a' || storedFinalVote === 'b') {
-        setSubmittedVotes(prev => ({ ...prev, final: storedFinalVote }));
-        return;
-      }
-      localStorage.setItem('gc_pred_user_final', teamChoice);
+      localStorage.setItem('gc_pred_user_final', teamId);
+      setSubmittedVotes(prev => ({ ...prev, final: teamId }));
     } else {
       localStorage.setItem('gc_pred_user_third_place', teamChoice);
+      setSubmittedVotes(prev => ({ ...prev, [matchId]: teamChoice }));
     }
-    setSubmittedVotes(prev => ({ ...prev, [matchId]: teamChoice }));
 
     const nextFin = matchId === 'final' ? teamId : finalWinner;
     const nextThi = matchId === 'third_place' ? teamId : thirdWinner;
@@ -132,13 +128,18 @@ export default function PlayoffBracket() {
       const res = await fetch('/api/votes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ matchId, team: teamChoice }),
+        body: JSON.stringify({ matchId, team: teamChoice, teamId, previousTeam: prevChoice }),
       });
       if (res.ok) {
         const data = await res.json();
         setCommunityVotes(prev => ({
           ...prev,
-          [matchId]: { a: data.a || 0, b: data.b || 0 }
+          [matchId]: {
+            a: data.a || 0,
+            b: data.b || 0,
+            venvanse: data.venvanse,
+            desacreditados: data.desacreditados,
+          } as any
         }));
       }
     } catch (e) {
@@ -189,12 +190,25 @@ export default function PlayoffBracket() {
     isThird = false
   ) => {
     const votesData = communityVotes[matchId] || { a: 0, b: 0 };
-    const totalVotes = votesData.a + votesData.b;
+    let votesCountA = votesData.a || 0;
+    let votesCountB = votesData.b || 0;
+
+    if (isFinal && teamAObj && teamBObj) {
+      if (teamAObj.id === 'desacreditados') {
+        votesCountA = typeof (votesData as any).desacreditados === 'number' ? (votesData as any).desacreditados : votesData.a || 0;
+        votesCountB = typeof (votesData as any).venvanse === 'number' ? (votesData as any).venvanse : votesData.b || 0;
+      } else if (teamAObj.id === 'venvanse') {
+        votesCountA = typeof (votesData as any).venvanse === 'number' ? (votesData as any).venvanse : votesData.a || 0;
+        votesCountB = typeof (votesData as any).desacreditados === 'number' ? (votesData as any).desacreditados : votesData.b || 0;
+      }
+    }
+
     const officialMatch = playoffMatches.find(match => match.id === matchId);
     const isOfficial = officialMatch?.status === 'Encerrado';
     const displayedWinnerId = isOfficial ? getOfficialWinner(matchId) : selectedWinnerId;
 
-    const pctA = totalVotes > 0 ? Math.round((votesData.a / totalVotes) * 100) : 50;
+    const totalVotes = votesCountA + votesCountB;
+    const pctA = totalVotes > 0 ? Math.round((votesCountA / totalVotes) * 100) : 50;
     const pctB = 100 - pctA;
     const isVoteOpen = (isFinal || isThird) && !isOfficial;
     const userVote = submittedVotes[matchId];
@@ -309,7 +323,7 @@ export default function PlayoffBracket() {
               )}
               {(isFinal || isThird) && (
                 <span style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 600 }}>
-                  🔥 {pctA}% · {votesData.a} voto{votesData.a === 1 ? '' : 's'}
+                  🔥 {pctA}% · {votesCountA} voto{votesCountA === 1 ? '' : 's'}
                 </span>
               )}
             </div>
@@ -371,7 +385,7 @@ export default function PlayoffBracket() {
               )}
               {(isFinal || isThird) && (
                 <span style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 600 }}>
-                  🔥 {pctB}% · {votesData.b} voto{votesData.b === 1 ? '' : 's'}
+                  🔥 {pctB}% · {votesCountB} voto{votesCountB === 1 ? '' : 's'}
                 </span>
               )}
             </div>

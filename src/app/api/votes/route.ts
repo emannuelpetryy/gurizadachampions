@@ -11,9 +11,9 @@ function getSupabaseConfig() {
 const cleanMatchId = (value: unknown) => String(value || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 120);
 
 // In-memory fallback para ambiente local sem credenciais
-const localVotesFallback: Record<string, { a: number; b: number }> = {};
+const localVotesFallback: Record<string, any> = {};
 
-async function getStoredVotes(): Promise<Record<string, { a: number; b: number }>> {
+async function getStoredVotes(): Promise<Record<string, any>> {
   const { supabaseUrl, supabaseKey } = getSupabaseConfig();
   if (!supabaseUrl || !supabaseKey) return localVotesFallback;
 
@@ -36,7 +36,7 @@ async function getStoredVotes(): Promise<Record<string, { a: number; b: number }
   return localVotesFallback;
 }
 
-async function saveStoredVotes(votesMap: Record<string, { a: number; b: number }>) {
+async function saveStoredVotes(votesMap: Record<string, any>) {
   const { supabaseUrl, supabaseKey } = getSupabaseConfig();
   if (!supabaseUrl || !supabaseKey) {
     Object.assign(localVotesFallback, votesMap);
@@ -63,6 +63,26 @@ async function saveStoredVotes(votesMap: Record<string, { a: number; b: number }
   }
 }
 
+function formatMatchResponse(matchId: string, current: any) {
+  const countA = typeof current.a === 'number' ? current.a : (current.venvanse || 0);
+  const countB = typeof current.b === 'number' ? current.b : (current.desacreditados || 0);
+  const total = countA + countB;
+
+  const result: any = {
+    a: countA,
+    b: countB,
+    total,
+  };
+
+  if (matchId === 'final') {
+    // Normalizar venvanse e desacreditados para garantir 100% de consistência
+    result.venvanse = countA;
+    result.desacreditados = countB;
+  }
+
+  return result;
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const matchId = cleanMatchId(searchParams.get('matchId'));
@@ -73,27 +93,60 @@ export async function GET(request: NextRequest) {
 
   const allVotes = await getStoredVotes();
   const current = allVotes[matchId] || { a: 0, b: 0 };
-  return NextResponse.json(current);
+  return NextResponse.json(formatMatchResponse(matchId, current));
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { matchId: rawMatchId, team } = body;
+    const { matchId: rawMatchId, team, teamId, previousTeam } = body;
 
     const matchId = cleanMatchId(rawMatchId);
-    if (!matchId || (team !== 'a' && team !== 'b')) {
+    if (!matchId) {
+      return NextResponse.json({ error: 'MatchId inválido' }, { status: 400 });
+    }
+
+    const rawChoice = String(teamId || team || '').toLowerCase();
+    let teamKey = '';
+
+    if (matchId === 'final') {
+      if (rawChoice === 'a' || rawChoice === 'venvanse') teamKey = 'a';
+      else if (rawChoice === 'b' || rawChoice === 'desacreditados') teamKey = 'b';
+    } else {
+      if (rawChoice === 'a' || rawChoice === 'b') teamKey = rawChoice;
+    }
+
+    if (!teamKey) {
       return NextResponse.json({ error: 'Dados de votação inválidos' }, { status: 400 });
     }
-    const teamKey = team as 'a' | 'b';
 
     const allVotes = await getStoredVotes();
     const current = allVotes[matchId] || { a: 0, b: 0 };
+
+    // Se estiver trocando de voto, decrementar a escolha anterior para não inflar
+    if (previousTeam) {
+      const rawPrev = String(previousTeam).toLowerCase();
+      let prevKey = '';
+      if (matchId === 'final') {
+        if (rawPrev === 'a' || rawPrev === 'venvanse') prevKey = 'a';
+        else if (rawPrev === 'b' || rawPrev === 'desacreditados') prevKey = 'b';
+      } else {
+        if (rawPrev === 'a' || rawPrev === 'b') prevKey = rawPrev;
+      }
+      if (prevKey && prevKey !== teamKey && current[prevKey] && current[prevKey] > 0) {
+        current[prevKey] = current[prevKey] - 1;
+      }
+    }
+
     current[teamKey] = (current[teamKey] || 0) + 1;
+    if (matchId === 'final') {
+      current.venvanse = current.a || 0;
+      current.desacreditados = current.b || 0;
+    }
     allVotes[matchId] = current;
 
     await saveStoredVotes(allVotes);
-    return NextResponse.json(current);
+    return NextResponse.json(formatMatchResponse(matchId, current));
   } catch (e) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
