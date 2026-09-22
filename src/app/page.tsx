@@ -5,7 +5,6 @@ import Comments from '../components/Comments';
 import TeamLogo from './components/TeamLogo';
 import MapPoolStats from './components/MapPoolStats';
 import CommunitySelection from './components/CommunitySelection';
-import TwitchLiveStream from './components/TwitchLiveStream';
 import PlayoffBracket from './components/PlayoffBracket';
 import GrandFinalShowdown from './components/GrandFinalShowdown';
 
@@ -79,10 +78,6 @@ export default function Home() {
 
       {/* Conteúdo Principal do Portal */}
       <section className="container" style={{ padding: '4rem 1.5rem' }}>
-        
-        {/* Banner de Live Stream Minimizado */}
-        <TwitchLiveStream />
-
         {/* GRANDE FINAL: CONFRONTO POR NÍVEL + VOTAÇÃO DA TORCIDA */}
         <GrandFinalShowdown />
 
