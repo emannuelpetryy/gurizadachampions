@@ -149,9 +149,12 @@ export default function Ranking() {
               {renderGroupTable('B', groupB)}
             </div>
 
-            <h2 className="hero-title" style={{ fontSize: '2.5rem', textAlign: 'center', marginTop: '4rem', marginBottom: '2rem', textShadow: 'none' }}>
+            <h2 className="hero-title" style={{ fontSize: '2.5rem', textAlign: 'center', marginTop: '4rem', marginBottom: '0.4rem', textShadow: 'none' }}>
               RANKING GERAL DE <span className="text-gold">DESEMPENHO</span>
             </h2>
+            <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '2rem' }}>
+              Classificação oficial por <strong style={{ color: 'var(--gold)' }}>K/D</strong> (2 casas decimais). Critério de desempate: melhor <strong style={{ color: 'var(--cyan)' }}>KDA</strong> acumulado e total de kills.
+            </p>
             
             <div className="glass-card" style={{ padding: '1.5rem' }}>
               <label className="ranking-search">
@@ -178,9 +181,13 @@ export default function Ranking() {
                     {[...players]
                       .filter((player) => `${player.name} ${getTeam(player.teamId).name}`.toLowerCase().includes(playerQuery.trim().toLowerCase()))
                       .sort((a, b) => {
-                        const kdDifference = (b.kills / (b.deaths || 1)) - (a.kills / (a.deaths || 1));
-                        if (kdDifference !== 0) return kdDifference;
-                        return ((b.kills + b.assists) / (b.deaths || 1)) - ((a.kills + a.assists) / (a.deaths || 1));
+                        const kdA = Math.round((a.kills / (a.deaths || 1)) * 100);
+                        const kdB = Math.round((b.kills / (b.deaths || 1)) * 100);
+                        if (kdB !== kdA) return kdB - kdA;
+                        const kdaA = (a.kills + a.assists) / (a.deaths || 1);
+                        const kdaB = (b.kills + b.assists) / (b.deaths || 1);
+                        if (kdaB !== kdaA) return kdaB - kdaA;
+                        return b.kills - a.kills;
                       }).map((player, index) => {
                       const team = getTeam(player.teamId);
                       const kd = (player.kills / (player.deaths || 1)).toFixed(2);

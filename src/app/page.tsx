@@ -8,14 +8,15 @@ import PlayoffBracket from './components/PlayoffBracket';
 import GrandFinalShowdown from './components/GrandFinalShowdown';
 
 export default function Home() {
-  // Ranking oficial: K/D acumulado; em empate, KDA acumulado.
+  // Ranking oficial: K/D acumulado (2 casas decimais); em empate, melhor KDA acumulado e kills.
   const topKD = [...players].sort((a, b) => {
-    const kdA = a.kills / (a.deaths || 1);
-    const kdB = b.kills / (b.deaths || 1);
+    const kdA = Math.round((a.kills / (a.deaths || 1)) * 100);
+    const kdB = Math.round((b.kills / (b.deaths || 1)) * 100);
     if (kdB !== kdA) return kdB - kdA;
     const kdaA = (a.kills + a.assists) / (a.deaths || 1);
     const kdaB = (b.kills + b.assists) / (b.deaths || 1);
-    return kdaB - kdaA;
+    if (kdaB !== kdaA) return kdaB - kdaA;
+    return b.kills - a.kills;
   });
 
   const totalKillsLeague = players.reduce((sum, p) => sum + p.kills, 0);
@@ -238,6 +239,9 @@ export default function Home() {
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
                 RANKING GERAL DE DESEMPENHO (TOP FRAGGERS)
               </h3>
+              <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                Ordenado por K/D (2 casas decimais) · Desempate oficial por melhor KDA
+              </p>
             </div>
             <span className="recent-matches-count">{topKD.length} JOGADORES REGISTRADOS</span>
           </div>

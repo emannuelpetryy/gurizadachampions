@@ -116,11 +116,29 @@ export default function CommunitySelection() {
   });
 
   const topStars = [...playersWithVotes]
-    .sort((a, b) => b.starVotes - a.starVotes || (b.kills / (b.deaths || 1)) - (a.kills / (a.deaths || 1)))
+    .sort((a, b) => {
+      if (b.starVotes !== a.starVotes) return b.starVotes - a.starVotes;
+      const kdA = Math.round((a.kills / (a.deaths || 1)) * 100);
+      const kdB = Math.round((b.kills / (b.deaths || 1)) * 100);
+      if (kdB !== kdA) return kdB - kdA;
+      const kdaA = (a.kills + a.assists) / (a.deaths || 1);
+      const kdaB = (b.kills + b.assists) / (b.deaths || 1);
+      if (kdaB !== kdaA) return kdaB - kdaA;
+      return b.kills - a.kills;
+    })
     .slice(0, 5);
 
   const topBagres = [...playersWithVotes]
-    .sort((a, b) => b.bagreVotes - a.bagreVotes || (a.kills / (a.deaths || 1)) - (b.kills / (b.deaths || 1)))
+    .sort((a, b) => {
+      if (b.bagreVotes !== a.bagreVotes) return b.bagreVotes - a.bagreVotes;
+      const kdA = Math.round((a.kills / (a.deaths || 1)) * 100);
+      const kdB = Math.round((b.kills / (b.deaths || 1)) * 100);
+      if (kdA !== kdB) return kdA - kdB;
+      const kdaA = (a.kills + a.assists) / (a.deaths || 1);
+      const kdaB = (b.kills + b.assists) / (b.deaths || 1);
+      if (kdaA !== kdaB) return kdaA - kdaB;
+      return a.kills - b.kills;
+    })
     .slice(0, 5);
 
   const filteredPlayers = playersWithVotes.filter(p => {

@@ -21,17 +21,44 @@ const formatKda = (player: ShowdownPlayer) => kdaOf(player).toFixed(2);
 const getPlayerLevel = (name: string) =>
   Object.values(tiers).flat().find((entry) => entry.name.trim().toLowerCase() === name.trim().toLowerCase())?.lvl;
 
+const sortRosterByKdAndKda = (a: ShowdownPlayer, b: ShowdownPlayer) => {
+  const kdA_2dec = Math.round(kdOf(a) * 100);
+  const kdB_2dec = Math.round(kdOf(b) * 100);
+  if (kdB_2dec !== kdA_2dec) return kdB_2dec - kdA_2dec;
+  const kdaA = kdaOf(a);
+  const kdaB = kdaOf(b);
+  if (kdaB !== kdaA) return kdaB - kdaA;
+  return b.kills - a.kills;
+};
+
 function PlayerDuel({ playerA, playerB, index }: { playerA?: ShowdownPlayer; playerB?: ShowdownPlayer; index: number }) {
   if (!playerA && !playerB) return null;
 
   const kdA = playerA ? kdOf(playerA) : 0;
   const kdB = playerB ? kdOf(playerB) : 0;
-  const winner = kdA === kdB ? null : kdA > kdB ? 'a' : 'b';
+  const kdA_2dec = Math.round(kdA * 100);
+  const kdB_2dec = Math.round(kdB * 100);
+
+  let winner: 'a' | 'b' | null = null;
+  let isTieBreakByKda = false;
+  if (kdA_2dec !== kdB_2dec) {
+    winner = kdA_2dec > kdB_2dec ? 'a' : 'b';
+  } else if (playerA && playerB) {
+    const kdaA = kdaOf(playerA);
+    const kdaB = kdaOf(playerB);
+    if (kdaA !== kdaB) {
+      winner = kdaA > kdaB ? 'a' : 'b';
+      isTieBreakByKda = true;
+    }
+  }
+
   const kdDifference = Math.abs(kdA - kdB);
   const comparisonLabel = !playerA || !playerB
     ? 'Sem comparação'
-    : kdDifference < 0.01
-      ? 'K/D igual'
+    : kdA_2dec === kdB_2dec
+      ? isTieBreakByKda
+        ? `${winner === 'a' ? playerA.name : playerB.name} (Desempate KDA)`
+        : 'K/D e KDA iguais'
       : `${winner === 'a' ? playerA.name : playerB.name} +${kdDifference.toFixed(2)}`;
 
   const renderPlayer = (player: ShowdownPlayer | undefined, side: 'a' | 'b') => {
@@ -95,8 +122,8 @@ export default function GrandFinalShowdown() {
   const teamA = getTeam(teamAId);
   const teamB = getTeam(teamBId);
 
-  const rosterA = useMemo(() => players.filter(player => player.teamId === teamAId).sort((a, b) => kdOf(b) - kdOf(a)), []);
-  const rosterB = useMemo(() => players.filter(player => player.teamId === teamBId).sort((a, b) => kdOf(b) - kdOf(a)), []);
+  const rosterA = useMemo(() => players.filter(player => player.teamId === teamAId).sort(sortRosterByKdAndKda), []);
+  const rosterB = useMemo(() => players.filter(player => player.teamId === teamBId).sort(sortRosterByKdAndKda), []);
   const duels = Array.from({ length: Math.max(rosterA.length, rosterB.length) }, (_, index) => ({ playerA: rosterA[index], playerB: rosterB[index] }));
 
   const averageKd = (roster: ShowdownPlayer[]) => roster.length ? (roster.reduce((sum, player) => sum + kdOf(player), 0) / roster.length).toFixed(2) : '0.00';
