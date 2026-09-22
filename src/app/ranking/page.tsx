@@ -199,7 +199,11 @@ export default function Ranking() {
                   <tbody>
                     {[...players]
                       .filter((player) => `${player.name} ${getTeam(player.teamId).name}`.toLowerCase().includes(playerQuery.trim().toLowerCase()))
-                      .sort((a, b) => (b.kills / (b.deaths || 1)) - (a.kills / (a.deaths || 1))).map((player, index) => {
+                      .sort((a, b) => {
+                        const kdDifference = (b.kills / (b.deaths || 1)) - (a.kills / (a.deaths || 1));
+                        if (kdDifference !== 0) return kdDifference;
+                        return ((b.kills + b.assists) / (b.deaths || 1)) - ((a.kills + a.assists) / (a.deaths || 1));
+                      }).map((player, index) => {
                       const team = getTeam(player.teamId);
                       const kd = (player.kills / (player.deaths || 1)).toFixed(2);
                       const kda = ((player.kills + player.assists) / (player.deaths || 1)).toFixed(2);

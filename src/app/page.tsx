@@ -10,61 +10,66 @@ import PlayoffBracket from './components/PlayoffBracket';
 import GrandFinalShowdown from './components/GrandFinalShowdown';
 
 export default function Home() {
-  // Ordenar jogadores pelo K/D ratio (principal)
+  // Ranking oficial: K/D acumulado; em empate, KDA acumulado.
   const topKD = [...players].sort((a, b) => {
     const kdA = a.kills / (a.deaths || 1);
     const kdB = b.kills / (b.deaths || 1);
-    return kdB - kdA; // Decrescente
+    if (kdB !== kdA) return kdB - kdA;
+    const kdaA = (a.kills + a.assists) / (a.deaths || 1);
+    const kdaB = (b.kills + b.assists) / (b.deaths || 1);
+    return kdaB - kdaA;
   });
 
   const totalKillsLeague = players.reduce((sum, p) => sum + p.kills, 0);
 
   return (
     <main>
-      {/* Hero Showcase Section com Efeito Parallax & Gradient Overlay */}
-      <section className="hero-section" style={{ position: 'relative', width: '100%', minHeight: '65vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundImage: 'url(https://firebasestorage.googleapis.com/v0/b/copafacil-web.appspot.com/o/events%2F-zfhvn%2Finfo.png?alt=media&token=1&m=1784675443770)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(6px) brightness(0.25)', transform: 'scale(1.05)' }}></div>
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'radial-gradient(circle at 50% 30%, rgba(0, 240, 255, 0.15), rgba(3, 7, 18, 0.95) 85%)' }}></div>
-        
-        <div className="container" style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', textAlign: 'center', padding: '4rem 1rem' }}>
-          
-          <div className="shimmer-container season-status-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', padding: '0.5rem 1.6rem', background: 'rgba(0, 240, 255, 0.12)', border: '1px solid var(--cyan)', borderRadius: '30px', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.5rem', boxShadow: '0 0 25px rgba(0, 240, 255, 0.25)' }}>
+      <section className="home-hero">
+        <div className="home-hero-backdrop" aria-hidden="true" />
+        <div className="home-hero-scanlines" aria-hidden="true" />
+        <div className="container home-hero-content">
+          <div className="home-hero-copy">
+          <div className="season-status-badge">
             <span className="status-pulse-dot"></span> TEMPORADA 1 — GRANDE FINAL DEFINIDA
           </div>
 
-          <h1 style={{ fontSize: 'clamp(3.2rem, 8vw, 5.5rem)', fontFamily: 'var(--font-rajdhani)', fontWeight: 900, lineHeight: 1, color: '#fff', textTransform: 'uppercase', margin: 0, textShadow: '0 0 50px rgba(0, 240, 255, 0.6)' }}>
+          <p className="home-hero-kicker">CS2 · CAMPEONATO DA GURIZADA</p>
+          <h1 className="home-hero-title">
             GURIZADA <span className="text-cyan">CHAMPIONS</span>
           </h1>
-          
-          <p style={{ fontSize: '1.25rem', color: '#cbd5e1', maxWidth: '680px', lineHeight: 1.6, marginTop: '0.5rem' }}>
+          <p className="home-hero-description">
             Portal oficial de estatísticas, ranking individual de ELO, tabela de classificação e partidas 5v5 da liga.
           </p>
 
-          <div style={{ display: 'flex', gap: '1.2rem', flexWrap: 'wrap', justifyContent: 'center', marginTop: '1rem' }}>
-            <Link href="/ranking" className="btn-primary" style={{ padding: '1rem 2.6rem', fontSize: '1.15rem' }}>
+          <div className="home-hero-actions">
+            <Link href="/ranking" className="btn-primary home-hero-action-primary">
               🏆 Ver Classificação & Ranking
             </Link>
-            <Link href="/lobby" className="btn-secondary" style={{ padding: '1rem 2.6rem', fontSize: '1.15rem' }}>
+            <Link href="/lobby" className="btn-secondary home-hero-action-secondary">
               🎮 Jogar Amistoso no Lobby
             </Link>
           </div>
+          </div>
 
-          {/* Stats Ticker Bar */}
-          <div className="stats-ticker-grid">
-            <div className="stats-ticker-item">
+          <div className="home-stats-ticker" aria-label="Resumo da temporada">
+            <div className="home-stat-card" data-stat="MATCHES">
+              <span className="home-stat-index">01</span>
               <div className="stats-ticker-val">{matches.length}</div>
               <div className="stats-ticker-label">Partidas Disputadas</div>
             </div>
-            <div className="stats-ticker-item">
-              <div className="stats-ticker-val" style={{ color: 'var(--cyan)' }}>{players.length}</div>
+            <div className="home-stat-card home-stat-cyan" data-stat="PLAYERS">
+              <span className="home-stat-index">02</span>
+              <div className="stats-ticker-val">{players.length}</div>
               <div className="stats-ticker-label">Jogadores Ativos</div>
             </div>
-            <div className="stats-ticker-item">
-              <div className="stats-ticker-val" style={{ color: 'var(--primary)' }}>{totalKillsLeague}</div>
+            <div className="home-stat-card home-stat-gold" data-stat="KILLS">
+              <span className="home-stat-index">03</span>
+              <div className="stats-ticker-val">{totalKillsLeague}</div>
               <div className="stats-ticker-label">Kills Acumuladas</div>
             </div>
-            <div className="stats-ticker-item">
-              <div className="stats-ticker-val" style={{ color: '#10b981' }}>{topKD[0] ? (topKD[0].kills / (topKD[0].deaths || 1)).toFixed(2) : '0.0'}</div>
+            <div className="home-stat-card home-stat-green" data-stat="BEST K/D">
+              <span className="home-stat-index">04</span>
+              <div className="stats-ticker-val">{topKD[0] ? (topKD[0].kills / (topKD[0].deaths || 1)).toFixed(2) : '0.0'}</div>
               <div className="stats-ticker-label">Maior K/D Ratio</div>
             </div>
           </div>
@@ -85,12 +90,18 @@ export default function Home() {
         <MapPoolStats />
         
         {/* ÚLTIMAS PARTIDAS FINALIZADAS (GRID FIXO SEM WRAP DE PLACAR) */}
-        <div className="glass-card" style={{ marginBottom: '3rem' }}>
-          <h3 className="card-title">
+        <section className="recent-matches-section">
+          <div className="recent-matches-heading">
+            <div>
+              <span className="section-eyebrow">ARQUIVO DA TEMPORADA</span>
+              <h3 className="card-title">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
             ÚLTIMAS PARTIDAS FINALIZADAS
           </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '1.2rem', marginTop: '1.5rem' }}>
+            </div>
+            <span className="recent-matches-count">{matches.length} RESULTADOS</span>
+          </div>
+          <div className="recent-matches-grid">
             {matches.map((match) => {
               const teamA = getTeam(match.teamA);
               const teamB = getTeam(match.teamB);
@@ -98,41 +109,30 @@ export default function Home() {
               const mapName = detail?.map || 'Mirage';
               
               return (
-                <Link href={`/partida/${match.id}`} key={match.id} style={{ textDecoration: 'none' }}>
-                  <div className="match-card-hltv" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: '0.8rem', cursor: 'pointer', padding: '1.2rem' }}>
-                    
-                    {/* Time A */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', minWidth: 0, zIndex: 1 }}>
+                <Link href={`/partida/${match.id}`} key={match.id} className="recent-match-card">
+                  <div className="recent-match-team recent-match-team-a">
                       <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={38} borderRadius="8px" />
-                      <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', color: match.scoreA > match.scoreB ? 'var(--cyan)' : '#e2e8f0', fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <strong className={match.scoreA > match.scoreB ? 'is-winner' : ''}>
                         {teamA.name}
                       </strong>
                     </div>
-                    
-                    {/* Placar Central Fixado */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1, minWidth: '95px' }}>
-                      <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff', fontFamily: 'var(--font-rajdhani)', letterSpacing: '2px', textShadow: '0 0 15px rgba(0,240,255,0.4)', whiteSpace: 'nowrap' }}>
-                        {match.scoreA} <span style={{ color: '#64748b', fontSize: '1rem', margin: '0 0.15rem' }}>×</span> {match.scoreB}
+                    <div className="recent-match-score">
+                      <span className="recent-match-scoreline">
+                        {match.scoreA} <span>×</span> {match.scoreB}
                       </span>
-                      <span style={{ fontSize: '0.65rem', background: 'rgba(0, 240, 255, 0.15)', border: '1px solid var(--cyan)', color: 'var(--cyan)', padding: '0.12rem 0.55rem', borderRadius: '10px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 800, marginTop: '0.15rem', whiteSpace: 'nowrap' }}>
-                        🗺️ {mapName}
-                      </span>
+                      <span className={`recent-match-map map-${mapName.toLowerCase().replace(/\s+/g, '-')}`}>◈ {mapName}</span>
                     </div>
-
-                    {/* Time B */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.8rem', minWidth: 0, zIndex: 1 }}>
-                      <strong style={{ fontSize: '1rem', fontFamily: 'var(--font-rajdhani)', textAlign: 'right', color: match.scoreB > match.scoreA ? 'var(--cyan)' : '#e2e8f0', fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <div className="recent-match-team recent-match-team-b">
+                      <strong className={match.scoreB > match.scoreA ? 'is-winner' : ''}>
                         {teamB.name}
                       </strong>
                       <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={38} borderRadius="8px" />
                     </div>
-
-                  </div>
                 </Link>
               );
             })}
           </div>
-        </div>
+        </section>
 
         {/* SELEÇÕES DA COMUNIDADE */}
         <CommunitySelection />

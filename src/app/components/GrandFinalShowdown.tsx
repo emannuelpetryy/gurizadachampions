@@ -36,26 +36,26 @@ function PlayerDuel({ playerA, playerB, index }: { playerA?: ShowdownPlayer; pla
 
   const renderPlayer = (player: ShowdownPlayer | undefined, side: 'a' | 'b') => {
     if (!player) {
-      return <span style={{ color: '#64748b', fontSize: '0.8rem', fontStyle: 'italic' }}>Sem jogador</span>;
+      return <span className="final-player-empty">Sem jogador</span>;
     }
 
     const team = getTeam(player.teamId);
     const isLeading = winner === side;
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem', minWidth: 0 }}>
+      <div className="final-player-card-content">
         <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor={side === 'a' ? 'rgba(0,240,255,0.2)' : 'rgba(255,51,102,0.2)'} size={38} />
-        <div style={{ minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
-            <strong style={{ color: '#fff', fontSize: '0.92rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{player.name}</strong>
+        <div className="final-player-copy">
+          <div className="final-player-name">
+            <strong>{player.name}</strong>
             {getPlayerTier(player.name) && (
-              <span className={`final-tier tier-${getPlayerTier(player.name)}`} style={{ fontSize: '0.58rem', fontWeight: 900, padding: '0.1rem 0.3rem', borderRadius: '5px' }}>
+              <span className={`final-tier tier-${getPlayerTier(player.name)}`}>
                 TIER {getPlayerTier(player.name)}
               </span>
             )}
             {getPlayerLevel(player.name) && <span className="final-level">LVL {getPlayerLevel(player.name)}</span>}
           </div>
-          <span style={{ color: isLeading ? (side === 'a' ? '#00f0ff' : '#ff7891') : '#94a3b8', fontSize: '0.78rem', fontWeight: 800 }}>
+          <span className={`final-player-stats ${isLeading ? `is-leading-${side}` : ''}`}>
             K/D {formatKd(player)} · KDA {formatKda(player)}
           </span>
         </div>
@@ -63,21 +63,23 @@ function PlayerDuel({ playerA, playerB, index }: { playerA?: ShowdownPlayer; pla
     );
   };
 
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 112px minmax(0, 1fr)', gap: '0.8rem', alignItems: 'center', padding: '0.85rem 0', borderTop: index === 0 ? 'none' : '1px solid rgba(255,255,255,0.07)' }}>
-      <Link href={`/jogador/${encodeURIComponent(playerA?.name || '')}`} className="final-player-card" aria-label={playerA ? `Ver perfil de ${playerA.name}` : undefined} style={{ padding: '0.75rem', borderRadius: '12px', background: winner === 'a' ? 'rgba(0,240,255,0.1)' : 'rgba(255,255,255,0.035)', border: `1px solid ${winner === 'a' ? 'rgba(0,240,255,0.35)' : 'rgba(255,255,255,0.07)'}` }}>
-        {renderPlayer(playerA, 'a')}
-      </Link>
+  const playerCard = (player: ShowdownPlayer | undefined, side: 'a' | 'b') => {
+    const content = renderPlayer(player, side);
+    const className = `final-player-card final-player-card-${side} ${winner === side ? 'is-leading' : ''}`;
+    return player ? (
+      <Link href={`/jogador/${encodeURIComponent(player.name)}`} className={className} aria-label={`Ver perfil de ${player.name}`}>{content}</Link>
+    ) : <div className={className}>{content}</div>;
+  };
 
-      <div className="final-kd-comparison" style={{ textAlign: 'center' }}>
+  return (
+    <div className={`final-duel ${index === 0 ? 'is-first' : ''}`}>
+      {playerCard(playerA, 'a')}
+      <div className="final-kd-comparison">
         <span className="final-kd-score">{playerA && playerB ? `${formatKd(playerA)} × ${formatKd(playerB)}` : '—'}</span>
         <span className="final-kd-label">K/D</span>
         <span className="final-kd-difference">{comparisonLabel}</span>
       </div>
-
-      <Link href={`/jogador/${encodeURIComponent(playerB?.name || '')}`} className="final-player-card" aria-label={playerB ? `Ver perfil de ${playerB.name}` : undefined} style={{ padding: '0.75rem', borderRadius: '12px', background: winner === 'b' ? 'rgba(255,51,102,0.1)' : 'rgba(255,255,255,0.035)', border: `1px solid ${winner === 'b' ? 'rgba(255,51,102,0.35)' : 'rgba(255,255,255,0.07)'}` }}>
-        {renderPlayer(playerB, 'b')}
-      </Link>
+      {playerCard(playerB, 'b')}
     </div>
   );
 }
@@ -94,42 +96,42 @@ export default function GrandFinalShowdown() {
   const totalKills = (roster: ShowdownPlayer[]) => roster.reduce((sum, player) => sum + player.kills, 0);
 
   return (
-    <section className="glass-card" style={{ marginBottom: '3.5rem', padding: 'clamp(1.1rem, 3vw, 2rem)', border: '1px solid rgba(255,215,0,0.34)', background: 'radial-gradient(circle at 50% -20%, rgba(255,215,0,0.11), transparent 45%), linear-gradient(135deg, rgba(10,20,39,0.98), rgba(5,11,25,0.98))', boxShadow: '0 18px 55px rgba(0,0,0,0.32)' }}>
-      <div style={{ textAlign: 'center', marginBottom: '1.6rem' }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', padding: '0.38rem 0.9rem', border: '1px solid rgba(255,215,0,0.6)', borderRadius: '999px', color: '#ffd700', fontSize: '0.72rem', fontWeight: 900, letterSpacing: '1.5px' }}>👑 GRANDE FINAL · MD3</span>
-        <h2 style={{ margin: '0.8rem 0 0.35rem', color: '#fff', fontFamily: 'var(--font-rajdhani)', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', lineHeight: 1, textTransform: 'uppercase' }}>
+    <section className="grand-final">
+      <header className="grand-final-header">
+        <span className="grand-final-stage">👑 GRANDE FINAL · MD3</span>
+        <h2 className="grand-final-title">
           VENVANSE <span className="final-vs-badge">VS</span> OS DESACREDITADOS
         </h2>
-        <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.88rem' }}>A final está definida. Compare o nível dos jogadores e escolha seu campeão.</p>
-      </div>
+        <p>A final está definida. Compare os números e escolha seu campeão.</p>
+      </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '1rem', maxWidth: '780px', margin: '0 auto 1.6rem' }}>
-        {[{ team: teamA, roster: rosterA, color: '#00f0ff', side: 'a' }, { team: teamB, roster: rosterB, color: '#ff5172', side: 'b' }].map(({ team, roster, color, side }) => (
-          <div key={team.id} style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', padding: '0.9rem 1rem', borderRadius: '14px', background: `${color}0d`, border: `1px solid ${color}55` }}>
+      <div className="grand-final-teams">
+        {[{ team: teamA, roster: rosterA, side: 'a' }, { team: teamB, roster: rosterB, side: 'b' }].map(({ team, roster, side }) => (
+          <div key={team.id} className={`grand-final-team grand-final-team-${side}`}>
             <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={48} borderRadius="10px" />
-            <div style={{ minWidth: 0, flex: 1 }}>
-              <strong style={{ display: 'block', color: '#fff', fontFamily: 'var(--font-rajdhani)', fontSize: '1.05rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{team.name}</strong>
-              <span style={{ color, fontSize: '0.72rem', fontWeight: 800 }}>{roster.length} jogadores · {totalKills(roster)} kills</span>
+            <div className="grand-final-team-copy">
+              <strong>{team.name}</strong>
+              <span>{roster.length} jogadores · {totalKills(roster)} kills</span>
             </div>
-            <div style={{ textAlign: 'right' }}>
-              <span style={{ display: 'block', color: '#94a3b8', fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.8px' }}>K/D médio</span>
-              <strong style={{ color, fontFamily: 'var(--font-rajdhani)', fontSize: '1.35rem' }}>{averageKd(roster)}</strong>
+            <div className="grand-final-team-kd">
+              <span>K/D médio</span>
+              <strong>{averageKd(roster)}</strong>
             </div>
           </div>
         ))}
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '980px', margin: '0 auto', padding: '0.55rem 0.8rem', borderTop: '1px solid rgba(255,255,255,0.08)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <span style={{ color: '#00f0ff', fontSize: '0.68rem', fontWeight: 900, letterSpacing: '1px' }}>VENVANSE</span>
-        <span style={{ color: '#ffd700', fontSize: '0.68rem', fontWeight: 900, letterSpacing: '1px' }}>CONFRONTO POR K/D</span>
-        <span style={{ color: '#ff5172', fontSize: '0.68rem', fontWeight: 900, letterSpacing: '1px' }}>DESACREDITADOS</span>
+      <div className="grand-final-key">
+        <span className="team-a-key">VENVANSE</span>
+        <span>CONFRONTO POR K/D</span>
+        <span className="team-b-key">DESACREDITADOS</span>
       </div>
 
-      <div style={{ maxWidth: '980px', margin: '0 auto 1.6rem' }}>
+      <div className="grand-final-duels">
         {duels.map(({ playerA, playerB }, index) => <PlayerDuel key={`${playerA?.name || 'a'}-${playerB?.name || 'b'}`} playerA={playerA} playerB={playerB} index={index} />)}
       </div>
 
-      <div style={{ maxWidth: '760px', margin: '0 auto' }}>
+      <div className="grand-final-prediction">
         <MatchPrediction matchId="final" teamAName={teamA.name} teamBName={teamB.name} />
       </div>
     </section>
