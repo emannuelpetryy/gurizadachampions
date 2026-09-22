@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import { getPlayerTier, getTeam, players, tiers } from '../data';
 import PlayerAvatar from '../jogador/[name]/PlayerAvatar';
+import DuelPrediction from './DuelPrediction';
 import MatchPrediction from './MatchPrediction';
 import TeamLogo from './TeamLogo';
 
@@ -80,6 +81,13 @@ function PlayerDuel({ playerA, playerB, index }: { playerA?: ShowdownPlayer; pla
         <span className="final-kd-difference">{comparisonLabel}</span>
       </div>
       {playerCard(playerB, 'b')}
+      {playerA && playerB && (
+        <DuelPrediction
+          duelId={`final-${playerA.name}-${playerB.name}`}
+          playerAName={playerA.name}
+          playerBName={playerB.name}
+        />
+      )}
     </div>
   );
 }

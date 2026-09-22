@@ -71,8 +71,8 @@ export default function MatchPrediction({
   };
 
   const total = votes.a + votes.b;
-  const pctA = total > 0 ? Math.round((votes.a / total) * 100) : 0;
-  const pctB = total > 0 ? 100 - pctA : 0;
+  const pctA = total > 0 ? Math.round((votes.a / total) * 100) : 50;
+  const pctB = 100 - pctA;
   const hasVotes = total > 0;
   const favorite = hasVotes && votes.a !== votes.b ? (votes.a > votes.b ? teamAName : teamBName) : null;
 
@@ -134,16 +134,14 @@ export default function MatchPrediction({
           }}
         >
           <span style={{ fontSize: '0.9rem' }}>{teamAName}</span>
-          {hasVotes && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', fontSize: '1.3rem', fontWeight: 'bold' }}>
-                {pctA}%
-              </span>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                ({votes.a})
-              </span>
-            </div>
-          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', fontSize: '1.3rem', fontWeight: 'bold' }}>
+              {pctA}%
+            </span>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+              ({votes.a})
+            </span>
+          </div>
           {!hasVotes && !userVote && (
             <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Clique para votar</span>
           )}
@@ -179,16 +177,14 @@ export default function MatchPrediction({
           }}
         >
           <span style={{ fontSize: '0.9rem' }}>{teamBName}</span>
-          {hasVotes && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ color: 'var(--accent-red)', fontFamily: 'var(--font-rajdhani)', fontSize: '1.3rem', fontWeight: 'bold' }}>
-                {pctB}%
-              </span>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                ({votes.b})
-              </span>
-            </div>
-          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ color: 'var(--accent-red)', fontFamily: 'var(--font-rajdhani)', fontSize: '1.3rem', fontWeight: 'bold' }}>
+              {pctB}%
+            </span>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+              ({votes.b})
+            </span>
+          </div>
           {!hasVotes && !userVote && (
             <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Clique para votar</span>
           )}
@@ -199,8 +195,7 @@ export default function MatchPrediction({
       </div>
 
       {/* Barra de Progresso Visual */}
-      {hasVotes && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
           <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.08)', borderRadius: '4px', overflow: 'hidden', display: 'flex' }}>
             <div style={{ 
               width: `${pctA}%`, 
@@ -218,7 +213,6 @@ export default function MatchPrediction({
             }}></div>
           </div>
         </div>
-      )}
 
       {/* Estado vazio */}
       {!hasVotes && !userVote && (
