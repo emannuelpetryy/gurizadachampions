@@ -84,7 +84,7 @@ export default function MatchPrediction({
   }
 
   return (
-    <div style={{ 
+      <div className="prediction-panel" style={{
       width: '100%', 
       background: justVoted ? 'rgba(0,240,255,0.08)' : 'rgba(13, 20, 36, 0.8)', 
       padding: '1rem', 

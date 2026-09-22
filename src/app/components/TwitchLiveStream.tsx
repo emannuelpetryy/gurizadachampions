@@ -7,7 +7,7 @@ export default function TwitchLiveStream() {
 
   return (
     <div
-      className="glass-card"
+      className="glass-card stream-panel"
       style={{
         gridColumn: '1 / -1',
         marginBottom: '2.5rem',

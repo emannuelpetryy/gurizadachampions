@@ -99,7 +99,7 @@ export default function GrandFinalShowdown() {
   const totalKills = (roster: ShowdownPlayer[]) => roster.reduce((sum, player) => sum + player.kills, 0);
 
   return (
-    <section className="glass-card" style={{ marginBottom: '3.5rem', padding: 'clamp(1.1rem, 3vw, 2rem)', border: '1px solid rgba(255,215,0,0.34)', background: 'radial-gradient(circle at 50% -20%, rgba(255,215,0,0.11), transparent 45%), linear-gradient(135deg, rgba(10,20,39,0.98), rgba(5,11,25,0.98))', boxShadow: '0 18px 55px rgba(0,0,0,0.32)' }}>
+    <section className="glass-card final-showdown" style={{ marginBottom: '0', padding: 'clamp(1.1rem, 3vw, 2rem)', border: '1px solid rgba(255,215,0,0.34)', background: 'radial-gradient(circle at 50% -20%, rgba(255,215,0,0.11), transparent 45%), linear-gradient(135deg, rgba(10,20,39,0.98), rgba(5,11,25,0.98))', boxShadow: '0 18px 55px rgba(0,0,0,0.32)' }}>
       <div style={{ textAlign: 'center', marginBottom: '1.6rem' }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', padding: '0.38rem 0.9rem', border: '1px solid rgba(255,215,0,0.6)', borderRadius: '999px', color: '#ffd700', fontSize: '0.72rem', fontWeight: 900, letterSpacing: '1.5px' }}>👑 GRANDE FINAL · MD3</span>
         <h2 style={{ margin: '0.8rem 0 0.35rem', color: '#fff', fontFamily: 'var(--font-rajdhani)', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', lineHeight: 1, textTransform: 'uppercase' }}>

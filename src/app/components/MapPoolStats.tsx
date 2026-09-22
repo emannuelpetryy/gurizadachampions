@@ -40,7 +40,7 @@ export default function MapPoolStats() {
   const sortedMaps = Object.entries(mapData).sort((a, b) => b[1].played - a[1].played);
 
   return (
-    <div className="glass-card" style={{ gridColumn: '1 / -1', marginTop: '2rem', border: '1px solid rgba(0,240,255,0.2)', boxShadow: '0 0 25px rgba(0,240,255,0.05)' }}>
+    <div className="glass-card map-pool-panel" style={{ gridColumn: '1 / -1', marginTop: 0, border: '1px solid rgba(0,240,255,0.2)', boxShadow: '0 0 25px rgba(0,240,255,0.05)' }}>
       <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
         MAP POOL DO CAMPEONATO
