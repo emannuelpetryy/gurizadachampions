@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { getPlayerTier, getTeam, players } from '../data';
+import Link from 'next/link';
+import { getPlayerTier, getTeam, players, tiers } from '../data';
 import PlayerAvatar from '../jogador/[name]/PlayerAvatar';
 import MatchPrediction from './MatchPrediction';
 import TeamLogo from './TeamLogo';
@@ -12,34 +13,26 @@ const teamAId = 'venvanse';
 const teamBId = 'desacreditados';
 
 const kdOf = (player: ShowdownPlayer) => player.kills / (player.deaths || 1);
+const kdaOf = (player: ShowdownPlayer) => (player.kills + player.assists) / (player.deaths || 1);
 
 const formatKd = (player: ShowdownPlayer) => kdOf(player).toFixed(2);
+const formatKda = (player: ShowdownPlayer) => kdaOf(player).toFixed(2);
 
-const tierValue: Record<string, number> = { S: 5, A: 4, B: 3, C: 2, D: 1 };
-
-const getSimilarity = (playerA: ShowdownPlayer, playerB: ShowdownPlayer) => {
-  const maxKd = Math.max(kdOf(playerA), kdOf(playerB), 1);
-  const kdSimilarity = 1 - Math.abs(kdOf(playerA) - kdOf(playerB)) / maxKd;
-  const tierA = tierValue[getPlayerTier(playerA.name)] || 0;
-  const tierB = tierValue[getPlayerTier(playerB.name)] || 0;
-  const tierSimilarity = tierA && tierB ? 1 - Math.abs(tierA - tierB) / 4 : kdSimilarity;
-
-  return Math.max(0, Math.round(((kdSimilarity * 0.7) + (tierSimilarity * 0.3)) * 100));
-};
-
-const getSimilarityLabel = (similarity: number) => {
-  if (similarity >= 85) return 'Duelo equilibrado';
-  if (similarity >= 65) return 'Boa disputa';
-  return 'Vantagem estatística';
-};
+const getPlayerLevel = (name: string) =>
+  Object.values(tiers).flat().find((entry) => entry.name.trim().toLowerCase() === name.trim().toLowerCase())?.lvl;
 
 function PlayerDuel({ playerA, playerB, index }: { playerA?: ShowdownPlayer; playerB?: ShowdownPlayer; index: number }) {
   if (!playerA && !playerB) return null;
 
-  const similarity = playerA && playerB ? getSimilarity(playerA, playerB) : 0;
   const kdA = playerA ? kdOf(playerA) : 0;
   const kdB = playerB ? kdOf(playerB) : 0;
   const winner = kdA === kdB ? null : kdA > kdB ? 'a' : 'b';
+  const kdDifference = Math.abs(kdA - kdB);
+  const comparisonLabel = !playerA || !playerB
+    ? 'Sem comparação'
+    : kdDifference < 0.01
+      ? 'K/D igual'
+      : `${winner === 'a' ? playerA.name : playerB.name} +${kdDifference.toFixed(2)}`;
 
   const renderPlayer = (player: ShowdownPlayer | undefined, side: 'a' | 'b') => {
     if (!player) {
@@ -60,9 +53,10 @@ function PlayerDuel({ playerA, playerB, index }: { playerA?: ShowdownPlayer; pla
                 TIER {getPlayerTier(player.name)}
               </span>
             )}
+            {getPlayerLevel(player.name) && <span className="final-level">LVL {getPlayerLevel(player.name)}</span>}
           </div>
           <span style={{ color: isLeading ? (side === 'a' ? '#00f0ff' : '#ff7891') : '#94a3b8', fontSize: '0.78rem', fontWeight: 800 }}>
-            K/D {formatKd(player)} · {player.kills}K / {player.deaths}D
+            K/D {formatKd(player)} · KDA {formatKda(player)}
           </span>
         </div>
       </div>
@@ -71,18 +65,19 @@ function PlayerDuel({ playerA, playerB, index }: { playerA?: ShowdownPlayer; pla
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 112px minmax(0, 1fr)', gap: '0.8rem', alignItems: 'center', padding: '0.85rem 0', borderTop: index === 0 ? 'none' : '1px solid rgba(255,255,255,0.07)' }}>
-      <div style={{ padding: '0.75rem', borderRadius: '12px', background: winner === 'a' ? 'rgba(0,240,255,0.1)' : 'rgba(255,255,255,0.035)', border: `1px solid ${winner === 'a' ? 'rgba(0,240,255,0.35)' : 'rgba(255,255,255,0.07)'}` }}>
+      <Link href={`/jogador/${encodeURIComponent(playerA?.name || '')}`} className="final-player-card" aria-label={playerA ? `Ver perfil de ${playerA.name}` : undefined} style={{ padding: '0.75rem', borderRadius: '12px', background: winner === 'a' ? 'rgba(0,240,255,0.1)' : 'rgba(255,255,255,0.035)', border: `1px solid ${winner === 'a' ? 'rgba(0,240,255,0.35)' : 'rgba(255,255,255,0.07)'}` }}>
         {renderPlayer(playerA, 'a')}
+      </Link>
+
+      <div className="final-kd-comparison" style={{ textAlign: 'center' }}>
+        <span className="final-kd-score">{playerA && playerB ? `${formatKd(playerA)} × ${formatKd(playerB)}` : '—'}</span>
+        <span className="final-kd-label">K/D</span>
+        <span className="final-kd-difference">{comparisonLabel}</span>
       </div>
 
-      <div className="final-similarity" style={{ textAlign: 'center' }}>
-        <span style={{ display: 'block', color: '#ffd700', fontSize: '0.66rem', fontWeight: 900, letterSpacing: '0.6px' }}>{similarity}%</span>
-        <span style={{ display: 'block', color: '#94a3b8', fontSize: '0.6rem', lineHeight: 1.15, marginTop: '0.15rem' }}>{playerA && playerB ? getSimilarityLabel(similarity) : 'Comparação'}</span>
-      </div>
-
-      <div style={{ padding: '0.75rem', borderRadius: '12px', background: winner === 'b' ? 'rgba(255,51,102,0.1)' : 'rgba(255,255,255,0.035)', border: `1px solid ${winner === 'b' ? 'rgba(255,51,102,0.35)' : 'rgba(255,255,255,0.07)'}` }}>
+      <Link href={`/jogador/${encodeURIComponent(playerB?.name || '')}`} className="final-player-card" aria-label={playerB ? `Ver perfil de ${playerB.name}` : undefined} style={{ padding: '0.75rem', borderRadius: '12px', background: winner === 'b' ? 'rgba(255,51,102,0.1)' : 'rgba(255,255,255,0.035)', border: `1px solid ${winner === 'b' ? 'rgba(255,51,102,0.35)' : 'rgba(255,255,255,0.07)'}` }}>
         {renderPlayer(playerB, 'b')}
-      </div>
+      </Link>
     </div>
   );
 }
@@ -126,7 +121,7 @@ export default function GrandFinalShowdown() {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '980px', margin: '0 auto', padding: '0.55rem 0.8rem', borderTop: '1px solid rgba(255,255,255,0.08)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <span style={{ color: '#00f0ff', fontSize: '0.68rem', fontWeight: 900, letterSpacing: '1px' }}>VENVANSE</span>
-        <span style={{ color: '#ffd700', fontSize: '0.68rem', fontWeight: 900, letterSpacing: '1px' }}>PROXIMIDADE POR K/D + TIER</span>
+        <span style={{ color: '#ffd700', fontSize: '0.68rem', fontWeight: 900, letterSpacing: '1px' }}>CONFRONTO POR K/D</span>
         <span style={{ color: '#ff5172', fontSize: '0.68rem', fontWeight: 900, letterSpacing: '1px' }}>DESACREDITADOS</span>
       </div>
 
