@@ -62,7 +62,7 @@ export default function DuelPrediction({ duelId, playerAName, playerBName }: { d
         </button>
       </div>
       <div className="final-duel-vote-bar" aria-hidden="true"><span style={{ width: `${pctA}%` }} /><i style={{ width: `${pctB}%` }} /></div>
-      <small>{loading ? 'Carregando votos...' : choice ? '✓ Seu palpite foi salvo' : total ? `${total} voto${total === 1 ? '' : 's'} da torcida` : 'Seja o primeiro a votar'}</small>
+      <small>{loading ? 'Carregando votos...' : choice ? `✓ Seu palpite foi salvo${total > 0 ? ` · ${total} voto${total === 1 ? '' : 's'} no total` : ''}` : total ? `${total} voto${total === 1 ? '' : 's'} da torcida` : 'Seja o primeiro a votar'}</small>
     </div>
   );
 }
