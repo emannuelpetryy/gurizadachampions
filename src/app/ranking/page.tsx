@@ -33,7 +33,14 @@ export default function Ranking() {
 
   const renderGroupTable = (groupName: string, groupData: any[]) => (
     <div className="glass-card" style={{ marginBottom: '2rem', padding: '1.5rem' }}>
-      <h3 className="card-title" style={{ textAlign: 'center', justifyContent: 'center' }}>GRUPO {groupName}</h3>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem', paddingBottom: '0.8rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+        <h3 className="card-title" style={{ margin: 0 }}>
+          <span style={{ color: 'var(--cyan)' }}>GRUPO</span> {groupName}
+        </h3>
+        <span style={{ fontSize: '0.72rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', color: '#10b981', padding: '0.2rem 0.6rem', borderRadius: '6px', fontWeight: 800, letterSpacing: '0.5px' }}>
+          TOP 2 ➔ SEMIFINAIS
+        </span>
+      </div>
       <div className="table-responsive">
         <table className="ranking-table group-ranking-table">
           <thead>
@@ -50,26 +57,34 @@ export default function Ranking() {
           <tbody>
             {groupData.map((row, index) => {
               const team = getTeam(row.teamId);
+              const isQualified = index < 2;
               return (
                 <tr key={team.id} className={`rank-${index + 1}`}>
                   <td style={{ textAlign: 'center' }}>
-                    <span className="rank-number" style={{ fontSize: index < 2 ? '1.5rem' : '1.2rem', color: index < 2 ? 'var(--cyan)' : '#fff', textShadow: index < 2 ? '0 0 10px rgba(0,240,255,0.5)' : 'none' }}>
+                    <span className="rank-number" style={{ fontSize: isQualified ? '1.4rem' : '1.1rem', color: isQualified ? '#10b981' : '#64748b', fontWeight: 900 }}>
                       {index + 1}
                     </span>
                   </td>
                   <td>
                     <Link href={`/time/${team.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                       <div className="team-info" style={{ cursor: 'pointer' }}>
-                        <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={40} borderRadius="8px" />
-                        <strong style={{ fontSize: '1.1rem' }}>{team.name}</strong>
+                        <TeamLogo logo={team.logo} name={team.name} initials={team.initials} size={36} borderRadius="8px" />
+                        <div>
+                          <strong style={{ fontSize: '1.05rem', color: '#fff' }}>{team.name}</strong>
+                          {isQualified && (
+                            <span style={{ display: 'block', fontSize: '0.65rem', color: '#10b981', fontWeight: 700 }}>
+                              Classificado para Playoffs
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </Link>
                   </td>
-                  <td style={{ textAlign: 'center', color: 'var(--primary)', fontWeight: 'bold', fontSize: '1.2rem' }}>{row.p}</td>
-                  <td style={{ textAlign: 'center' }}>{row.pj}</td>
-                  <td style={{ textAlign: 'center', color: '#00F0FF' }}>{row.v}</td>
-                  <td style={{ textAlign: 'center', color: '#ff3366' }}>{row.d}</td>
-                  <td style={{ textAlign: 'center', color: row.rd > 0 ? '#2ed573' : row.rd < 0 ? '#ff4757' : 'var(--text-muted)', fontWeight: 'bold' }}>
+                  <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 900, fontSize: '1.25rem', fontFamily: 'var(--font-rajdhani)' }}>{row.p}</td>
+                  <td style={{ textAlign: 'center', fontWeight: 700 }}>{row.pj}</td>
+                  <td style={{ textAlign: 'center', color: '#00f0ff', fontWeight: 700 }}>{row.v}</td>
+                  <td style={{ textAlign: 'center', color: '#ff3366', fontWeight: 700 }}>{row.d}</td>
+                  <td style={{ textAlign: 'center', color: row.rd > 0 ? '#10b981' : row.rd < 0 ? '#ff3366' : 'var(--text-muted)', fontWeight: 800, fontFamily: 'var(--font-rajdhani)', fontSize: '1.1rem' }}>
                     {row.rd > 0 ? `+${row.rd}` : row.rd}
                   </td>
                 </tr>
@@ -78,7 +93,9 @@ export default function Ranking() {
           </tbody>
         </table>
       </div>
-      <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>* Top 2 classificam para as semifinais | RD = Saldo de Rounds</p>
+      <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.78rem', color: '#8fa0bc' }}>
+        * Top 2 avançam às semifinais | PTS = Pontos, J = Jogos, V = Vitórias, D = Derrotas, RD = Saldo de Rounds
+      </p>
     </div>
   );
 
@@ -87,23 +104,10 @@ export default function Ranking() {
       <section className="container">
         
         {/* SELETOR DE MENU SUSPENSO / TABS DE RANKING */}
-        <div className="ranking-tabs" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
+        <div className="ranking-tabs" style={{ marginBottom: '3rem' }}>
           <button
             onClick={() => setActiveTab('championship')}
             className={`ranking-tab ${activeTab === 'championship' ? 'is-active' : ''}`}
-            style={{
-              background: activeTab === 'championship' ? 'linear-gradient(135deg, #00f0ff, #0099ff)' : 'rgba(255,255,255,0.05)',
-              color: activeTab === 'championship' ? '#080d1a' : '#fff',
-              border: activeTab === 'championship' ? 'none' : '1px solid rgba(255,255,255,0.15)',
-              padding: '0.9rem 2rem',
-              borderRadius: '20px',
-              fontWeight: 800,
-              fontSize: '1rem',
-              fontFamily: 'var(--font-rajdhani)',
-              cursor: 'pointer',
-              boxShadow: activeTab === 'championship' ? '0 0 25px rgba(0,240,255,0.4)' : 'none',
-              transition: 'all 0.3s',
-            }}
           >
             🏆 RANKING DO CAMPEONATO
           </button>
@@ -111,19 +115,6 @@ export default function Ranking() {
           <button
             onClick={() => setActiveTab('playoffs')}
             className={`ranking-tab ${activeTab === 'playoffs' ? 'is-active' : ''}`}
-            style={{
-              background: activeTab === 'playoffs' ? 'linear-gradient(135deg, #ff007f, #7928ca)' : 'rgba(255,255,255,0.05)',
-              color: '#fff',
-              border: activeTab === 'playoffs' ? 'none' : '1px solid rgba(255,255,255,0.15)',
-              padding: '0.9rem 2rem',
-              borderRadius: '20px',
-              fontWeight: 800,
-              fontSize: '1rem',
-              fontFamily: 'var(--font-rajdhani)',
-              cursor: 'pointer',
-              boxShadow: activeTab === 'playoffs' ? '0 0 25px rgba(255,0,127,0.4)' : 'none',
-              transition: 'all 0.3s',
-            }}
           >
             ⚔️ MATA-MATA (PLAYOFFS)
           </button>
@@ -131,19 +122,6 @@ export default function Ranking() {
           <button
             onClick={() => setActiveTab('elo_rating')}
             className={`ranking-tab ${activeTab === 'elo_rating' ? 'is-active' : ''}`}
-            style={{
-              background: activeTab === 'elo_rating' ? 'linear-gradient(135deg, #ffd700, #ffaa00)' : 'rgba(255,255,255,0.05)',
-              color: activeTab === 'elo_rating' ? '#080d1a' : '#fff',
-              border: activeTab === 'elo_rating' ? 'none' : '1px solid rgba(255,255,255,0.15)',
-              padding: '0.9rem 2rem',
-              borderRadius: '20px',
-              fontWeight: 800,
-              fontSize: '1rem',
-              fontFamily: 'var(--font-rajdhani)',
-              cursor: 'pointer',
-              boxShadow: activeTab === 'elo_rating' ? '0 0 25px rgba(255,215,0,0.4)' : 'none',
-              transition: 'all 0.3s',
-            }}
           >
             ⚡ RANKING DE ELO DA GURIZADA (AMISTOSOS 5V5)
           </button>
@@ -210,11 +188,20 @@ export default function Ranking() {
                       const playerTier = getPlayerTier(player.name);
                       return (
                         <tr key={player.name} className={`rank-${index + 1}`}>
-                          <td style={{ textAlign: 'center' }}><span className="rank-number" style={{ fontSize: index < 3 ? '1.5rem' : '1.2rem' }}>#{index + 1}</span></td>
+                          <td style={{ textAlign: 'center' }}>
+                            <span className="rank-number" style={{
+                              fontSize: index < 3 ? '1.4rem' : '1.1rem',
+                              color: index === 0 ? '#ffd700' : index === 1 ? '#e2e8f0' : index === 2 ? '#cd7f32' : 'var(--text-muted)',
+                              fontWeight: 900,
+                              fontFamily: 'var(--font-rajdhani)',
+                            }}>
+                              {index === 0 ? '🥇 #1' : index === 1 ? '🥈 #2' : index === 2 ? '🥉 #3' : `#${index + 1}`}
+                            </span>
+                          </td>
                           <td>
-                            <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '1rem' }} className="match-card-hover">
-                              <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor="rgba(255,255,255,0.1)" size={40} />
-                              <strong style={{ fontSize: '1.1rem', color: '#fff', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                            <Link href={`/jogador/${encodeURIComponent(player.name)}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '0.85rem' }} className="match-card-hover">
+                              <PlayerAvatar teamName={team.name} playerName={player.name} badgeColor="rgba(255,255,255,0.1)" size={38} />
+                              <strong style={{ fontSize: '1.05rem', color: '#fff', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
                                 {player.name}
                                 {playerTier && (
                                   <span style={{
@@ -243,11 +230,13 @@ export default function Ranking() {
                             </Link>
                           </td>
                           <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{player.matches || 1}</td>
-                          <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '1.2rem' }}>{player.kills}</td>
+                          <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '1.15rem' }}>{player.kills}</td>
                           <td style={{ textAlign: 'center', color: 'var(--accent-red)' }}>{player.deaths}</td>
                           <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{player.assists}</td>
-                          <td style={{ textAlign: 'center', color: 'var(--gold)', fontWeight: 'bold', fontSize: '1.2rem' }}>{kd}</td>
-                          <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '1.2rem' }}>{kda}</td>
+                          <td style={{ textAlign: 'center', color: parseFloat(kd) >= 2.0 ? '#ffd700' : parseFloat(kd) >= 1.5 ? 'var(--cyan)' : parseFloat(kd) >= 1.0 ? '#10b981' : 'var(--accent-red)', fontWeight: 'bold', fontSize: '1.2rem', fontFamily: 'var(--font-rajdhani)' }}>
+                            {kd}
+                          </td>
+                          <td style={{ textAlign: 'center', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '1.15rem', fontFamily: 'var(--font-rajdhani)' }}>{kda}</td>
                         </tr>
                       );
                     })}

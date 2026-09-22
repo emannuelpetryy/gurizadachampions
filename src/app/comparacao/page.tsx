@@ -106,21 +106,23 @@ export default function ComparacaoPage() {
     const weightB = lowerIsBetter ? (valA || 1) : (valB || 1);
 
     return (
-      <div style={{ marginBottom: '1.5rem', background: 'rgba(0,0,0,0.3)', padding: '1.2rem 1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
-          <strong style={{ fontSize: '1.3rem', color: isAWinner ? 'var(--cyan)' : '#fff', fontFamily: 'var(--font-rajdhani)' }}>
+      <div className="versus-meter-row">
+        <div className="versus-meter-labels">
+          <strong style={{ fontSize: '1.25rem', color: isAWinner ? 'var(--cyan)' : '#f1f5f9', fontFamily: 'var(--font-rajdhani)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
             {format(valA)} {isAWinner && '👑'}
           </strong>
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>{label}</span>
-          <strong style={{ fontSize: '1.3rem', color: isBWinner ? '#ab47bc' : '#fff', fontFamily: 'var(--font-rajdhani)' }}>
+          <span style={{ fontSize: '0.8rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 800 }}>
+            {label}
+          </span>
+          <strong style={{ fontSize: '1.25rem', color: isBWinner ? '#d946ef' : '#f1f5f9', fontFamily: 'var(--font-rajdhani)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
             {isBWinner && '👑 '} {format(valB)}
           </strong>
         </div>
 
         {/* Bar Comparison */}
-        <div style={{ display: 'flex', height: '8px', borderRadius: '4px', overflow: 'hidden', background: 'rgba(255,255,255,0.1)', gap: '2px' }}>
-          <div style={{ flex: weightA, background: isAWinner ? 'var(--cyan)' : 'rgba(0,240,255,0.4)', transition: 'all 0.3s' }}></div>
-          <div style={{ flex: weightB, background: isBWinner ? '#ab47bc' : 'rgba(171,71,188,0.4)', transition: 'all 0.3s' }}></div>
+        <div className="versus-meter-bar">
+          <div style={{ flex: weightA, background: isAWinner ? 'var(--cyan)' : 'rgba(0,240,255,0.4)', transition: 'all 0.35s ease' }}></div>
+          <div style={{ flex: weightB, background: isBWinner ? '#d946ef' : 'rgba(217,70,239,0.4)', transition: 'all 0.35s ease' }}></div>
         </div>
       </div>
     );
@@ -132,51 +134,71 @@ export default function ComparacaoPage() {
         
         {/* Title */}
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h1 className="hero-title" style={{ fontSize: '3rem', margin: 0, textShadow: 'none' }}>
+          <span className="section-eyebrow">HEAD-TO-HEAD</span>
+          <h1 className="hero-title" style={{ fontSize: '3rem', margin: '0.2rem 0 0', textShadow: 'none' }}>
             COMPARAÇÃO <span style={{ color: 'var(--cyan)' }}>1V1</span>
           </h1>
-          <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>Coloque dois jogadores lado a lado e alimente a rivalidade do campeonato!</p>
+          <p style={{ color: '#94a3b8', marginTop: '0.5rem', fontSize: '0.95rem' }}>
+            Coloque dois jogadores frente a frente e analise quem domina as estatísticas da temporada!
+          </p>
         </div>
 
-        {/* Selectors Header Card */}
-        <div className="glass-card" style={{ padding: '2.5rem 2rem', marginBottom: '3rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '2rem', alignItems: 'center' }}>
+        {/* Versus Arena Card */}
+        <div className="versus-arena-card">
+          <div className="versus-fighter-grid">
             
-            {/* Player A Selector */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-              <PlayerAvatar teamName={teamA.name} playerName={pA.name} badgeColor="var(--cyan)" size={90} />
+            {/* Player A Fighter Card */}
+            <div className="versus-fighter-card" style={{ borderTop: '3px solid var(--cyan)' }}>
+              <PlayerAvatar teamName={teamA.name} playerName={pA.name} badgeColor="var(--cyan)" size={84} />
               <select
                 value={playerAName}
                 onChange={(e) => setPlayerAName(e.target.value)}
-                style={{ background: 'rgba(0,0,0,0.6)', color: '#fff', border: '1px solid var(--cyan)', padding: '0.8rem 1.2rem', borderRadius: '10px', fontSize: '1.1rem', fontWeight: 'bold', width: '100%', maxWidth: '280px', outline: 'none', cursor: 'pointer' }}
+                className="versus-select"
+                style={{ borderColor: 'rgba(0, 240, 255, 0.4)' }}
               >
                 {players.map(p => (
-                  <option key={p.name} value={p.name} style={{ background: '#111' }}>{p.name}</option>
+                  <option key={p.name} value={p.name} style={{ background: '#080d1a' }}>{p.name}</option>
                 ))}
               </select>
-              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{teamA.name}</span>
-            </div>
-
-            {/* VS Badge */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'linear-gradient(45deg, var(--cyan), #ab47bc)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.4rem', color: '#fff', boxShadow: '0 0 20px rgba(0,240,255,0.4)', fontFamily: 'var(--font-rajdhani)' }}>
-                VS
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <span style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 700 }}>{teamA.name}</span>
+                {tierA.tier !== '-' && (
+                  <span style={{ fontSize: '0.65rem', background: 'rgba(0, 240, 255, 0.15)', border: '1px solid rgba(0, 240, 255, 0.5)', color: 'var(--cyan)', padding: '0.15rem 0.5rem', borderRadius: '6px', fontWeight: 800 }}>
+                    TIER {tierA.tier} (LVL {tierA.lvl})
+                  </span>
+                )}
               </div>
             </div>
 
-            {/* Player B Selector */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-              <PlayerAvatar teamName={teamB.name} playerName={pB.name} badgeColor="#ab47bc" size={90} />
+            {/* VS Pulsating Badge */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+              <div className="versus-badge-icon">
+                VS
+              </div>
+              <span style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase' }}>DUELO</span>
+            </div>
+
+            {/* Player B Fighter Card */}
+            <div className="versus-fighter-card" style={{ borderTop: '3px solid #d946ef' }}>
+              <PlayerAvatar teamName={teamB.name} playerName={pB.name} badgeColor="#d946ef" size={84} />
               <select
                 value={playerBName}
                 onChange={(e) => setPlayerBName(e.target.value)}
-                style={{ background: 'rgba(0,0,0,0.6)', color: '#fff', border: '1px solid #ab47bc', padding: '0.8rem 1.2rem', borderRadius: '10px', fontSize: '1.1rem', fontWeight: 'bold', width: '100%', maxWidth: '280px', outline: 'none', cursor: 'pointer' }}
+                className="versus-select"
+                style={{ borderColor: 'rgba(217, 70, 239, 0.4)' }}
               >
                 {players.map(p => (
-                  <option key={p.name} value={p.name} style={{ background: '#111' }}>{p.name}</option>
+                  <option key={p.name} value={p.name} style={{ background: '#080d1a' }}>{p.name}</option>
                 ))}
               </select>
-              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{teamB.name}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <span style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 700 }}>{teamB.name}</span>
+                {tierB.tier !== '-' && (
+                  <span style={{ fontSize: '0.65rem', background: 'rgba(217, 70, 239, 0.15)', border: '1px solid rgba(217, 70, 239, 0.5)', color: '#d946ef', padding: '0.15rem 0.5rem', borderRadius: '6px', fontWeight: 800 }}>
+                    TIER {tierB.tier} (LVL {tierB.lvl})
+                  </span>
+                )}
+              </div>
             </div>
 
           </div>
