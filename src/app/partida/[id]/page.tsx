@@ -15,7 +15,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
   if (!details) {
     return (
-      <main style={{ padding: '4rem 0' }}>
+      <main className="content-page">
         <section className="container">
           <div className="glass-card" style={{ textAlign: 'center', padding: '4rem' }}>
             <h2 className="hero-title" style={{ fontSize: '2rem' }}>Detalhes não disponíveis</h2>
@@ -154,7 +154,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   );
 
   return (
-    <main style={{ padding: '4rem 0' }}>
+    <main className="content-page match-page">
       <section className="container">
         
         {/* Match Header */}

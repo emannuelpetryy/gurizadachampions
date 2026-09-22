@@ -256,7 +256,7 @@ export default function LobbyPage() {
   const filledCount = slots.filter(Boolean).length;
 
   return (
-    <main style={{ padding: '3rem 0', minHeight: '100vh' }}>
+    <main className="content-page lobby-page">
       <section className="container">
         
         {/* Banner do Lobby */}
