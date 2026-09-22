@@ -7,7 +7,7 @@ export default function MatchPrediction({
   teamAName, 
   teamBName 
 }: { 
-  matchId: number, 
+  matchId: number | string,
   teamAName: string, 
   teamBName: string 
 }) {

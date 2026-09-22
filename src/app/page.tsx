@@ -1,14 +1,13 @@
-import { getTeam, matches, matchDetails, players, teams, upcomingMatches, getPlayerTier } from './data';
+import { getTeam, matches, matchDetails, players, teams, getPlayerTier } from './data';
 import Link from 'next/link';
 import PlayerAvatar from './jogador/[name]/PlayerAvatar';
 import Comments from '../components/Comments';
-import Countdown from '../components/Countdown';
 import TeamLogo from './components/TeamLogo';
-import MatchPrediction from './components/MatchPrediction';
 import MapPoolStats from './components/MapPoolStats';
 import CommunitySelection from './components/CommunitySelection';
 import TwitchLiveStream from './components/TwitchLiveStream';
 import PlayoffBracket from './components/PlayoffBracket';
+import GrandFinalShowdown from './components/GrandFinalShowdown';
 
 export default function Home() {
   // Ordenar jogadores pelo K/D ratio (principal)
@@ -79,55 +78,8 @@ export default function Home() {
         {/* Banner de Live Stream Minimizado */}
         <TwitchLiveStream />
 
-        {/* PRÓXIMOS CONFRONTOS - CARDS ESPORTS */}
-        {upcomingMatches.length > 0 && (
-          <div className="glass-card shimmer-container" style={{ marginBottom: '3rem' }}>
-            <h3 className="card-title">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              PRÓXIMOS CONFRONTOS — RODADA 3
-            </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '1.6rem', marginTop: '1.5rem' }}>
-              {upcomingMatches.map((match) => {
-                const teamA = getTeam(match.teamA);
-                const teamB = getTeam(match.teamB);
-                return (
-                  <div key={match.id} style={{ background: 'linear-gradient(135deg, rgba(15,25,48,0.85) 0%, rgba(7,14,28,0.95) 100%)', padding: '1.8rem 1.5rem', borderRadius: '16px', border: '1px solid rgba(0,240,255,0.25)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: '1.2rem', alignItems: 'center', position: 'relative' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-                      <span style={{ fontSize: '0.78rem', color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 900 }}>{match.group}</span>
-                      <span style={{ fontSize: '0.75rem', background: 'rgba(16,185,129,0.15)', color: '#10b981', border: '1px solid #10b981', padding: '0.15rem 0.6rem', borderRadius: '10px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
-                        <span className="status-pulse-dot"></span> AGENDADO
-                      </span>
-                    </div>
-                    
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', gap: '1rem', margin: '0.5rem 0' }}>
-                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem' }}>
-                        <TeamLogo logo={teamA.logo} name={teamA.name} initials={teamA.initials} size={54} borderRadius="12px" />
-                        <strong style={{ fontSize: '1.1rem', color: '#fff', textAlign: 'center', fontFamily: 'var(--font-rajdhani)', letterSpacing: '0.5px' }}>{teamA.name}</strong>
-                      </div>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem' }}>
-                        <span style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--cyan)', fontFamily: 'var(--font-rajdhani)', textShadow: '0 0 20px rgba(0,240,255,0.7)' }}>VS</span>
-                      </div>
-
-                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem' }}>
-                        <TeamLogo logo={teamB.logo} name={teamB.name} initials={teamB.initials} size={54} borderRadius="12px" />
-                        <strong style={{ fontSize: '1.1rem', color: '#fff', textAlign: 'center', fontFamily: 'var(--font-rajdhani)', letterSpacing: '0.5px' }}>{teamB.name}</strong>
-                      </div>
-                    </div>
-
-                    <Countdown targetDate={match.date} />
-                    {match.dateDisplay && (
-                      <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontWeight: 700, background: 'rgba(255,255,255,0.05)', padding: '0.3rem 0.8rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>{match.dateDisplay}</span>
-                    )}
-                    
-                    {/* Sistema de Palpites / Votação da Torcida */}
-                    <MatchPrediction matchId={match.id} teamAName={teamA.name} teamBName={teamB.name} />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
+        {/* GRANDE FINAL: CONFRONTO POR NÍVEL + VOTAÇÃO DA TORCIDA */}
+        <GrandFinalShowdown />
 
         {/* MAP POOL STATS & ÚLTIMOS JOGOS */}
         <MapPoolStats />

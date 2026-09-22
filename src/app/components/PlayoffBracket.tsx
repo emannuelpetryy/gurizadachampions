@@ -95,6 +95,14 @@ export default function PlayoffBracket() {
   const handlePickTeam = async (matchId: string, teamChoice: 'a' | 'b', teamId: string) => {
     if ((matchId === 'semi-1' && officialSemi1Winner) || (matchId === 'semi-2' && officialSemi2Winner)) return;
 
+    // A grande final também possui o painel de votação da home. Compartilhar
+    // esta marca evita dois votos no mesmo navegador em componentes diferentes.
+    if (matchId === 'final') {
+      const storedFinalVote = localStorage.getItem('gc_pred_user_final');
+      if (storedFinalVote === 'a' || storedFinalVote === 'b') return;
+      localStorage.setItem('gc_pred_user_final', teamChoice);
+    }
+
     let nextS1 = semi1Winner;
     let nextS2 = semi2Winner;
     let nextFin = finalWinner;
