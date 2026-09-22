@@ -28,7 +28,7 @@ export default function Home() {
         
         <div className="container" style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', textAlign: 'center', padding: '4rem 1rem' }}>
           
-          <div className="shimmer-container" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', padding: '0.5rem 1.6rem', background: 'rgba(0, 240, 255, 0.12)', border: '1px solid var(--cyan)', borderRadius: '30px', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.5rem', boxShadow: '0 0 25px rgba(0, 240, 255, 0.25)' }}>
+          <div className="shimmer-container season-status-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', padding: '0.5rem 1.6rem', background: 'rgba(0, 240, 255, 0.12)', border: '1px solid var(--cyan)', borderRadius: '30px', color: 'var(--cyan)', fontWeight: 'bold', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.5rem', boxShadow: '0 0 25px rgba(0, 240, 255, 0.25)' }}>
             <span className="status-pulse-dot"></span> TEMPORADA 1 — GRANDE FINAL DEFINIDA
           </div>
 

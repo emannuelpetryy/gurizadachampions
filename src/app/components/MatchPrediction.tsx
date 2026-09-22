@@ -74,6 +74,7 @@ export default function MatchPrediction({
   const pctA = total > 0 ? Math.round((votes.a / total) * 100) : 0;
   const pctB = total > 0 ? 100 - pctA : 0;
   const hasVotes = total > 0;
+  const favorite = hasVotes && votes.a !== votes.b ? (votes.a > votes.b ? teamAName : teamBName) : null;
 
   if (!loaded) {
     return (
@@ -100,7 +101,8 @@ export default function MatchPrediction({
         <span style={{ fontSize: '0.8rem', color: justVoted ? '#2ed573' : 'var(--cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'color 0.3s' }}>
           {justVoted ? '🎉 Voto registrado no servidor!' : userVote ? '🗳️ Seu palpite foi computado' : '🗳️ Quem vai vencer? Vote!'}
         </span>
-        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+          {favorite && <strong className="fan-favorite">🔥 Favorito da galera · {favorite}</strong>}
           {total} voto global{total !== 1 ? 's' : ''}
         </span>
       </div>

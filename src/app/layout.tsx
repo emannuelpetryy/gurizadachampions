@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Rajdhani, Inter } from 'next/font/google';
 import './globals.css';
 import Link from 'next/link';
+import NavItem from './components/NavItem';
 
 const rajdhani = Rajdhani({ 
   subsets: ['latin'], 
@@ -35,13 +36,13 @@ export default function RootLayout({
               </span>
             </Link>
             <div className="nav-links">
-              <Link href="/" className="nav-item">INÍCIO</Link>
-              <Link href="/ranking" className="nav-item">RANKING & STATS</Link>
-              <Link href="/selecao" className="nav-item nav-item-gold">🌟 SELEÇÕES</Link>
-              <Link href="/lobby" className="nav-item nav-item-lobby">🎮 LOBBY (5v5)</Link>
-              <Link href="/comparacao" className="nav-item">COMPARAR 1V1</Link>
-              <Link href="/jogadores" className="nav-item">JOGADORES</Link>
-              <Link href="/sobre" className="nav-item">REGULAMENTO</Link>
+              <NavItem href="/" className="nav-item">INÍCIO</NavItem>
+              <NavItem href="/ranking" className="nav-item">RANKING & STATS</NavItem>
+              <NavItem href="/selecao" className="nav-item nav-item-gold">🌟 SELEÇÕES</NavItem>
+              <NavItem href="/lobby" className="nav-item nav-item-lobby">🎮 LOBBY (5v5)</NavItem>
+              <NavItem href="/comparacao" className="nav-item">COMPARAR 1V1</NavItem>
+              <NavItem href="/jogadores" className="nav-item">JOGADORES</NavItem>
+              <NavItem href="/sobre" className="nav-item">REGULAMENTO</NavItem>
             </div>
           </div>
         </nav>

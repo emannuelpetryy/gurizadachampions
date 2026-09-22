@@ -56,7 +56,7 @@ function PlayerDuel({ playerA, playerB, index }: { playerA?: ShowdownPlayer; pla
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
             <strong style={{ color: '#fff', fontSize: '0.92rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{player.name}</strong>
             {getPlayerTier(player.name) && (
-              <span style={{ color: side === 'a' ? '#00f0ff' : '#ff7891', fontSize: '0.58rem', fontWeight: 900, border: `1px solid ${side === 'a' ? '#00f0ff55' : '#ff789155'}`, padding: '0.1rem 0.3rem', borderRadius: '5px' }}>
+              <span className={`final-tier tier-${getPlayerTier(player.name)}`} style={{ fontSize: '0.58rem', fontWeight: 900, padding: '0.1rem 0.3rem', borderRadius: '5px' }}>
                 TIER {getPlayerTier(player.name)}
               </span>
             )}
@@ -75,7 +75,7 @@ function PlayerDuel({ playerA, playerB, index }: { playerA?: ShowdownPlayer; pla
         {renderPlayer(playerA, 'a')}
       </div>
 
-      <div style={{ textAlign: 'center' }}>
+      <div className="final-similarity" style={{ textAlign: 'center' }}>
         <span style={{ display: 'block', color: '#ffd700', fontSize: '0.66rem', fontWeight: 900, letterSpacing: '0.6px' }}>{similarity}%</span>
         <span style={{ display: 'block', color: '#94a3b8', fontSize: '0.6rem', lineHeight: 1.15, marginTop: '0.15rem' }}>{playerA && playerB ? getSimilarityLabel(similarity) : 'Comparação'}</span>
       </div>
@@ -103,7 +103,7 @@ export default function GrandFinalShowdown() {
       <div style={{ textAlign: 'center', marginBottom: '1.6rem' }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', padding: '0.38rem 0.9rem', border: '1px solid rgba(255,215,0,0.6)', borderRadius: '999px', color: '#ffd700', fontSize: '0.72rem', fontWeight: 900, letterSpacing: '1.5px' }}>👑 GRANDE FINAL · MD3</span>
         <h2 style={{ margin: '0.8rem 0 0.35rem', color: '#fff', fontFamily: 'var(--font-rajdhani)', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', lineHeight: 1, textTransform: 'uppercase' }}>
-          VENVANSE <span style={{ color: '#ffd700', fontSize: '0.72em' }}>VS</span> OS DESACREDITADOS
+          VENVANSE <span className="final-vs-badge">VS</span> OS DESACREDITADOS
         </h2>
         <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.88rem' }}>A final está definida. Compare o nível dos jogadores e escolha seu campeão.</p>
       </div>

@@ -12,6 +12,7 @@ export default function Ranking() {
   const [activeTab, setActiveTab] = useState<'championship' | 'playoffs' | 'elo_rating'>('championship');
   const [eloMap, setEloMap] = useState<Record<string, any>>({});
   const [loadingElo, setLoadingElo] = useState(true);
+  const [playerQuery, setPlayerQuery] = useState('');
 
   useEffect(() => {
     async function fetchElo() {
@@ -34,7 +35,7 @@ export default function Ranking() {
     <div className="glass-card" style={{ marginBottom: '2rem', padding: '1.5rem' }}>
       <h3 className="card-title" style={{ textAlign: 'center', justifyContent: 'center' }}>GRUPO {groupName}</h3>
       <div className="table-responsive">
-        <table className="ranking-table">
+        <table className="ranking-table group-ranking-table">
           <thead>
             <tr>
               <th style={{ width: '60px', textAlign: 'center' }}>POS</th>
@@ -86,9 +87,10 @@ export default function Ranking() {
       <section className="container">
         
         {/* SELETOR DE MENU SUSPENSO / TABS DE RANKING */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
+        <div className="ranking-tabs" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
           <button
             onClick={() => setActiveTab('championship')}
+            className={`ranking-tab ${activeTab === 'championship' ? 'is-active' : ''}`}
             style={{
               background: activeTab === 'championship' ? 'linear-gradient(135deg, #00f0ff, #0099ff)' : 'rgba(255,255,255,0.05)',
               color: activeTab === 'championship' ? '#080d1a' : '#fff',
@@ -108,6 +110,7 @@ export default function Ranking() {
 
           <button
             onClick={() => setActiveTab('playoffs')}
+            className={`ranking-tab ${activeTab === 'playoffs' ? 'is-active' : ''}`}
             style={{
               background: activeTab === 'playoffs' ? 'linear-gradient(135deg, #ff007f, #7928ca)' : 'rgba(255,255,255,0.05)',
               color: '#fff',
@@ -127,6 +130,7 @@ export default function Ranking() {
 
           <button
             onClick={() => setActiveTab('elo_rating')}
+            className={`ranking-tab ${activeTab === 'elo_rating' ? 'is-active' : ''}`}
             style={{
               background: activeTab === 'elo_rating' ? 'linear-gradient(135deg, #ffd700, #ffaa00)' : 'rgba(255,255,255,0.05)',
               color: activeTab === 'elo_rating' ? '#080d1a' : '#fff',
@@ -172,6 +176,11 @@ export default function Ranking() {
             </h2>
             
             <div className="glass-card" style={{ padding: '1.5rem' }}>
+              <label className="ranking-search">
+                <span aria-hidden="true">⌕</span>
+                <span className="sr-only">Buscar jogador</span>
+                <input value={playerQuery} onChange={(event) => setPlayerQuery(event.target.value)} placeholder="Buscar jogador ou amigo..." />
+              </label>
               <div className="table-responsive">
                 <table className="ranking-table">
                   <thead>
@@ -188,7 +197,9 @@ export default function Ranking() {
                     </tr>
                   </thead>
                   <tbody>
-                    {[...players].sort((a, b) => (b.kills / (b.deaths || 1)) - (a.kills / (a.deaths || 1))).map((player, index) => {
+                    {[...players]
+                      .filter((player) => `${player.name} ${getTeam(player.teamId).name}`.toLowerCase().includes(playerQuery.trim().toLowerCase()))
+                      .sort((a, b) => (b.kills / (b.deaths || 1)) - (a.kills / (a.deaths || 1))).map((player, index) => {
                       const team = getTeam(player.teamId);
                       const kd = (player.kills / (player.deaths || 1)).toFixed(2);
                       const kda = ((player.kills + player.assists) / (player.deaths || 1)).toFixed(2);
