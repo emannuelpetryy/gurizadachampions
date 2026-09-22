@@ -6,18 +6,13 @@ import TeamLogo from './components/TeamLogo';
 import CommunitySelection from './components/CommunitySelection';
 import PlayoffBracket from './components/PlayoffBracket';
 import GrandFinalShowdown from './components/GrandFinalShowdown';
+import PickemWidget from './components/PickemWidget';
+import SeasonSelector from './components/SeasonSelector';
+import { sortRanking } from '../lib/stats';
 
 export default function Home() {
   // Ranking oficial: K/D acumulado (2 casas decimais); em empate, melhor KDA acumulado e kills.
-  const topKD = [...players].sort((a, b) => {
-    const kdA = Math.round((a.kills / (a.deaths || 1)) * 100);
-    const kdB = Math.round((b.kills / (b.deaths || 1)) * 100);
-    if (kdB !== kdA) return kdB - kdA;
-    const kdaA = (a.kills + a.assists) / (a.deaths || 1);
-    const kdaB = (b.kills + b.assists) / (b.deaths || 1);
-    if (kdaB !== kdaA) return kdaB - kdaA;
-    return b.kills - a.kills;
-  });
+  const topKD = sortRanking(players);
 
   const totalKillsLeague = players.reduce((sum, p) => sum + p.kills, 0);
 
@@ -28,8 +23,11 @@ export default function Home() {
         <div className="home-hero-scanlines" aria-hidden="true" />
         <div className="container home-hero-content">
           <div className="home-hero-copy">
-          <div className="season-status-badge">
-            <span className="status-pulse-dot"></span> TEMPORADA 1 — GRANDE FINAL DEFINIDA
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', flexWrap: 'wrap', marginBottom: '0.8rem' }}>
+            <SeasonSelector />
+            <div className="season-status-badge" style={{ margin: 0 }}>
+              <span className="status-pulse-dot"></span> GRANDE FINAL DEFINIDA
+            </div>
           </div>
 
           <p className="home-hero-kicker">CS2 · CAMPEONATO DA GURIZADA</p>
@@ -80,6 +78,9 @@ export default function Home() {
       <section className="container" style={{ padding: '4rem 1.5rem' }}>
         {/* GRANDE FINAL: CONFRONTO POR NÍVEL + VOTAÇÃO DA TORCIDA */}
         <GrandFinalShowdown />
+
+        {/* BOLÃO E PICK'EM DA GRANDE FINAL */}
+        <PickemWidget />
 
         {/* ÚLTIMAS PARTIDAS: SEMIFINAIS DOS PLAYOFFS (O CAMINHO ATÉ A FINAL) */}
         <section className="recent-matches-section" style={{ marginTop: '2.5rem' }}>

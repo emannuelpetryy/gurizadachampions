@@ -6,6 +6,10 @@ import PlayerAvatar from './PlayerAvatar';
 import GamersClubLink from './GamersClubLink';
 import PlayerStatsSection from './PlayerStatsSection';
 import PlayerCardGenerator from './PlayerCardGenerator';
+import PlayerRadarChart from './PlayerRadarChart';
+import RecentFormBadge from './RecentFormBadge';
+import { calculateRadarAttributes } from '../../../lib/stats';
+import { RecentMatchRecord } from '../../../types/champions';
 
 export default async function JogadorPage({ params }: { params: Promise<{ name: string }> }) {
   const resolvedParams = await params;
@@ -79,6 +83,25 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
     return null;
   }).filter(Boolean) as any[];
 
+  const recentMatchRecords: RecentMatchRecord[] = playerMatches.map(pm => ({
+    matchId: pm.match.id,
+    stage: pm.match.stage || pm.match.date,
+    map: pm.details.map,
+    date: pm.match.date,
+    won: pm.won,
+    scoreDisplay: `${pm.match.scoreA}x${pm.match.scoreB}`,
+    enemyTeamName: pm.enemyObj.name,
+    enemyTeamLogo: pm.enemyObj.logo,
+    kills: pm.stats.kills,
+    deaths: pm.stats.deaths,
+    assists: pm.stats.assists,
+    kd: pm.matchKd,
+    hs: pm.stats.hs,
+    damage: pm.stats.damage,
+  }));
+
+  const radarAttributes = calculateRadarAttributes(player, recentMatchRecords);
+
   return (
     <main style={{ padding: '4rem 0', minHeight: '100vh' }}>
       <section className="container">
@@ -107,6 +130,7 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
                 </Link>
               </div>
               <GamersClubLink playerName={player.name} lvl={playerLvlVal} />
+              <RecentFormBadge matches={recentMatchRecords} />
               <PlayerCardGenerator
                 playerName={player.name}
                 teamName={team.name}
@@ -132,6 +156,9 @@ export default async function JogadorPage({ params }: { params: Promise<{ name: 
               champDamageTotal={player.damageTotal}
               champAdr={player.adr}
               badgeColor={badgeColor}
+              radarComponent={
+                <PlayerRadarChart attributes={radarAttributes} playerName={player.name} />
+              }
               badgesComponent={
                 (() => {
                   let mvpCount = 0;

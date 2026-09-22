@@ -29,6 +29,7 @@ export default function PlayerStatsSection({
   champDamageTotal,
   champAdr,
   badgeColor,
+  radarComponent,
   badgesComponent,
   chartComponent,
   historyComponent,
@@ -42,6 +43,7 @@ export default function PlayerStatsSection({
   champDamageTotal?: number;
   champAdr?: number;
   badgeColor: string;
+  radarComponent?: React.ReactNode;
   badgesComponent: React.ReactNode;
   chartComponent: React.ReactNode;
   historyComponent: React.ReactNode;
@@ -223,6 +225,13 @@ export default function PlayerStatsSection({
               </div>
             )}
           </div>
+
+          {/* Radar HLTV Pro 360 */}
+          {radarComponent && (
+            <div style={{ width: '100%', maxWidth: '800px', marginTop: '1rem' }}>
+              {radarComponent}
+            </div>
+          )}
 
           {/* Badges e Gráfico */}
           {badgesComponent}

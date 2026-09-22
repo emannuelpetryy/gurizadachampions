@@ -7,6 +7,8 @@ import PlayerAvatar from '../jogador/[name]/PlayerAvatar';
 import TeamLogo from '../components/TeamLogo';
 
 import PlayoffBracket from '../components/PlayoffBracket';
+import SeasonSelector from '../components/SeasonSelector';
+import { sortRanking } from '../../lib/stats';
 
 export default function Ranking() {
   const [activeTab, setActiveTab] = useState<'championship' | 'playoffs' | 'elo_rating'>('championship');
@@ -137,6 +139,9 @@ export default function Ranking() {
         {/* TAB 1: CLASSIFICAÇÃO DO CAMPEONATO */}
         {activeTab === 'championship' && (
           <>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.2rem' }}>
+              <SeasonSelector />
+            </div>
             <h1 className="hero-title" style={{ fontSize: '3.2rem', textAlign: 'center', textShadow: 'none' }}>
               TABELA DE <span className="text-cyan">CLASSIFICAÇÃO</span>
             </h1>
@@ -178,17 +183,11 @@ export default function Ranking() {
                     </tr>
                   </thead>
                   <tbody>
-                    {[...players]
-                      .filter((player) => `${player.name} ${getTeam(player.teamId).name}`.toLowerCase().includes(playerQuery.trim().toLowerCase()))
-                      .sort((a, b) => {
-                        const kdA = Math.round((a.kills / (a.deaths || 1)) * 100);
-                        const kdB = Math.round((b.kills / (b.deaths || 1)) * 100);
-                        if (kdB !== kdA) return kdB - kdA;
-                        const kdaA = (a.kills + a.assists) / (a.deaths || 1);
-                        const kdaB = (b.kills + b.assists) / (b.deaths || 1);
-                        if (kdaB !== kdaA) return kdaB - kdaA;
-                        return b.kills - a.kills;
-                      }).map((player, index) => {
+                    {sortRanking(
+                      [...players].filter((player) =>
+                        `${player.name} ${getTeam(player.teamId).name}`.toLowerCase().includes(playerQuery.trim().toLowerCase())
+                      )
+                    ).map((player, index) => {
                       const team = getTeam(player.teamId);
                       const kd = (player.kills / (player.deaths || 1)).toFixed(2);
                       const kda = ((player.kills + player.assists) / (player.deaths || 1)).toFixed(2);
