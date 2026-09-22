@@ -27,7 +27,7 @@ export const matches = [
   { id: 13, teamA: 'venvanse', teamB: 'gilsons', scoreA: 13, scoreB: 7, status: 'Encerrado', date: 'Semifinal 2', group: 'Playoffs' },
   { id: 14, teamA: 'desacreditados', teamB: 'maconhaco', scoreA: 13, scoreB: 2, status: 'Encerrado', date: 'Semifinal 1', group: 'Playoffs' },
   { id: 15, teamA: 'desacreditados', teamB: 'maconhaco', scoreA: 13, scoreB: 4, status: 'Encerrado', date: 'Semifinal 1', group: 'Playoffs' },
-  { id: 16, teamA: 'whitelemon', teamB: 'assentamento', scoreA: 13, scoreB: 8, status: 'Encerrado', date: 'Rodada 3', group: 'B' },
+  { id: 16, teamA: 'assentamento', teamB: 'whitelemon', scoreA: 13, scoreB: 8, status: 'Encerrado', date: 'Rodada 3', group: 'B' },
 ];
 
 export const upcomingMatches: any[] = [];
@@ -377,8 +377,8 @@ export const groupA = [
 export const groupB = [
   { teamId: 'gilsons', p: 3, pj: 3, v: 3, d: 0, rd: 15 },
   { teamId: 'maconhaco', p: 2, pj: 3, v: 2, d: 1, rd: 6 },
-  { teamId: 'whitelemon', p: 1, pj: 3, v: 1, d: 2, rd: -5 },
-  { teamId: 'assentamento', p: 0, pj: 3, v: 0, d: 3, rd: -16 },
+  { teamId: 'assentamento', p: 1, pj: 3, v: 1, d: 2, rd: -6 },
+  { teamId: 'whitelemon', p: 0, pj: 3, v: 0, d: 3, rd: -15 },
 ];
 
 const CANONICAL_ALIASES: Record<string, string> = {
@@ -449,6 +449,8 @@ const CANONICAL_ALIASES: Record<string, string> = {
   'celso - demoleison': 'Demoleison',
   'celso - mathzikntc': 'Math',
   'celso - math': 'Math',
+  'nil': 'Nil',
+  'dark': 'Demoleison',
 };
 
 export const normalizePlayerName = (name: string): string => {
@@ -458,7 +460,56 @@ export const normalizePlayerName = (name: string): string => {
 };
 
 const PRIMARY_TEAMS: Record<string, string> = {
+  // Assentamento Celso Furtado
+  'leco': 'assentamento',
+  'nil': 'assentamento',
+  'math': 'assentamento',
+  'cobes': 'assentamento',
   'demoleison': 'assentamento',
+
+  // White Lemon
+  'marcelo - bitz': 'whitelemon',
+  'fernandinho - peida leite': 'whitelemon',
+  'hallow': 'whitelemon',
+  'giuseppe lagos': 'whitelemon',
+  'daddy money': 'whitelemon',
+
+  // Maconhaço E-Sports
+  'acyd': 'maconhaco',
+  'gusta': 'maconhaco',
+  'natan': 'maconhaco',
+  'lucas': 'maconhaco',
+  'joão marcelo': 'maconhaco',
+
+  // Gilsons E-Sports
+  'felpy': 'gilsons',
+  'manko': 'gilsons',
+  'pombaloka': 'gilsons',
+  'alemão': 'gilsons',
+  'gilson tedesko': 'gilsons',
+
+  // Os Desacreditados
+  'distress - pedro': 'desacreditados',
+  'tufa': 'desacreditados',
+  'sorps - leluia': 'desacreditados',
+  'gio': 'desacreditados',
+  'galaxy': 'desacreditados',
+
+  // Venvanse
+  'pacal': 'venvanse',
+  'samuka': 'venvanse',
+  'manu': 'venvanse',
+  'baronelis': 'venvanse',
+  'duzão': 'venvanse',
+
+  // Jalin Habei
+  'dash': 'jalin',
+  'gilli': 'jalin',
+  'duzz': 'jalin',
+  'peteka': 'jalin',
+  'camargo': 'jalin',
+
+  // 5 Cones
   'becker': '5cones',
   'chapachaplin': '5cones',
   'bagua': '5cones',
@@ -555,7 +606,7 @@ addPlayersToGlobal(matchDetails, '12', 'venvanse', 'gilsons');
 addPlayersToGlobal(matchDetails, '13', 'venvanse', 'gilsons');
 addPlayersToGlobal(matchDetails, '14', 'desacreditados', 'maconhaco');
 addPlayersToGlobal(matchDetails, '15', 'desacreditados', 'maconhaco');
-addPlayersToGlobal(matchDetails, '16', 'whitelemon', 'assentamento', ['juju', 'rnt01', 'men0rdosdedos']);
+addPlayersToGlobal(matchDetails, '16', 'assentamento', 'whitelemon', ['juju', 'rnt01', 'men0rdosdedos', '5cns - giraldi']);
 
 export const players: Array<PlayerSummary> = Object.values(rawPlayersMap);
 
@@ -592,7 +643,7 @@ export const tiers = {
   ],
   C: [
     { name: 'João Marcelo', lvl: 10 },
-    { name: 'Giuseppe Lagos - Henrique', lvl: 10 },
+    { name: 'Giuseppe Lagos', lvl: 10 },
     { name: 'Gio', lvl: 10 },
     { name: 'Peteka', lvl: 9 },
     { name: 'Duzão', lvl: 9 },
@@ -606,6 +657,7 @@ export const tiers = {
     { name: 'Deeez1n', lvl: 6 },
     { name: 'Marcelo - Bitz', lvl: 6 },
     { name: 'Baronelis', lvl: 6 },
+    { name: 'Demoleison', lvl: 5 },
     { name: 'Dark', lvl: 5 },
     { name: 'Natan', lvl: 4 },
     { name: 'Gilson Tedesko', lvl: 3 }
@@ -614,9 +666,9 @@ export const tiers = {
 
 export const getPlayerTier = (name: string): string => {
   if (!name) return '';
-  const clean = name.trim().toLowerCase();
+  const canonical = normalizePlayerName(name).toLowerCase();
   for (const [tier, list] of Object.entries(tiers)) {
-    if (list.some(p => p.name.trim().toLowerCase() === clean)) {
+    if (list.some(p => normalizePlayerName(p.name).toLowerCase() === canonical)) {
       return tier;
     }
   }
